@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f5f7fa" />
+<title>PRS WIND — Easy Mode Engine Prototype</title>
+<style>
+:root{
+ --bg:#f5f7fa;--panel:#fff;--ink:#111827;--muted:#667085;--line:#d9dee6;
+ --good:#16794d;--warn:#9a6700;--bad:#b42318;--blue:#2457d6;--purple:#6842a5;
+ --radius:18px;--shadow:0 8px 30px rgba(16,24,40,.07)
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{max-width:760px;margin:0 auto;padding-bottom:94px}
+header{position:sticky;top:0;z-index:50;padding:12px 14px 9px;background:rgba(245,247,250,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{font-weight:1000;letter-spacing:.05em;font-size:20px}
+.mode{display:flex;background:#e8ecf1;border-radius:999px;padding:3px}
+.mode button{border:0;background:transparent;border-radius:999px;padding:8px 11px;font-weight:900;color:#59636e}
+.mode .active{background:#111827;color:#fff}
+.progress{display:flex;gap:6px;margin-top:10px;overflow-x:auto;scrollbar-width:none}
+.progress::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;color:#667085}
+.chip.active{background:#111827;color:#fff;border-color:#111827}.chip.done{background:#e9f5ee;color:#17603e;border-color:#b8ddc6}
+main{padding:14px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+.kicker{font-size:11px;font-weight:1000;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+h2,h3{margin:0}h2{font-size:25px;margin-top:4px}h3{font-size:18px}
+.sub{color:var(--muted);line-height:1.45;margin:7px 0 0}
+.grid{display:grid;gap:11px;margin-top:14px}.two{grid-template-columns:1fr 1fr}
+@media(max-width:620px){.two{grid-template-columns:1fr}.metric4{grid-template-columns:1fr 1fr!important}}
+label{display:block;font-size:11px;font-weight:1000;letter-spacing:.05em;color:#46515c;text-transform:uppercase}
+input,select{width:100%;margin-top:6px;border:1px solid #cbd3dc;background:#fff;color:#111827;border-radius:13px;min-height:49px;padding:12px;font-weight:850;outline:none}
+input{font-size:21px}select{font-size:15px}
+input:focus,select:focus{border-color:#111827;box-shadow:0 0 0 3px rgba(17,24,39,.07)}
+.btn{border:0;border-radius:13px;padding:13px 15px;min-height:48px;font-weight:950;background:#111827;color:#fff}
+.btn.secondary{background:#edf1f5;color:#111827}.btn.outline{background:#fff;color:#111827;border:1px solid var(--line)}
+.btn.small{min-height:38px;padding:8px 10px;font-size:13px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.full{width:100%}
+.targettabs{display:flex;gap:7px;overflow:auto;margin-top:13px;padding-bottom:3px}
+.targettab{border:1px solid var(--line);background:#fff;border-radius:11px;padding:9px 12px;font-weight:950}.targettab.active{background:#111827;color:#fff}
+.metric4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.metric{background:#fafbfc;border:1px solid var(--line);border-radius:14px;padding:10px}
+.metric .m{font-size:10px;letter-spacing:.08em;color:var(--muted);font-weight:1000}.metric input{font-size:24px;margin-top:4px}.unit{font-size:11px;color:var(--muted)}
+.prov{display:inline-block;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:1000;letter-spacing:.06em}
+.measured{background:#e8f0ff;color:#244988}.observed{background:#fff1d6;color:#744c00}.modelled{background:#f0e9ff;color:#5c3998}.kestrel{background:#e8f5ee;color:#17603f}
+.sectionhead{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.info,.warn,.bad{border-radius:12px;padding:11px 12px;margin-top:11px;font-size:13px;line-height:1.42}
+.info{background:#f7f9fb;border:1px solid #dde3ea;color:#43505c}.warn{background:#fff8e8;border:1px solid #ead49b;color:#795207}.bad{background:#fff0ef;border:1px solid #edc5c0;color:#922d22}
+.angleBtn{width:100%;margin-top:7px;border:1px dashed #98a2ad;background:#f9fafb;border-radius:12px;padding:10px;font-weight:950}
+.point{border:1px solid var(--line);border-radius:15px;padding:13px;margin-top:12px}
+.obs{border-top:1px solid #edf0f3;padding-top:11px;margin-top:11px}.obs:first-of-type{border-top:0}
+.obsSummary{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.evidence{font-size:12px;color:#56616d;margin-top:7px;line-height:1.4}
+.output3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}
+.out{border:1px solid var(--line);border-radius:14px;padding:11px;text-align:center}.out.best{border:2px solid #111827}.out .t{font-size:10px;font-weight:1000;color:var(--muted)}.out .n{font-size:29px;font-weight:1000;margin-top:3px}
+.quality{font-weight:1000}.qstrong{color:var(--good)}.qmod{color:var(--warn)}.qweak{color:var(--bad)}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:center;border-top:1px solid #edf0f3;padding:11px 0}.row:first-child{border-top:0}.row strong{font-size:17px}
+.hero{border:2px solid #111827;border-radius:18px;padding:18px;text-align:center;margin-top:13px}.hero .small{font-size:11px;color:var(--muted);font-weight:1000;letter-spacing:.1em}.hero .big{font-size:58px;line-height:1;font-weight:1000;margin-top:6px}
+.stagecard{background:#111827;color:#fff;border-radius:18px;padding:17px;margin-top:13px}.stageLine{border-top:1px solid rgba(255,255,255,.16);padding:13px 0}.stageLine:first-child{border-top:0}.stageLine .hold{font-size:33px;font-weight:1000}.stageLine .meta{color:#c9d0d8;font-size:12px;margin-top:4px}
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(255,255,255,.97);border-top:1px solid var(--line);padding:10px 14px max(10px,env(safe-area-inset-bottom))}
+.bottomin{max-width:760px;margin:auto;display:grid;grid-template-columns:1fr 1.4fr;gap:9px}.bigbtn{min-height:54px;border-radius:14px;border:1px solid var(--line);background:#fff;font-weight:1000}.bigbtn.next{background:#111827;color:#fff}
+.hidden{display:none!important}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.58);z-index:100;display:flex;align-items:flex-end;justify-content:center;padding:8px}.sheet{width:min(720px,100%);background:#fff;border-radius:22px 22px 0 0;padding:17px 15px max(20px,env(safe-area-inset-bottom));max-height:90vh;overflow:auto}
+.wheelwrap{display:flex;justify-content:center;margin:13px 0}.wheel{width:300px;height:300px;border-radius:50%;border:2px solid #111827;position:relative;background:radial-gradient(circle,#fff 0 55%,#f2f4f7 56% 100%)}
+.tick{position:absolute;font-size:14px;font-weight:1000;transform:translate(-50%,-50%)}.pointer{position:absolute;left:50%;top:50%;width:4px;height:108px;background:#111827;transform-origin:50% 100%;margin-left:-2px;margin-top:-108px;border-radius:4px}.pointer:after{content:"";position:absolute;left:-6px;top:-8px;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:14px solid #111827}.dot{position:absolute;left:50%;top:50%;width:16px;height:16px;border-radius:50%;background:#111827;transform:translate(-50%,-50%)}.wheelValue{text-align:center;font-size:38px;font-weight:1000}.wheelSub{text-align:center;color:var(--muted);font-weight:900}
+.del{border:0;background:#f1f3f5;color:#6a737d;border-radius:10px;padding:7px 9px;font-weight:900}
+.field{--bg:#fff;--panel:#fff;--line:#aeb7c2;--shadow:none}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+ <div class="brandrow"><div class="brand">PRS WIND</div><div class="mode"><button id="easy" class="active">EASY</button><button id="adv">ADVANCED</button></div></div>
+ <div id="progress" class="progress"></div>
+</header>
+<main>
+<section id="s0">
+ <div class="panel"><div class="kicker">Fast match solution</div><h2>New stage</h2><p class="sub">Targets → Calypso → observations → Kestrel → optimal wind hold.</p><div class="actions"><button class="btn full" onclick="go(1)">NEW STAGE</button><button class="btn secondary full" onclick="resumeStage()">RESUME LAST STAGE</button></div></div>
+ <div class="panel"><div class="kicker">Engine status</div><h3>Calibration-connected prototype</h3><p class="sub">Uses your validated Kestrel speed/angle/DOF behavior. Downrange wind fusion is conservative and explicitly reports model quality; no invented near/mid/far ballistic weighting is used.</p></div>
+</section>
+
+<section id="s1" class="hidden">
+ <div class="panel">
+  <div class="sectionhead"><div><div class="kicker">1</div><h2>Targets</h2></div><span class="prov measured">GEOMETRY</span></div>
+  <div class="targettabs" id="targetTabs"></div>
+  <div class="grid two">
+   <label>Distance (m)<input id="td" type="number" inputmode="decimal"></label>
+   <label>Shape<select id="shape" onchange="shapeUI()"><option>Round</option><option>Square</option><option>Rectangle</option><option>Diamond</option><option>IPSC / Silhouette</option><option>Custom</option></select></label>
+   <label>Width / Diameter (cm)<input id="tw" type="number" inputmode="decimal"></label>
+   <label id="heightWrap" class="hidden">Height (cm)<input id="th" type="number" inputmode="decimal"></label>
+   <label>DOF (°)<input id="dof" type="number" min="0" max="359" inputmode="decimal"></label>
+  </div>
+  <button class="angleBtn" onclick="openWheel('dof','TARGET DOF')">◎ ANGLE WHEEL</button>
+  <div class="actions"><button class="btn" onclick="saveTarget()">SAVE</button><button class="btn secondary" onclick="addTarget()">+ TARGET</button></div>
+ </div>
+</section>
+
+<section id="s2" class="hidden">
+ <div class="panel">
+  <div class="sectionhead"><div><div class="kicker">2</div><h2>Shooter wind</h2></div><span class="prov measured">CALYPSO • MEASURED</span></div>
+  <div class="metric4">
+   <div class="metric"><div class="m">MIN</div><input id="wmin" type="number" inputmode="decimal"><div class="unit">mph</div></div>
+   <div class="metric"><div class="m">AVG</div><input id="wavg" type="number" inputmode="decimal"><div class="unit">mph</div></div>
+   <div class="metric"><div class="m">MAX</div><input id="wmax" type="number" inputmode="decimal"><div class="unit">mph</div></div>
+   <div class="metric"><div class="m">NOW</div><input id="wnow" type="number" inputmode="decimal"><div class="unit">mph</div></div>
+  </div>
+  <div class="grid two">
+   <label>AVG wind from (°)<input id="wdir" type="number" min="0" max="359" inputmode="decimal"></label>
+   <label>NOW wind from (°)<input id="wnowdir" type="number" min="0" max="359" inputmode="decimal"></label>
+   <button class="angleBtn" onclick="openWheel('wdir','AVG WIND FROM')">◎ AVG ANGLE</button>
+   <button class="angleBtn" onclick="openWheel('wnowdir','NOW WIND FROM')">◎ NOW ANGLE</button>
+   <label>Logging window<select id="window"><option>10 min</option><option>20 min</option><option>30 min</option></select></label>
+   <label>Terrain<select id="shootTerrain"><option>Open / normal</option><option>Sheltered</option><option>Ridge / exposed</option><option>Valley / channel</option><option>Turbulent / complex</option><option>Unknown</option></select></label>
+  </div>
+  <div id="calypsoCheck" class="info"></div>
+ </div>
+</section>
+
+<section id="s3" class="hidden">
+ <div class="panel">
+  <div class="sectionhead"><div><div class="kicker">3</div><h2>Downrange</h2></div><span class="prov observed">OBSERVED</span></div>
+  <p class="sub">Start with one point. Add observations at the same point or another point only when useful.</p>
+  <div id="points"></div>
+  <div class="actions"><button class="btn secondary" onclick="addPoint()">+ POINT</button></div>
+ </div>
+ <div class="panel">
+  <div class="sectionhead"><div><h3>Target zone</h3></div><span class="prov observed">OBSERVED</span></div>
+  <div id="targetObs"></div>
+  <button class="btn secondary small" style="margin-top:10px" onclick="addObs('target')">+ OBSERVATION</button>
+  <div class="grid two">
+   <label>Terrain<select id="targetTerrain"><option>Open / normal</option><option>Sheltered</option><option>Ridge / exposed</option><option>Valley / channel</option><option>Turbulent / complex</option><option>Unknown</option></select></label>
+  </div>
+ </div>
+ <div class="panel">
+  <div class="sectionhead"><div><h3>Shooter Intel</h3></div><span class="prov observed">SANITY CHECK ONLY</span></div>
+  <div id="intel"></div><button class="btn secondary small" onclick="addIntel()">+ SHOOTER INTEL</button>
+ </div>
+</section>
+
+<section id="s4" class="hidden">
+ <div class="panel">
+  <div class="sectionhead"><div><div class="kicker">4</div><h2>Kestrel</h2></div><span class="prov modelled">MODEL + KESTREL</span></div>
+  <div class="targettabs" id="kTabs"></div>
+  <div id="windSolution"></div>
+  <div class="grid two">
+   <label>Kestrel MIN hold (mil)<input id="kmin" type="number" step="0.01" inputmode="decimal"></label>
+   <label>Kestrel MAX hold (mil)<input id="kmax" type="number" step="0.01" inputmode="decimal"></label>
+  </div>
+  <div class="actions"><button class="btn" onclick="saveK()">SAVE HOLDS</button></div>
+ </div>
+</section>
+
+<section id="s5" class="hidden">
+ <div class="panel">
+  <div class="sectionhead"><div><div class="kicker">5</div><h2>Shoot</h2></div><span class="prov kestrel">FINAL</span></div>
+  <div id="shoot"></div>
+ </div>
+ <div class="panel"><div class="sectionhead"><h3>Stage Card</h3><button class="btn secondary small" onclick="document.body.classList.toggle('field')">☀ FIELD</button></div><div id="stage" class="stagecard"></div></div>
+</section>
+</main>
+</div>
+<div id="bottom" class="bottom"><div class="bottomin"><button class="bigbtn" onclick="back()">← BACK</button><button class="bigbtn next" onclick="next()">NEXT →</button></div></div>
+
+<div id="overlay" class="overlay hidden" onclick="if(event.target===this)closeWheel()"><div class="sheet">
+ <div class="sectionhead"><div><div class="kicker">Angle tool</div><h2 id="wheelTitle">WIND FROM</h2></div><button class="btn secondary small" onclick="closeWheel()">DONE</button></div>
+ <div id="wheelDeg" class="wheelValue">000°</div><div id="wheelClock" class="wheelSub">12:00</div>
+ <div class="wheelwrap"><div id="wheel" class="wheel"><div id="pointer" class="pointer"></div><div class="dot"></div></div></div>
+ <label>Exact degrees<input id="wheelInput" type="number" min="0" max="359" inputmode="decimal"></label>
+ <div class="info"><strong>Convention:</strong> wind direction means <strong>WIND FROM</strong>. DOF uses the same 0–359° geometry.</div>
+</div></div>
+<script>
+const STEP=["HOME","TARGETS","WIND","DOWNRANGE","KESTREL","SHOOT"];
+let cur=0,activeTarget=0,wheelTarget=null,drag=false;
+const defaultTarget=()=>({label:"T"+(state.targets?.length+1||1),distance:"",shape:"Round",width:"",height:"",dof:"",kmin:"",kmax:""});
+let state={targets:[{label:"T1",distance:"",shape:"Round",width:"",height:"",dof:"",kmin:"",kmax:""}],
+ points:[{distance:"",terrain:"Open / normal",obs:[]}],targetObs:[],targetTerrain:"Open / normal",intel:[]};
+
+const behaviors={
+ "Long grass":[["Rattles only","point",5,5,"speed-low"],["Starts bending; direction visible","range",7,8,"speed+direction"],["Bent over / picked up straight","range",9,11,"speed+direction"],["Bent + oscillating up/down","range",12,13,"speed+direction"],["Cannot determine","none",null,null,"none"]],
+ "Bush":[["No movement","point",5,5,"speed-low"],["Very slight movement","point",8,8,"speed"],["Tops moving lightly","range",9,10,"speed"],["Pushed / bent with wind","range",13,15,"speed+direction"],["Cannot determine","none",null,null,"none"]],
+ "Trees":[["Leaves rustling","range",4,7,"speed"],["Leaves + small twigs moving","range",8,12,"speed"],["Small branches moving","range",13,18,"speed"],["Small trees swaying","range",19,24,"speed"],["Large branches moving","range",25,31,"speed"],["Cannot determine","none",null,null,"none"]],
+ "Short grass":[["Still","none",null,null,"relative"],["Slight movement","none",null,null,"relative"],["Continuous movement","none",null,null,"relative"],["Clearly bending","none",null,null,"relative"],["Strongly laid over","none",null,null,"relative"],["Cannot determine","none",null,null,"none"]],
+ "Dust":[["No useful dust","none",null,null,"none"],["Rises almost vertically","none",null,null,"direction"],["Slow lateral drift","none",null,null,"direction"],["Clear lateral drift","none",null,null,"direction"],["Fast lateral movement","none",null,null,"direction"],["Turbulent","none",null,null,"direction"],["Reversing / switching","none",null,null,"direction"],["Wind actively raising loose dust","range",13,18,"speed+direction"]],
+ "Smoke":[["Rises vertically","none",null,null,"direction"],["Shows direction","none",null,null,"direction"],["Clear lateral flow","none",null,null,"direction"],["Turbulent","none",null,null,"direction"],["Switching","none",null,null,"direction"]],
+ "Mirage":[["No readable mirage","none",null,null,"none"],["Boiling / near axial","none",null,null,"direction"],["Slight angle","none",null,null,"direction"],["Moderate angle","none",null,null,"direction"],["Strong lateral flow","none",null,null,"direction"],["Switching","none",null,null,"direction"]],
+ "None":[["No usable indicator","none",null,null,"none"]]
+};
+const indicators=Object.keys(behaviors);
+
+function norm(a){a=Number(a);return ((a%360)+360)%360}
+function signedDelta(a,b){return ((norm(a)-norm(b)+540)%360)-180}
+function clock(deg){deg=norm(deg);let total=deg/360*720,mins=Math.round(total)%60,hr=Math.floor(total/60);if(hr===0)hr=12;if(hr>12)hr-=12;return hr+":"+String(mins).padStart(2,"0")}
+function show(n){document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));document.getElementById("s"+n).classList.remove("hidden")}
+function renderProgress(){progress.innerHTML="";STEP.forEach((x,i)=>{let d=document.createElement("div");d.className="chip"+(i===cur?" active":i<cur?" done":"");d.textContent=x;progress.appendChild(d)});bottom.style.display=cur===0?"none":"block"}
+function go(n){saveAll();cur=Math.max(0,Math.min(5,n));show(cur);renderProgress();if(cur===1)loadTarget();if(cur===3)renderObs();if(cur===4){renderKTabs();renderK();}if(cur===5)renderShoot();window.scrollTo(0,0)}
+function next(){go(cur+1)}function back(){go(cur-1)}
+function saveAll(){if(cur===1)saveTarget(false);if(cur===4)saveK(false);captureWind();captureObsMeta();localStorage.setItem("prsWindProto",JSON.stringify(state))}
+function resumeStage(){try{let x=localStorage.getItem("prsWindProto");if(x)state=JSON.parse(x)}catch(e){}go(1)}
+
+function shapeUI(){heightWrap.classList.toggle("hidden",["Round","Square"].includes(shape.value))}
+function renderTargetTabs(){targetTabs.innerHTML="";state.targets.forEach((t,i)=>{let b=document.createElement("button");b.className="targettab"+(i===activeTarget?" active":"");b.textContent=t.label;b.onclick=()=>{saveTarget(false);activeTarget=i;loadTarget()};targetTabs.appendChild(b)});let p=document.createElement("button");p.className="targettab";p.textContent="+";p.onclick=addTarget;targetTabs.appendChild(p)}
+function loadTarget(){let t=state.targets[activeTarget];td.value=t.distance;shape.value=t.shape;tw.value=t.width;th.value=t.height;dof.value=t.dof;shapeUI();renderTargetTabs()}
+function saveTarget(msg=true){let t=state.targets[activeTarget];t.distance=td.value;t.shape=shape.value;t.width=tw.value;t.height=th.value;t.dof=dof.value;if(msg){}}
+function addTarget(){saveTarget(false);state.targets.push(defaultTarget());state.targets[state.targets.length-1].label="T"+state.targets.length;activeTarget=state.targets.length-1;loadTarget()}
+
+function captureWind(){state.wind={min:wmin?.value||"",avg:wavg?.value||"",max:wmax?.value||"",now:wnow?.value||"",dir:wdir?.value||"",nowdir:wnowdir?.value||"",window:window?.value||"10 min",terrain:shootTerrain?.value||"Open / normal"}}
+function loadWind(){let w=state.wind||{};wmin.value=w.min||"";wavg.value=w.avg||"";wmax.value=w.max||"";wnow.value=w.now||"";wdir.value=w.dir||"";wnowdir.value=w.nowdir||"";window.value=w.window||"10 min";shootTerrain.value=w.terrain||"Open / normal";calypsoStatus()}
+["wmin","wavg","wmax","wnow","wdir","wnowdir"].forEach(id=>document.addEventListener("input",e=>{if(e.target.id===id)calypsoStatus()}))
+function calypsoStatus(){let a=+wmin.value,b=+wavg.value,c=+wmax.value,n=+wnow.value,d=+wdir.value,nd=+wnowdir.value;let txt=[];if(a||b||c){if(!(a<=b&&b<=c))txt.push("Check MIN ≤ AVG ≤ MAX.");else txt.push(`Measured envelope ${a.toFixed(1)}–${c.toFixed(1)} mph; AVG ${b.toFixed(1)}.`)}if(Number.isFinite(d)&&Number.isFinite(nd)&&wdir.value!==""&&wnowdir.value!==""){txt.push(`Direction shift now: ${Math.abs(signedDelta(nd,d)).toFixed(0)}°.`)}calypsoCheck.innerHTML=txt.join(" ")||"Enter the Calypso measurements exactly as displayed."}
+
+function newObs(){return {indicator:"Long grass",behavior:0,quality:"Clear",dir:""}}
+function addPoint(){state.points.push({distance:"",terrain:"Open / normal",obs:[]});renderObs()}
+function addObs(where,pi=0){if(where==="target")state.targetObs.push(newObs());else state.points[pi].obs.push(newObs());renderObs()}
+function delObs(where,pi,oi){if(where==="target")state.targetObs.splice(oi,1);else state.points[pi].obs.splice(oi,1);renderObs()}
+function delPoint(pi){state.points.splice(pi,1);if(!state.points.length)state.points.push({distance:"",terrain:"Open / normal",obs:[]});renderObs()}
+function captureObsMeta(){document.querySelectorAll("[data-point-distance]").forEach(el=>state.points[+el.dataset.pointDistance].distance=el.value);document.querySelectorAll("[data-point-terrain]").forEach(el=>state.points[+el.dataset.pointTerrain].terrain=el.value);if(targetTerrain)state.targetTerrain=targetTerrain.value}
+function obsHTML(o,where,pi,oi){
+ let opts=indicators.map(x=>`<option ${x===o.indicator?"selected":""}>${x}</option>`).join("");
+ let beh=behaviors[o.indicator].map((x,i)=>`<option value="${i}" ${i==o.behavior?"selected":""}>${x[0]}</option>`).join("");
+ return `<div class="obs"><div class="obsSummary"><strong>Observation ${oi+1}</strong><button class="del" onclick="delObs('${where}',${pi},${oi})">REMOVE</button></div>
+ <div class="grid two"><label>Indicator<select onchange="obsChange('${where}',${pi},${oi},'indicator',this.value)">${opts}</select></label>
+ <label>Behaviour<select onchange="obsChange('${where}',${pi},${oi},'behavior',this.value)">${beh}</select></label>
+ <label>Direction<select onchange="obsChange('${where}',${pi},${oi},'quality',this.value)"><option ${o.quality==="Clear"?"selected":""}>Clear</option><option ${o.quality==="Approximate"?"selected":""}>Approximate</option><option ${o.quality==="Unknown"?"selected":""}>Unknown</option></select></label>
+ ${o.quality==="Unknown"?"":`<label>Wind from (°)<input value="${o.dir||""}" inputmode="decimal" onchange="obsChange('${where}',${pi},${oi},'dir',this.value)"></label>`}</div>
+ ${o.quality==="Unknown"?"":`<button class="angleBtn" onclick="openObsWheel('${where}',${pi},${oi})">◎ CLOCK / ANGLE WHEEL</button>`}
+ <div class="evidence">${evidenceText(o)}</div></div>`;
+}
+function evidenceText(o){let b=behaviors[o.indicator][+o.behavior||0];if(!b)return"";if(b[1]==="range")return `<strong>${b[2]}–${b[3]} mph evidence</strong> • ${b[4]}`;if(b[1]==="point")return `<strong>~${b[2]} mph calibration reference</strong> • ${b[4]}`;return `${b[4]==="direction"?"Direction evidence":"Qualitative evidence only"}`;}
+function renderObs(){points.innerHTML="";state.points.forEach((p,pi)=>{let box=document.createElement("div");box.className="point";box.innerHTML=`<div class="sectionhead"><strong>POINT ${pi+1}</strong>${state.points.length>1?`<button class="del" onclick="delPoint(${pi})">REMOVE</button>`:""}</div><div class="grid two"><label>Distance (m)<input data-point-distance="${pi}" value="${p.distance||""}" inputmode="decimal"></label><label>Terrain<select data-point-terrain="${pi}">${["Open / normal","Sheltered","Ridge / exposed","Valley / channel","Turbulent / complex","Unknown"].map(x=>`<option ${x===p.terrain?"selected":""}>${x}</option>`).join("")}</select></label></div>${p.obs.map((o,oi)=>obsHTML(o,"point",pi,oi)).join("")}<button class="btn secondary small" style="margin-top:10px" onclick="addObs('point',${pi})">+ OBSERVATION</button>`;points.appendChild(box)});targetObs.innerHTML=state.targetObs.map((o,oi)=>obsHTML(o,"target",0,oi)).join("")||`<div class="info">No target-zone observation added. That's acceptable when you cannot see a useful indicator.</div>`;targetTerrain.value=state.targetTerrain||"Open / normal";renderIntel()}
+function obsChange(where,pi,oi,key,val){let o=where==="target"?state.targetObs[oi]:state.points[pi].obs[oi];if(key==="indicator"){o.indicator=val;o.behavior=0}else if(key==="behavior")o.behavior=+val;else o[key]=val;renderObs()}
+let pendingObsWheel=null;
+function openObsWheel(where,pi,oi){pendingObsWheel={where,pi,oi};let o=where==="target"?state.targetObs[oi]:state.points[pi].obs[oi];openWheel("__obs__","WIND FROM",o.dir||0)}
+function addIntel(){state.intel.push({target:state.targets[0]?.label||"T1",hold:""});renderIntel()}
+function renderIntel(){intel.innerHTML=state.intel.map((x,i)=>`<div class="grid two" style="margin-top:8px"><label>Target<select onchange="state.intel[${i}].target=this.value">${state.targets.map(t=>`<option ${t.label===x.target?"selected":""}>${t.label}</option>`).join("")}</select></label><label>Reported hold (mil)<input value="${x.hold||""}" inputmode="decimal" onchange="state.intel[${i}].hold=this.value"></label></div>`).join("")||`<div class="smallnote">Optional sanity check only. Does not alter the model.</div>`}
+
+function sourceReliability(ind){if(ind==="Long grass"||ind==="Bush")return 1.0;if(ind==="Trees")return .75;if(ind==="Dust"||ind==="Smoke")return .45;if(ind==="Mirage")return .45;if(ind==="Short grass")return .25;return 0}
+function terrainPenalty(t){return t==="Open / normal"?0:t==="Unknown"?1:t==="Turbulent / complex"?3:2}
+function fuseEvidence(){
+ let w=state.wind||{}, min=+w.min,avg=+w.avg,max=+w.max,dir=+w.dir;
+ if(!(max>=avg&&avg>=min))return {valid:false,reason:"Calypso MIN / AVG / MAX invalid."};
+ let speedEvidence=[],dirEvidence=[],conflict=0,penalty=terrainPenalty(w.terrain||"Open / normal");
+ // anchor evidence is the measured shooter envelope.
+ speedEvidence.push({lo:min,hi:max,mode:avg,rel:3,source:"Calypso"});
+ const allZones=[...state.points.map(p=>({terrain:p.terrain,obs:p.obs})),{terrain:state.targetTerrain,obs:state.targetObs}];
+ allZones.forEach(z=>{
+   penalty+=terrainPenalty(z.terrain||"Open / normal");
+   (z.obs||[]).forEach(o=>{
+     const b=behaviors[o.indicator][+o.behavior||0],r=sourceReliability(o.indicator);
+     if(b&&b[1]==="range")speedEvidence.push({lo:b[2],hi:b[3],mode:(b[2]+b[3])/2,rel:r,source:o.indicator});
+     if(b&&b[1]==="point")speedEvidence.push({lo:Math.max(0,b[2]-1),hi:b[3]+1,mode:b[2],rel:r*.7,source:o.indicator});
+     if(o.quality!=="Unknown"&&o.dir!==""){
+       let q=o.quality==="Clear"?1:.55;
+       let dr=sourceReliability(o.indicator);
+       if(b&&String(b[4]).includes("direction"))dr=Math.max(dr,.8);
+       dirEvidence.push({deg:+o.dir,rel:q*dr,source:o.indicator});
+     }
+   });
+ });
+ // Conservative fusion: weighted modes, bounds driven by weighted evidence agreement. Avoid claiming path-weighted ballistic equivalence.
+ let sw=0,sm=0;
+ speedEvidence.forEach(e=>{sw+=e.rel;sm+=e.rel*e.mode});
+ let best=sm/sw;
+ // credible LOW/HIGH: combine measured envelope with observation intervals; observations can tighten only when they overlap anchor.
+ let obs=speedEvidence.slice(1);
+ let low=min,high=max;
+ if(obs.length){
+   let ol=Math.max(...obs.map(e=>e.lo)), oh=Math.min(...obs.map(e=>e.hi));
+   if(ol<=oh){low=Math.max(min,ol);high=Math.min(max,oh); if(low>high){low=min;high=max}}
+   else{conflict++; // conflicting evidence: expand to encompass observations and measured envelope conservatively
+     low=Math.min(min,...obs.map(e=>e.lo));high=Math.max(max,...obs.map(e=>e.hi));
+   }
+ }
+ best=Math.max(low,Math.min(high,best));
+ // Direction: vector mean around stage measured direction; measured direction has highest weight.
+ let vx=3*Math.cos(dir*Math.PI/180),vy=3*Math.sin(dir*Math.PI/180),dw=3;
+ dirEvidence.forEach(e=>{vx+=e.rel*Math.cos(e.deg*Math.PI/180);vy+=e.rel*Math.sin(e.deg*Math.PI/180);dw+=e.rel});
+ let dBest=norm(Math.atan2(vy,vx)*180/Math.PI);
+ // measure disagreement
+ let maxDev=0;dirEvidence.forEach(e=>maxDev=Math.max(maxDev,Math.abs(signedDelta(e.deg,dir))));
+ if(maxDev>60)conflict++;
+ let qualityScore=8 - penalty - conflict*3 + Math.min(2,obs.length) + Math.min(1,dirEvidence.length);
+ let quality=qualityScore>=7?"STRONG":qualityScore>=4?"MODERATE":"WEAK";
+ return {valid:true,low,best,high,dir:dBest,quality,conflict,dirEvidence,speedEvidence,maxDev}
+}
+function targetWind(t,f){
+ let rel=signedDelta(f.dir,+t.dof||0),factor=Math.abs(Math.sin(rel*Math.PI/180)),side=Math.sin(rel*Math.PI/180)>=0?"R→L":"L→R";
+ return {rel,factor,side,low:f.low*factor,best:f.best*factor,high:f.high*factor,expectedWD:norm(f.dir-(+t.dof||0))}
+}
+function renderKTabs(){kTabs.innerHTML="";state.targets.forEach((t,i)=>{let b=document.createElement("button");b.className="targettab"+(i===activeTarget?" active":"");b.textContent=t.label;b.onclick=()=>{saveK(false);activeTarget=i;renderKTabs();renderK()};kTabs.appendChild(b)})}
+function renderK(){
+ captureWind();captureObsMeta();let f=fuseEvidence(),t=state.targets[activeTarget];if(!f.valid){windSolution.innerHTML=`<div class="bad">${f.reason}</div>`;return}
+ let z=targetWind(t,f);
+ windSolution.innerHTML=`<div class="info"><strong>${t.label} • ${t.distance||"—"} m</strong><br>Expected Kestrel WD after DOF: <strong>${z.expectedWD.toFixed(0)}°</strong> • ${clock(z.expectedWD)}<br>Model quality: <span class="quality ${f.quality==="STRONG"?"qstrong":f.quality==="MODERATE"?"qmod":"qweak"}">${f.quality}</span></div>
+ <div class="output3"><div class="out"><div class="t">LOW FV-EQ</div><div class="n">${z.low.toFixed(1)}</div><div class="unit">mph</div></div><div class="out best"><div class="t">BEST FV-EQ</div><div class="n">${z.best.toFixed(1)}</div><div class="unit">mph</div></div><div class="out"><div class="t">HIGH FV-EQ</div><div class="n">${z.high.toFixed(1)}</div><div class="unit">mph</div></div></div>
+ <div class="row"><span>Stage wind-from model</span><strong>${f.dir.toFixed(0)}° / ${clock(f.dir)}</strong></div>
+ <div class="row"><span>Target DOF</span><strong>${(+t.dof||0).toFixed(0)}°</strong></div>
+ <div class="row"><span>Relative angle</span><strong>${Math.abs(z.rel).toFixed(0)}°</strong></div>
+ <div class="row"><span>Crosswind value</span><strong>${z.factor.toFixed(2)}</strong></div>
+ ${f.conflict?`<div class="warn">OBSERVATIONS CONFLICT — bracket kept conservative.</div>`:""}
+ <div class="info"><strong>Important:</strong> FV-equivalent values are evidence-fusion outputs for stage planning, not a replacement for Kestrel/AB. Enter the actual Kestrel MIN/MAX holds below; those remain ballistic authority.</div>`;
+ kmin.value=t.kmin||"";kmax.value=t.kmax||""
+}
+function saveK(msg=true){let t=state.targets[activeTarget];t.kmin=kmin.value;t.kmax=kmax.value}
+function targetWidthMil(t){let d=+t.distance,w=+t.width/100;return d>0&&w>0?w/d*1000:null}
+function triangularCDF(x,a,m,b){if(x<=a)return 0;if(x>=b)return 1;if(m<=a+1e-9)return 1-Math.pow((b-x)/(b-a),2);if(m>=b-1e-9)return Math.pow((x-a)/(b-a),2);return x<=m?Math.pow(x-a,2)/((b-a)*(m-a)):1-Math.pow(b-x,2)/((b-a)*(b-m))}
+function optimizeHold(t,f){
+ let lo=+t.kmin,hi=+t.kmax,w=targetWidthMil(t);if(!(hi>=lo&&w>0))return null;
+ let z=targetWind(t,f), denom=(z.high-z.low),modeHold=denom>1e-9?lo+(z.best-z.low)/denom*(hi-lo):(lo+hi)/2;
+ modeHold=Math.max(lo,Math.min(hi,modeHold));
+ let step=.001,bestH=lo,bestP=-1;
+ // required hold distribution triangular across Kestrel bracket, mode mapped from modeled LOW/BEST/HIGH
+ for(let h=lo-w/2;h<=hi+w/2+1e-9;h+=step){
+   let p=triangularCDF(h+w/2,lo,modeHold,hi)-triangularCDF(h-w/2,lo,modeHold,hi);
+   if(p>bestP){bestP=p;bestH=h}
+ }
+ let safeLo=hi-w/2,safeHi=lo+w/2,safe=safeLo<=safeHi;
+ return {lo,hi,w,modeHold,bestH,bestP:Math.max(0,Math.min(1,bestP)),safe,safeLo,safeHi}
+}
+function intelFor(t){let vals=state.intel.filter(x=>x.target===t.label&&x.hold!=="").map(x=>+x.hold).filter(Number.isFinite);return vals}
+function renderShoot(){captureWind();captureObsMeta();let f=fuseEvidence();shoot.innerHTML="";stage.innerHTML="";if(!f.valid){shoot.innerHTML=`<div class="bad">${f.reason}</div>`;return}
+ state.targets.forEach(t=>{let r=optimizeHold(t,f),ints=intelFor(t);if(!r){shoot.innerHTML+=`<div class="info">${t.label}: enter valid Kestrel MIN/MAX holds and target dimensions.</div>`;stage.innerHTML+=`<div class="stageLine"><strong>${t.label}</strong><div class="hold">—</div><div class="meta">Kestrel holds required</div></div>`;return}
+ let intelWarn=ints.length&&(Math.max(...ints)<r.lo||Math.min(...ints)>r.hi);
+ shoot.innerHTML+=`<div style="border-top:1px solid var(--line);padding:14px 0"><div class="sectionhead"><strong>${t.label} • ${t.distance} m • ${t.shape}</strong><span class="prov kestrel">WIND P(HIT)</span></div>
+ <div class="row"><span>Kestrel bracket</span><strong>${r.lo.toFixed(2)}–${r.hi.toFixed(2)} mil</strong></div>
+ <div class="row"><span>Target horizontal width</span><strong>${r.w.toFixed(2)} mil</strong></div>
+ <div class="hero"><div class="small">OPTIMAL WIND HOLD</div><div class="big">${r.bestH.toFixed(2)}</div><div class="unit">mil</div></div>
+ <div class="row"><span>WIND P(HIT)</span><strong>${(r.bestP*100).toFixed(0)}%</strong></div>
+ <div class="row"><span>Most-supported required hold</span><strong>${r.modeHold.toFixed(2)}</strong></div>
+ <div class="row"><span>Safe hold window</span><strong>${r.safe?r.safeLo.toFixed(2)+"–"+r.safeHi.toFixed(2):"NONE"}</strong></div>
+ ${f.quality==="WEAK"?`<div class="warn">WIND QUALITY LOW — treat probability output cautiously.</div>`:""}
+ ${ints.length?`<div class="${intelWarn?"warn":"info"}">Shooter Intel: ${ints.map(x=>x.toFixed(2)).join(" / ")}${intelWarn?" • OUTSIDE MODEL BRACKET":""}</div>`:""}
+ <div class="info">Wind P(hit) models horizontal wind uncertainty only. It does not include rifle/shooter vertical dispersion; target shape is stored for the later 2D Advanced model.</div></div>`;
+ stage.innerHTML+=`<div class="stageLine"><strong>${t.label} • ${t.distance} m</strong><div class="hold">${r.bestH.toFixed(2)}</div><div class="meta">Bracket ${r.lo.toFixed(2)}–${r.hi.toFixed(2)} • Wind P(hit) ${(r.bestP*100).toFixed(0)}%</div></div>`
+ })
+}
+easy.onclick=()=>{easy.classList.add("active");adv.classList.remove("active")};adv.onclick=()=>{adv.classList.add("active");easy.classList.remove("active");alert("Advanced Mode remains separate while Easy Mode is validated.")};
+
+function openWheel(target,title,val=null){wheelTarget=target;wheelTitle.textContent=title;let v=val!==null?+val:+(document.getElementById(target)?.value||0);setWheel(v);overlay.classList.remove("hidden")}
+function closeWheel(){overlay.classList.add("hidden");wheelTarget=null;if(pendingObsWheel)pendingObsWheel=null}
+function setWheel(v){v=norm(v);pointer.style.transform=`rotate(${v}deg)`;wheelDeg.textContent=String(Math.round(v)).padStart(3,"0")+"°";wheelClock.textContent=clock(v);wheelInput.value=Math.round(v);if(wheelTarget==="__obs__"&&pendingObsWheel){let p=pendingObsWheel,o=p.where==="target"?state.targetObs[p.oi]:state.points[p.pi].obs[p.oi];o.dir=Math.round(v)}else if(wheelTarget&&document.getElementById(wheelTarget))document.getElementById(wheelTarget).value=Math.round(v)}
+function fromEvent(e){let r=wheel.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),v=Math.atan2(x,-y)*180/Math.PI;if(v<0)v+=360;setWheel(v)}
+wheel.addEventListener("pointerdown",e=>{drag=true;wheel.setPointerCapture(e.pointerId);fromEvent(e)});wheel.addEventListener("pointermove",e=>{if(drag)fromEvent(e)});wheel.addEventListener("pointerup",()=>drag=false);wheelInput.addEventListener("input",()=>setWheel(+wheelInput.value||0));
+for(let h=1;h<=12;h++){let el=document.createElement("div"),deg=h*30,rad=(deg-90)*Math.PI/180,r=124;el.className="tick";el.style.left=(150+r*Math.cos(rad))+"px";el.style.top=(150+r*Math.sin(rad))+"px";el.textContent=h;wheel.appendChild(el)}
+
+if(!state.points[0].obs.length)state.points[0].obs.push(newObs());
+loadWind();loadTarget();renderObs();show(0);renderProgress();
+</script>
+</body></html>
