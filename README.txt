@@ -1,3 +1,19 @@
-WIND SIGHT PRS v3.0 UX Rebuild
-JavaScript syntax: /mnt/data/wind_sight_prs_v3_0_ux_rebuild/_check.js:386
-function obsHTML(o,where,pi,oi){return `<div class="obs"><div class="cardhead"><strong>Observation ${oi+1}</strong><button class="btn danger small" onclick="removeObs('${where}',${pi},${oi})">REMOVE</button></div><div class="grid two"><label>Indicator<select id="oi_${where}_${pi}_${oi}" onchange="changeIndicator('${where}',${pi},${oi},this.value)">${Object.keys(behavior).map(x=>`<option ${x===o.indicator?"selected":""}>${x}</option>`).join("
+WIND SIGHT PRS v3.0.1 — Deep Audited
+
+This is the audited successor to v3.0 UX Rebuild.
+
+Key audit corrections:
+- PWA/offline install files restored
+- Cloudflare asset-exposure protection
+- calibrated-profile gating
+- calibration L/R persistence
+- dynamic calibration distance persistence
+- stronger calibration validation
+- cleaner final match review
+- corrected completed-stage correction workflow
+- side-aware bracket analytics
+- visible, honest reverse wind inference
+- direction-chart wrap correction
+- generic Ballistic Software terminology
+
+See AUDIT_REPORT.txt.

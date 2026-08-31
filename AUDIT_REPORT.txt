@@ -1,50 +1,31 @@
-WIND SIGHT PRS v2.5 — EXECUTIVE AUDIT
+WIND SIGHT PRS v3.0.1 — DEEP AUDIT REPORT
 
-APPLIED FINDINGS
-- Blank numeric fields no longer silently parse as zero.
-- Essential live steps now validate before progression.
-- DOF and wind direction ranges are validated.
-- Kestrel MIN/MAX brackets are validated before Shoot.
-- Side-flip risk is detected from current/downrange directional evidence; Easy Mode refuses to issue a false single-side probability solution.
-- Angle sensitivity is surfaced as ROBUST / MODERATE / SENSITIVE.
-- Pre-shoot solution values are frozen and stored for later prediction-vs-actual reporting.
-- Completed stages are locked; explicit correction mode preserves revision history.
-- Rifle/ammo/match local persistence is mirrored to IndexedDB with localStorage fallback.
-- Backup import receives structural validation.
-- Stage and target removal added to pre-match correction workflow.
-- Observation direction quality changes immediately update the UI.
-- Downrange observations outside shooter bracket generate explicit stronger/weaker path notes rather than silently pretending agreement.
-- Match reports now calculate true average stage %, bracket capture rate, and mean actual-vs-recommended hold error.
-- Service worker upgraded to network-first navigation for safer version updates and same-origin-only runtime caching.
-- PWA manifest expanded with id/scope/lang/categories.
-- Basic CSP/referrer hardening added.
+Critical fixes applied:
+- Restored missing PWA manifest and service worker.
+- Added explicit Cloudflare Wrangler static-assets config and .assetsignore.
+- Rifle/ammo readiness now requires a saved calibration version before New Match.
+- Calibration L/R selections are persisted.
+- Added Wind Angle calibration distances are now persisted.
+- Calibration row widths now adapt to dynamic distance/speed columns.
+- Calibration validation now checks distance trend, wind-speed trend and suspicious scaling.
+- Added explicit VALIDATE ENTRIES action.
+- Final match review no longer has a duplicate bottom NEXT path.
+- Completed-stage correction opens POST, not BALLISTICS.
+- Completed-stage back navigation returns to Match Dashboard.
+- Ballistic Software labels are generic rather than Kestrel-only.
+- Match Learning is shown once, not repeated on every target.
+- Wind Bracket Capture and Match Learning are now hold-side aware.
+- Post-stage inferred wind is now actually displayed and clearly states non-uniqueness.
+- Wind-direction report chart unwraps 359°/0° transitions to avoid false visual jumps.
+- Dynamic user labels are escaped in key Shoot/Post outputs.
 
-MODEL BOUNDARIES RETAINED
-- Kestrel / Applied Ballistics remains ballistic authority.
-- No invented near/mid/far ballistic weighting.
-- MODELLED WIND P(HIT) remains horizontal wind uncertainty only, not total system P(hit).
-- Match-learning remains a sanity signal only, not an automatic correction.
-
-RELEASE STATUS
-Approved for controlled iPhone field validation. Not yet App Store / Google Play production release.
-
-ADDITIONAL PRODUCT / DEPLOYMENT HARDENING
-- Easy Mode caps: 10 targets, 3 downrange points, 3 observations per zone, 5 Shooter Intel entries.
-- Direct angle entries normalize 360° to 000° before Kestrel display/storage.
-- Completed-match corrections preserve match-level revision history and refresh the final match snapshot.
-- Rifle calibration wizard now allows user-defined Test A distances/speeds, Test B speed/distances/angles, and Test D distance/wind/speeds/DOFs.
-- Cloudflare Wrangler configuration and .assetsignore added so repository metadata (.git), audit files and config are not published as public static assets.
-
-FINAL EXECUTION LOOP — 2026-08-31
-- Full browser workflow regression suite: PASS.
-- Executive follow-up workflow suite: 17/17 PASS.
-- Engine/property edge-case suite: 20/20 PASS.
-- PWA/deployment configuration suite: 6/6 PASS.
-- Inline application JavaScript syntax: PASS.
-- Service worker JavaScript syntax: PASS.
-- Mobile horizontal-overflow checks: 320 / 390 / 430 / 768 px PASS.
-- Validated blank-field handling, comma decimals, 0/360 normalization, negative wind rejection, DOF validation, reversed/equal hold brackets, same-zone conflicts, different-zone non-conflicts, stronger-path warnings, terrain quality, NOW influence, side-flip detection and target-size probability monotonicity.
-
-EXECUTIVE SIGN-OFF
-Signed for controlled field-validation release by GPT-5.6 Sol, OpenAI.
-This sign-off is for the tested v2.5 web/PWA field-validation build, not final App Store / Google Play commercial release certification.
+Validation results:
+- wrap 359/0: PASS
+- DOF expected WD: PASS
+- full value factor: PASS
+- headwind factor: PASS
+- manifest exists: PASS
+- service worker exists: PASS
+- app icon exists: PASS
+- no missing HTML assets: PASS
+- JS syntax: PASS
