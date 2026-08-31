@@ -1,0 +1,6 @@
+{
+  "name": "prs-wind",
+  "compatibility_date": "2026-08-31",
+  "assets": { "directory": "." },
+  "observability": { "enabled": true }
+}
