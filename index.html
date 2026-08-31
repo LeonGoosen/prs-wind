@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v2.5 Executive Audit</title>
+<title>WIND SIGHT PRS by ZealTech — v2.6.1 Safe Area & Match Management</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="WIND SIGHT">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
@@ -26,8 +26,8 @@ html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,
 body.modal-open{overflow:hidden;touch-action:none}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-.app{max-width:860px;margin:auto;min-height:100vh;padding-bottom:94px}
-header{position:sticky;top:0;z-index:50;background:rgba(4,10,17,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:12px 14px}
+.app{max-width:860px;margin:auto;min-height:100vh;min-height:100dvh;padding-bottom:calc(94px + env(safe-area-inset-bottom,0px))}
+header{position:sticky;top:0;z-index:50;background:rgba(4,10,17,.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:calc(12px + env(safe-area-inset-top,0px)) 14px 12px}
 .brandrow{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .brand{font-size:20px;font-weight:1000;letter-spacing:.05em;color:var(--silver)}
 .brand small{display:block;font-size:9px;letter-spacing:.16em;color:#6f8194;margin-top:2px}
@@ -74,7 +74,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 
 .obs{border-top:1px solid #17283a;padding-top:11px;margin-top:11px}.obs:first-of-type{border-top:0}
 .hidden{display:none!important}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:100;display:flex;align-items:flex-end;justify-content:center;padding:0;overscroll-behavior:contain;touch-action:none}
-.sheet{width:min(720px,100%);background:#08131f;border:1px solid #264056;border-bottom:0;border-radius:22px 22px 0 0;padding:17px 15px max(20px,env(safe-area-inset-bottom));max-height:90%;overflow:auto;touch-action:none}
+.sheet{width:min(720px,100%);background:#08131f;border:1px solid #264056;border-bottom:0;border-radius:22px 22px 0 0;padding:17px 15px max(20px,env(safe-area-inset-bottom));max-height:calc(90% - env(safe-area-inset-top,0px));overflow:auto;touch-action:none}
 .wheelwrap{display:flex;justify-content:center;margin:14px 0;touch-action:none}
 .wheel{width:300px;height:300px;max-width:82vw;max-height:82vw;aspect-ratio:1;border-radius:50%;border:2px solid var(--silver);position:relative;background:radial-gradient(circle,#091522 0 55%,#101e2c 56% 100%);touch-action:none;user-select:none;-webkit-user-select:none}
 .tick{position:absolute;font-size:14px;font-weight:1000;transform:translate(-50%,-50%);color:#d8e2ec}.pointer{position:absolute;left:50%;top:50%;width:4px;height:108px;background:var(--blue);transform-origin:50% 100%;margin-left:-2px;margin-top:-108px;border-radius:4px}.pointer:after{content:"";position:absolute;left:-6px;top:-8px;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:14px solid var(--blue)}.dot{position:absolute;left:50%;top:50%;width:16px;height:16px;border-radius:50%;background:var(--silver);transform:translate(-50%,-50%)}.wheelValue{text-align:center;font-size:38px;font-weight:1000}.wheelSub{text-align:center;color:var(--muted);font-weight:900}
@@ -102,6 +102,22 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 
 .critical{border:2px solid var(--warn)!important}
 .readonlyValue{font-size:20px;font-weight:900;color:#fff;margin-top:4px}
 .auditBadge{font-size:10px;font-weight:1000;letter-spacing:.08em;color:#6bd4ed}
+
+.profileSummary{border:1px solid #29435a;border-radius:14px;padding:12px;margin-top:10px;background:#07131f}
+.calHelp{background:#091b2a;border-left:3px solid var(--blue);padding:12px;margin:10px 0;border-radius:8px;color:#b9c8d6;font-size:13px;line-height:1.5}
+.req{color:#efc35f;font-weight:900}
+.lockedAction{opacity:.55;cursor:not-allowed}
+
+.matchSectionTitle{margin-top:16px;font-size:11px;font-weight:1000;letter-spacing:.10em;text-transform:uppercase;color:var(--muted)}
+.managementActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.managementActions .btn{flex:0 1 auto}
+.archivedCard{opacity:.82}
+.trashCard{opacity:.68}
+@media(max-width:650px){.managementActions .btn{width:100%}}
+@supports(padding:max(0px)){
+  main{padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+  .bottom{padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+}
 </style>
 </head>
 <body>
@@ -150,7 +166,7 @@ function clock(deg){deg=norm(deg);let total=deg/360*720,mins=Math.round(total)%6
 function migrateData(d){
  if(!d||typeof d!=="object")return {schemaVersion:SCHEMA_VERSION,rifles:[],matches:[]};
  d.schemaVersion=d.schemaVersion||1;
- d.rifles=d.rifles||[]; d.matches=d.matches||[]; d.drafts=d.drafts||{}; d.lastSavedAt=d.lastSavedAt||null;
+ d.rifles=d.rifles||[]; d.matches=d.matches||[]; d.drafts=d.drafts||{}; d.trash=d.trash||{matches:[]}; d.trash.matches=d.trash.matches||[]; d.lastSavedAt=d.lastSavedAt||null;
  d.matches.forEach(m=>{
    m.stages=m.stages||[];
    m.stages.forEach(s=>{
@@ -207,8 +223,11 @@ function ta(lbl,id,val){return `<label>${lbl}<textarea id="${id}">${esc(val??"")
 function v(id){return document.getElementById(id)?.value??""}
 function bindAuto(cb){main.querySelectorAll("input,select,textarea").forEach(el=>{el.addEventListener("input",cb);el.addEventListener("change",cb)})}
 
-function home(){setBottom(false);main.innerHTML=`<div class="panel"><div class="kicker">Precision wind & match intelligence</div><h2>Ready</h2><p class="sub">Calibrate. Prepare. Execute. Analyze. Improve.</p><div class="actions"><button class="btn" id="newMatch">+ NEW MATCH</button><button class="btn secondary" id="newRifle">+ NEW RIFLE</button><button class="btn outline" id="exportBtn">EXPORT DATA</button><label class="btn outline" style="display:inline-flex;align-items:center;justify-content:center">IMPORT DATA<input id="importFile" type="file" accept="application/json" style="display:none"></label></div></div><div class="panel brandStrip"><div><div class="kicker">Product publisher</div><h3 style="margin-top:4px">WIND SIGHT PRS</h3><div class="small">Developed by ZealTech</div></div><img src="zealtech-landscape.png" alt="ZealTech"></div><div class="panel"><h3>Recent matches</h3><div id="recent"></div></div>`;
-exportBtn.onclick=exportData;importFile.onchange=importData;newMatch.onclick=()=>{st.screen="matchWizard";st.step=0;st.selectedMatch=null;render()};newRifle.onclick=()=>{st.screen="rifleWizard";st.step=0;st.selectedRifle=null;st.selectedAmmo=null;render()};recent.innerHTML=st.data.matches.length?st.data.matches.slice().reverse().slice(0,5).map(matchCard).join(""):`<div class="note">No matches yet.</div>`;bindMatchCards()}
+function hasReadyProfile(){return st.data.rifles.some(r=>(r.ammo||[]).some(a=>a.name&&a.bullet&&a.mv&&(a.bcType||a.bc)&&a.calibrationVersions?.length));}
+function home(){setBottom(false);main.innerHTML=`<div class="panel"><div class="kicker">Precision wind & match intelligence</div><h2>Ready</h2><p class="sub">Calibrate. Prepare. Execute. Analyze. Improve.</p><div class="actions">${hasReadyProfile()?`<button class="btn" id="newMatch">+ NEW MATCH</button>`:`<button class="btn" id="setupFirst">SET UP YOUR FIRST RIFLE →</button><button class="btn outline lockedAction" disabled>NEW MATCH • SETUP REQUIRED</button>`}<button class="btn secondary" id="newRifle">+ NEW RIFLE</button><button class="btn outline" id="exportBtn">EXPORT DATA</button><label class="btn outline" style="display:inline-flex;align-items:center;justify-content:center">IMPORT DATA<input id="importFile" type="file" accept="application/json" style="display:none"></label></div></div><div class="panel brandStrip"><div><div class="kicker">Product publisher</div><h3 style="margin-top:4px">WIND SIGHT PRS</h3><div class="small">Developed by ZealTech</div></div><img src="zealtech-landscape.png" alt="ZealTech"></div><div class="panel"><h3>Recent matches</h3><div id="recent"></div></div>`;
+exportBtn.onclick=exportData;importFile.onchange=importData;
+ if(document.getElementById("setupFirst"))setupFirst.onclick=()=>{st.screen="rifleWizard";st.step=0;st.selectedRifle=null;st.selectedAmmo=null;render()};
+ if(document.getElementById("newMatch"))newMatch.onclick=()=>{st.screen="matchWizard";st.step=0;st.selectedMatch=null;render()};newRifle.onclick=()=>{st.screen="rifleWizard";st.step=0;st.selectedRifle=null;st.selectedAmmo=null;render()};recent.innerHTML=st.data.matches.length?st.data.matches.slice().reverse().slice(0,5).map(matchCard).join(""):`<div class="note">No matches yet.</div>`;bindMatchCards()}
 
 function rifles(){
  setBottom(false);
@@ -230,7 +249,7 @@ function rifles(){
      ${(r.ammo||[]).map(a=>`
        <div class="listrow">
          <div><strong>${esc(a.name)}</strong><div class="small">${esc(a.bullet||"")} • ${esc(a.mv||"—")} fps • Cal v${a.currentCalibrationVersion||0}</div></div>
-         <button class="btn outline small editAmmo" data-a="${a.id}">EDIT</button>
+         <button class="btn outline small editAmmo" data-a="${a.id}">CALIBRATION / EDIT</button>
        </div>`).join("")}
    </div>`).join(""):`<div class="note">Create your first rifle profile.</div>`;
  document.querySelectorAll("[data-r]").forEach(el=>{
@@ -240,7 +259,7 @@ function rifles(){
  });
 }
 function rifleWizard(){
- const steps=["RIFLE","AMMO","CAL A","CAL B","CAL D","REVIEW"], last=steps.length-1;
+ const steps=["RIFLE","AMMO","WIND SPEED","WIND ANGLE","TARGET DOF","REVIEW"], last=steps.length-1;
  setBottom(true,st.step===last?"FINISH / SAVE":"NEXT →");
  let r=st.selectedRifle?st.data.rifles.find(x=>x.id===st.selectedRifle):(st._rd||loadDraft("rifle")||(st._rd={id:uid("r"),name:"",cartridge:"",twist:"",zeroM:"100",sightHeight:"",kestrelModel:"5700 Elite",notes:"",ammo:[]}));
  let a=null;
@@ -254,9 +273,9 @@ function rifleWizard(){
    rw.innerHTML=`<div class="grid two">
      ${f("Rifle name","rName",r.name)}
      ${f("Cartridge","rCart",r.cartridge)}
-     ${f("Twist","rTwist",r.twist)}
+     <label>Barrel twist<div style="display:flex;gap:8px;align-items:center;margin-top:6px"><strong style="font-size:20px">1 :</strong><input id="rTwist" type="text" inputmode="decimal" value="${esc(r.twistValue||r.twist||"")}" placeholder="7.5"></div><div class="dimensionNote">Example: enter 7.5 for a 1:7.5 twist.</div></label>
      ${f("Zero distance (m)","rZero",r.zeroM,"decimal")}
-     ${f("Sight height","rSight",r.sightHeight,"decimal")}
+     <label>Sight height<div style="display:grid;grid-template-columns:1fr 95px;gap:8px;margin-top:6px"><input id="rSight" type="text" inputmode="decimal" value="${esc(r.sightHeight||"")}"><select id="rSightUnit"><option ${r.sightHeightUnit==="inch"?"":"selected"}>cm</option><option ${r.sightHeightUnit==="inch"?"selected":""}>inch</option></select></div></label>
      ${f("Kestrel model","rKestrel",r.kestrelModel)}
      ${ta("Notes","rNotes",r.notes)}
    </div>${st.selectedRifle?`<div class="actions"><button class="btn secondary" id="quickSaveRifle">SAVE RIFLE ONLY</button></div>`:""}`;
@@ -265,17 +284,17 @@ function rifleWizard(){
      ${f("Ammo profile name","aName",a.name)}
      ${f("Bullet / model","aBullet",a.bullet)}
      ${f("Bullet weight (gr)","aWeight",a.weightGr,"decimal")}
-     ${f("Muzzle velocity (fps)","aMv",a.mv,"numeric")}
-     ${f("BC / CDM","aBc",a.bc)}
+     <label>Muzzle velocity<div style="display:grid;grid-template-columns:1fr 95px;gap:8px;margin-top:6px"><input id="aMv" type="text" inputmode="decimal" value="${esc(a.mv||"")}"><select id="aMvUnit"><option ${a.mvUnit==="m/s"?"":"selected"}>fps</option><option ${a.mvUnit==="m/s"?"selected":""}>m/s</option></select></div></label>
+     <label>BC model<select id="aBcType"><option ${a.bcType==="G1"?"":"selected"}>G7</option><option ${a.bcType==="G1"?"selected":""}>G1</option><option ${a.bcType==="Custom Drag Model"?"selected":""}>Custom Drag Model</option></select></label>${f("BC value / CDM reference","aBc",a.bcValue||a.bc)}
      ${f("Lot / batch","aLot",a.lot)}
      ${ta("Ammo notes","aNotes",a.notes)}
    </div><div class="note">Calibration belongs to this rifle + ammo combination.</div>`;
  }else if(st.step===2){
-   rw.innerHTML=calTableA(a);
+   rw.innerHTML=`<div class="calHelp"><strong>WIND SPEED CALIBRATION</strong><br>Purpose: teach WIND SIGHT how this rifle + ammo responds as wind speed changes.<br><br><strong>On your Kestrel:</strong> set DOF = 000°, inclination = 0°, and WIND FROM = 90° (full-value crosswind). Keep the same rifle profile and atmosphere. At every distance shown below, set 5 mph, 10 mph and 15 mph and copy the Kestrel wind hold in mil into the table.</div>`+calTableA(a);
  }else if(st.step===3){
-   rw.innerHTML=calTableB(a);
+   rw.innerHTML=`<div class="calHelp"><strong>WIND ANGLE CALIBRATION</strong><br>Purpose: teach WIND SIGHT how the ballistic solution changes as the same wind approaches the bullet path from different angles.<br><br><strong>On your Kestrel:</strong> keep DOF = 000° and wind speed = 10 mph. For each WIND FROM angle (15°, 30°, 45°, 60°, 75°, 90°), copy the Kestrel hold at 500 m and 900 m.</div>`+calTableB(a);
  }else if(st.step===4){
-   rw.innerHTML=calTableD(a);
+   rw.innerHTML=`<div class="calHelp"><strong>TARGET DOF VALIDATION</strong><br>Purpose: verify WIND SIGHT and your Kestrel reference the same physical wind correctly when you pan between targets.<br><br><strong>On your Kestrel:</strong> set WD Chg = w/ DOF. Use a fixed 700 m target. Establish the physical stage wind as WIND FROM 90° at T1 / DOF 000°. Set WS1 = 8 mph and WS2 = 12 mph. Change only DOF. Enter the WD, Wnd1 and Wnd2 displayed by Kestrel.</div>`+calTableD(a);
  }else{
    rw.innerHTML=`<div class="card"><strong>${esc(r.name||"Unnamed rifle")}</strong><div class="small">${esc(r.cartridge||"")}</div></div>
    <div class="card"><strong>${esc(a?.name||"Unnamed ammo")}</strong><div class="small">${esc(a?.bullet||"")} • ${esc(a?.mv||"—")} fps • next calibration version will be saved if changed</div></div>`;
@@ -286,8 +305,8 @@ function rifleWizard(){
  nextBtn.onclick=()=>{saveRifleWizard(r,a);if(st.step<last){st.step++;render()}else{commitRifleWizard(r,a);st.screen="rifles";st.step=0;render()}};
 }
 function saveRifleWizard(r,a){
- if(st.step===0){r.name=v("rName");r.cartridge=v("rCart");r.twist=v("rTwist");r.zeroM=v("rZero");r.sightHeight=v("rSight");r.kestrelModel=v("rKestrel");r.notes=v("rNotes")}
- if(st.step===1&&a){a.name=v("aName");a.bullet=v("aBullet");a.weightGr=v("aWeight");a.mv=v("aMv");a.bc=v("aBc");a.lot=v("aLot");a.notes=v("aNotes")}
+ if(st.step===0){r.name=v("rName");r.cartridge=v("rCart");r.twistValue=v("rTwist");r.twist="1:"+v("rTwist");r.zeroM=v("rZero");r.sightHeight=v("rSight");r.sightHeightUnit=v("rSightUnit")||"cm";r.kestrelModel=v("rKestrel");r.notes=v("rNotes")}
+ if(st.step===1&&a){a.name=v("aName");a.bullet=v("aBullet");a.weightGr=v("aWeight");a.mv=v("aMv");a.mvUnit=v("aMvUnit")||"fps";a.bcType=v("aBcType")||"G7";a.bcValue=v("aBc");a.bc=a.bcValue;a.lot=v("aLot");a.notes=v("aNotes")}
  if(st.step===2&&a){a._work.A=readCal("calA");a._work.meta.A.speeds=[n(v("aS1"))||5,n(v("aS2"))||10,n(v("aS3"))||15]}
  if(st.step===3&&a){a._work.B=readCal("calB");a._work.meta.B.speed=n(v("bSpeed"))||10;a._work.meta.B.distances=[n(v("bD1"))||500,n(v("bD2"))||900]}
  if(st.step===4&&a){a._work.D=readCal("calD");a._work.meta.D={distance:n(v("dDist"))||700,stageWindFrom:n(v("dWind"))||90,ws1:n(v("dWS1"))||8,ws2:n(v("dWS2"))||12}}
@@ -322,26 +341,121 @@ function calTableB(a){let rows=a._work?.B?.length?a._work.B:[[15,"",""],[30,"","
 function calTableD(a){let rows=a._work?.D?.length?a._work.D:[[0,"","",""],[30,"","",""],[60,"","",""],[120,"","",""],[180,"","",""],[240,"","",""],[330,"","",""]],meta=a._work.meta?.D||{distance:700,stageWindFrom:90,ws1:8,ws2:12};return `<div class="note">DOF validation. Customize the fixed distance, common stage wind and two wind speeds.</div><div class="grid four">${f("Distance m","dDist",meta.distance,"numeric")}${f("Stage WIND FROM °","dWind",meta.stageWindFrom,"numeric")}${f("WS1 mph","dWS1",meta.ws1,"decimal")}${f("WS2 mph","dWS2",meta.ws2,"decimal")}</div><table class="table" id="calD"><tr><th>DOF</th><th>Kestrel WD</th><th>Wnd1</th><th>Wnd2</th></tr>${rows.map(r=>`<tr>${r.map(x=>`<td><input inputmode="decimal" value="${esc(x)}"></td>`).join("")}</tr>`).join("")}</table>`}
 function readCal(id){return [...document.querySelectorAll("#"+id+" tr")].slice(1).map(tr=>[...tr.querySelectorAll("input")].map(i=>normDec(i.value)))}
 
-function matches(){setBottom(false);main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Competition history</div><h2>Matches</h2></div><button class="btn" id="add">+ MATCH</button></div><div id="list"></div></div>`;add.onclick=()=>{st.screen="matchWizard";st.step=0;st.selectedMatch=null;render()};list.innerHTML=st.data.matches.length?st.data.matches.slice().reverse().map(matchCard).join(""):`<div class="note">No matches yet.</div>`;bindMatchCards()}
-function matchCard(m){let done=m.stages?.filter(s=>s.completedAt)||[];return `<div class="card" data-m="${m.id}"><div class="cardhead"><div><strong>${esc(m.name)}</strong><div class="small">${esc(m.date||"")} • ${esc(m.venue||"")}</div></div><span class="tag ${m.completedAt?"done":"live"}">${m.completedAt?"COMPLETE":"ACTIVE"}</span></div><div class="actions"><button class="btn secondary small open">OPEN</button></div></div>`}
-function bindMatchCards(){document.querySelectorAll("[data-m]").forEach(el=>el.querySelector(".open").onclick=()=>{st.selectedMatch=el.dataset.m;st.screen="matchWizard";st.step=3;render()})}
+
+function deepClone(x){return JSON.parse(JSON.stringify(x))}
+function regenTargetIds(targets){return (targets||[]).map((t,i)=>({...deepClone(t),id:uid("t"),label:t.label||("T"+(i+1)),dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"}))}
+function duplicateStageRecord(s,index){
+ const c=deepClone(s);
+ c.id=uid("s");c.name=(s.name||("Stage "+(index+1)))+" Copy";c.createdAt=iso();c.liveStartedAt=null;c.completedAt=null;c.preShootSnapshot=null;c.preShootSolution=null;c.postStageSnapshot=null;c.revisionHistory=[];c.correctionMode=false;c.score="";c.postNotes="";
+ c.targets=regenTargetIds(c.targets);
+ c.points=(c.points||[]).map(p=>({...p,id:uid("p"),obs:(p.obs||[]).map(o=>({...o,id:uid("o")}))}));
+ c.targetObs=(c.targetObs||[]).map(o=>({...o,id:uid("o")}));
+ return c;
+}
+function duplicateMatchRecord(m){
+ const c=deepClone(m);
+ c.id=uid("m");c.name=(m.name||"Match")+" Copy";c.createdAt=iso();c.completedAt=null;c.finalSnapshot=null;c.revisionHistory=[];c.archivedAt=null;c.deletedAt=null;
+ c.stages=(c.stages||[]).map((s,i)=>duplicateStageRecord(s,i));
+ return c;
+}
+function archiveMatchById(id){
+ const m=st.data.matches.find(x=>x.id===id);if(!m)return;
+ m.archivedAt=iso();writeNow();render();
+}
+function restoreArchivedMatchById(id){
+ const m=st.data.matches.find(x=>x.id===id);if(!m)return;
+ m.archivedAt=null;writeNow();render();
+}
+function softDeleteMatchById(id){
+ const i=st.data.matches.findIndex(x=>x.id===id);if(i<0)return;
+ const m=st.data.matches[i];
+ const warning=m.completedAt
+  ?"This completed match contains historical wind, score and hold data. Move it to Trash?"
+  :"Move this match to Trash?";
+ if(!confirm(warning))return;
+ const removed=st.data.matches.splice(i,1)[0];
+ removed.deletedAt=iso();
+ st.data.trash=st.data.trash||{matches:[]};st.data.trash.matches=st.data.trash.matches||[];
+ st.data.trash.matches.unshift(removed);writeNow();render();
+}
+function restoreDeletedMatchById(id){
+ const i=(st.data.trash?.matches||[]).findIndex(x=>x.id===id);if(i<0)return;
+ const m=st.data.trash.matches.splice(i,1)[0];m.deletedAt=null;m.archivedAt=null;st.data.matches.push(m);writeNow();render();
+}
+function permanentlyDeleteMatchById(id){
+ const i=(st.data.trash?.matches||[]).findIndex(x=>x.id===id);if(i<0)return;
+ if(!confirm("PERMANENTLY DELETE this match and all of its stage history? This cannot be undone."))return;
+ st.data.trash.matches.splice(i,1);writeNow();render();
+}
+function duplicateMatchById(id){
+ const m=st.data.matches.find(x=>x.id===id);if(!m)return;
+ const c=duplicateMatchRecord(m);st.data.matches.push(c);writeNow();render();
+}
+
+function matches(){
+ setBottom(false);
+ const active=st.data.matches.filter(m=>!m.archivedAt);
+ const archived=st.data.matches.filter(m=>!!m.archivedAt);
+ const trash=st.data.trash?.matches||[];
+ main.innerHTML=`<div class="panel">
+   <div class="cardhead"><div><div class="kicker">Competition history</div><h2>Matches</h2></div><button class="btn" id="add">+ MATCH</button></div>
+   <div class="matchSectionTitle">Active / Completed</div>
+   <div id="list">${active.length?active.slice().reverse().map(m=>matchCard(m,"active")).join(""):`<div class="note">No active matches.</div>`}</div>
+   ${archived.length?`<div class="matchSectionTitle">Archived</div><div id="archivedList">${archived.slice().reverse().map(m=>matchCard(m,"archived")).join("")}</div>`:""}
+   ${trash.length?`<div class="matchSectionTitle">Trash</div><div id="trashList">${trash.map(m=>matchCard(m,"trash")).join("")}</div>`:""}
+ </div>`;
+ add.onclick=()=>{if(!hasReadyProfile()){alert("Set up and calibrate a rifle + ammo profile first.");return;}st.screen="matchWizard";st.step=0;st.selectedMatch=null;render()};
+ bindMatchCards();
+}
+function matchCard(m,mode="active"){
+ let status=m.completedAt?"COMPLETE":"ACTIVE";
+ if(mode==="archived")status="ARCHIVED"; if(mode==="trash")status="TRASH";
+ const cls=mode==="archived"?" archivedCard":mode==="trash"?" trashCard":"";
+ return `<div class="card${cls}" data-m="${m.id}" data-mode="${mode}">
+   <div class="cardhead"><div><strong>${esc(m.name)}</strong><div class="small">${esc(m.date||"")} • ${esc(m.venue||"")}</div></div><span class="tag ${m.completedAt?"done":"live"}">${status}</span></div>
+   <div class="small">${m.stages?.length||0} stages</div>
+   <div class="managementActions">
+    ${mode==="active"?`<button class="btn secondary small open">OPEN</button><button class="btn outline small duplicateMatch">DUPLICATE</button><button class="btn outline small archiveMatch">ARCHIVE</button><button class="btn danger small deleteMatch">DELETE</button>`:""}
+    ${mode==="archived"?`<button class="btn secondary small open">OPEN</button><button class="btn outline small restoreArchive">RESTORE</button><button class="btn outline small duplicateMatch">DUPLICATE</button><button class="btn danger small deleteMatch">DELETE</button>`:""}
+    ${mode==="trash"?`<button class="btn outline small restoreTrash">RESTORE</button><button class="btn danger small permanentDelete">DELETE PERMANENTLY</button>`:""}
+   </div>
+ </div>`;
+}
+function bindMatchCards(){
+ document.querySelectorAll("[data-m]").forEach(el=>{
+   const id=el.dataset.m,mode=el.dataset.mode;
+   el.querySelector(".open")?.addEventListener("click",()=>{st.selectedMatch=id;st.screen="matchWizard";st.step=3;render()});
+   el.querySelector(".duplicateMatch")?.addEventListener("click",()=>duplicateMatchById(id));
+   el.querySelector(".archiveMatch")?.addEventListener("click",()=>archiveMatchById(id));
+   el.querySelector(".restoreArchive")?.addEventListener("click",()=>restoreArchivedMatchById(id));
+   el.querySelector(".deleteMatch")?.addEventListener("click",()=>softDeleteMatchById(id));
+   el.querySelector(".restoreTrash")?.addEventListener("click",()=>restoreDeletedMatchById(id));
+   el.querySelector(".permanentDelete")?.addEventListener("click",()=>permanentlyDeleteMatchById(id));
+ });
+}
 function newStage(nm){return {id:uid("s"),name:nm,targets:[{id:uid("t"),label:"T1",distanceM:"",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"}],wind:{min:"",avg:"",max:"",now:"",avgDir:"",nowDir:"",window:"10 min"},points:[{id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[]}],targetObs:[],targetTerrain:"Open / normal",intel:[],score:"",pointsAvailable:"",impacts:"",shots:"",preNotes:"",postNotes:"",createdAt:iso()}}
 function matchWizard(){
  const m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):(st._md||loadDraft("match")||(st._md={id:uid("m"),name:"",date:new Date().toISOString().slice(0,10),venue:"",rifleId:"",ammoId:"",rifleSnapshot:null,ammoSnapshot:null,calibrationVersion:null,stages:[],createdAt:iso()}));
  setBottom(true,st.step===3?"DONE":"NEXT →");
- main.innerHTML=`<div class="panel"><div class="kicker">Competition wizard</div><h2>Match Setup</h2><div class="stepbar">${["EVENT","RIFLE","STAGES","LIVE"].map((x,i)=>`<div class="step ${st.step===i?"active":""}">${x}</div>`).join("")}</div><div id="mw"></div></div>`;
- if(st.step===0)mw.innerHTML=`<div class="grid two">${f("Event name","mName",m.name)}${f("Date","mDate",m.date,"date")}${f("Venue / range","mVenue",m.venue)}</div>`;
- if(st.step===1){
-   if(!st.data.rifles.length){mw.innerHTML=`<div class="bad">Create a rifle and ammo profile before creating a match.</div>`;nextBtn.style.visibility="hidden";}
-   else{mw.innerHTML=`<div class="grid two"><label>Rifle<select id="mRifle">${st.data.rifles.map(r=>`<option value="${r.id}" ${r.id===m.rifleId?"selected":""}>${esc(r.name)}</option>`).join("")}</select></label><label>Ammo<select id="mAmmo"></select></label></div>`;fillAmmo(m);mRifle.onchange=()=>fillAmmo(m)}
+ main.innerHTML=`<div class="panel"><div class="kicker">Competition wizard</div><h2>Match Setup</h2><div class="stepbar">${["RIFLE + AMMO","EVENT","STAGES","LIVE"].map((x,i)=>`<div class="step ${st.step===i?"active":""}">${x}</div>`).join("")}</div><div id="mw"></div></div>`;
+ if(st.step===1)mw.innerHTML=`<div class="grid two">${f("Event name","mName",m.name)}${f("Date","mDate",m.date,"date")}${f("Venue / range","mVenue",m.venue)}</div>`;
+ if(st.step===0){
+   const readyRifles=st.data.rifles.filter(r=>(r.ammo||[]).some(a=>a.calibrationVersions?.length));
+   if(!readyRifles.length){mw.innerHTML=`<div class="bad">Create and calibrate a rifle + ammunition profile before creating a match.</div>`;nextBtn.style.visibility="hidden";}
+   else{mw.innerHTML=`<div class="calHelp"><strong>Select your rifle and ammunition for this match.</strong><br>The selected rifle, ammunition and calibration version are frozen into the match history.</div><div class="grid two"><label>Rifle<select id="mRifle">${readyRifles.map(r=>`<option value="${r.id}" ${r.id===m.rifleId?"selected":""}>${esc(r.name)}</option>`).join("")}</select></label><label>Ammo<select id="mAmmo"></select></label></div>`;fillAmmo(m);mRifle.onchange=()=>fillAmmo(m)}
  }
  if(st.step===2){mw.innerHTML=`<div id="stageSetup"></div><button class="btn secondary" id="addStage">+ STAGE</button>`;renderStageSetup(m);addStage.onclick=()=>{saveMatch(m);m.stages.push(newStage("Stage "+(m.stages.length+1)));renderStageSetup(m);bindAuto(()=>saveMatch(m))}}
  if(st.step===3){
-   const stageHtml=m.stages.length?m.stages.map((s,i)=>`<div class="card"><div class="cardhead"><strong>${i+1}. ${esc(s.name)}</strong><span class="tag ${s.completedAt?"done":s.liveStartedAt?"live":"ready"}">${s.completedAt?"COMPLETE":s.liveStartedAt?"LIVE":"READY"}</span></div><div class="small">${s.targets.length} targets</div><div class="actions"><button class="btn secondary small openStage" data-s="${s.id}">OPEN STAGE</button></div></div>`).join(""):`<div class="note">No stages.</div>`;
+   const stageHtml=m.stages.length?m.stages.map((s,i)=>`<div class="card"><div class="cardhead"><strong>${i+1}. ${esc(s.name)}</strong><span class="tag ${s.completedAt?"done":s.liveStartedAt?"live":"ready"}">${s.completedAt?"COMPLETE":s.liveStartedAt?"LIVE":"READY"}</span></div><div class="small">${s.targets.length} targets</div><div class="managementActions"><button class="btn secondary small openStage" data-s="${s.id}">OPEN STAGE</button><button class="btn outline small dupReviewStage" data-s="${s.id}">DUPLICATE</button><button class="btn danger small delReviewStage" data-s="${s.id}">${s.completedAt?"DELETE COMPLETED STAGE":"DELETE"}</button></div></div>`).join(""):`<div class="note">No stages.</div>`;
    const allDone=m.stages.length>0&&m.stages.every(s=>!!s.completedAt);
-   mw.innerHTML=stageHtml+`<div class="actions"><button class="btn ${m.completedAt?"secondary":"danger"}" id="completeMatch" ${(!allDone||m.completedAt)?"disabled":""}>${m.completedAt?"MATCH COMPLETE":allDone?"COMPLETE MATCH":"COMPLETE ALL STAGES FIRST"}</button></div>`;
+   mw.innerHTML=stageHtml+`<div class="managementActions"><button class="btn outline" id="duplicateThisMatch">DUPLICATE MATCH</button><button class="btn outline" id="archiveThisMatch">${m.archivedAt?"RESTORE MATCH":"ARCHIVE MATCH"}</button><button class="btn danger" id="deleteThisMatch">DELETE MATCH</button></div><div class="actions"><button class="btn ${m.completedAt?"secondary":"danger"}" id="completeMatch" ${(!allDone||m.completedAt)?"disabled":""}>${m.completedAt?"MATCH COMPLETE":allDone?"COMPLETE MATCH":"COMPLETE ALL STAGES FIRST"}</button></div>`;
    document.querySelectorAll(".openStage").forEach(b=>b.onclick=()=>{commitMatch(m);st.selectedMatch=m.id;st.selectedStage=b.dataset.s;st.liveStep=0;st.screen="liveStage";render()});
+   document.querySelectorAll(".dupReviewStage").forEach(b=>b.onclick=()=>{const i=m.stages.findIndex(s=>s.id===b.dataset.s);if(i<0)return;m.stages.splice(i+1,0,duplicateStageRecord(m.stages[i],m.stages.length));commitMatch(m);render()});
+   document.querySelectorAll(".delReviewStage").forEach(b=>b.onclick=()=>{const i=m.stages.findIndex(s=>s.id===b.dataset.s);if(i<0)return;const s=m.stages[i];const msg=s.completedAt?"This completed stage contains historical wind and score data. Delete it from this match?":"Delete this stage?";if(!confirm(msg))return;m.stages.splice(i,1);commitMatch(m);render()});
    completeMatch.onclick=()=>{if(!m.completedAt&&allDone){m.completedAt=iso();m.finalSnapshot=JSON.parse(JSON.stringify(m));writeNow();render()}};
+   duplicateThisMatch.onclick=()=>{const c=duplicateMatchRecord(m);st.data.matches.push(c);writeNow();st.selectedMatch=c.id;render()};
+   archiveThisMatch.onclick=()=>{m.archivedAt=m.archivedAt?null:iso();writeNow();render()};
+   deleteThisMatch.onclick=()=>{softDeleteMatchById(m.id);st.screen="matches";st.selectedMatch=null;render()};
  }
  bindAuto(()=>saveMatch(m));
  backBtn.onclick=()=>{saveMatch(m);if(st.step===0){st.screen="matches";render()}else{st.step--;render()}};
@@ -349,8 +463,8 @@ function matchWizard(){
 }
 function fillAmmo(m){let rid=mRifle.value||m.rifleId||st.data.rifles[0]?.id,r=st.data.rifles.find(x=>x.id===rid);mAmmo.innerHTML=(r?.ammo||[]).map(a=>`<option value="${a.id}" ${a.id===m.ammoId?"selected":""}>${esc(a.name)}</option>`).join("")}
 function saveMatch(m){
- if(st.step===0){m.name=v("mName");m.date=v("mDate");m.venue=v("mVenue")}
- if(st.step===1){
+ if(st.step===1){m.name=v("mName");m.date=v("mDate");m.venue=v("mVenue")}
+ if(st.step===0){
    m.rifleId=v("mRifle");m.ammoId=v("mAmmo");
    const rr=st.data.rifles.find(x=>x.id===m.rifleId), aa=rr?.ammo.find(x=>x.id===m.ammoId);
    m.rifleSnapshot=rr?JSON.parse(JSON.stringify(rr)):null;
@@ -373,8 +487,8 @@ function saveMatch(m){
  autosave();
 }
 function validateMatchStep(m){
- if(st.step===0)return !!(m.name&&m.date);
- if(st.step===1)return !!(m.rifleId&&m.ammoId);
+ if(st.step===0)return !!(m.rifleId&&m.ammoId);
+ if(st.step===1)return !!(m.name&&m.date);
  if(st.step===2){
    if(!m.stages.length)return false;
    return m.stages.every(s=>s.name&&s.targets.length&&s.targets.every(t=>n(t.distanceM)>0&&n(t.widthCm)>0&&(!needsHeight(t.shape)||n(t.heightCm)>0)));
@@ -392,7 +506,7 @@ function syncShapeDims(si,ti){
 function renderStageSetup(m){
  stageSetup.innerHTML=m.stages.length?m.stages.map((s,si)=>`
    <div class="card">
-     <div class="cardhead"><strong>STAGE ${si+1}</strong><button class="btn danger small" type="button" onclick="removeStageSetup(${si})">REMOVE STAGE</button></div>
+     <div class="cardhead"><strong>STAGE ${si+1}</strong><div class="managementActions"><button class="btn outline small" type="button" onclick="duplicateStageSetup(${si})">DUPLICATE</button><button class="btn danger small" type="button" onclick="removeStageSetup(${si})">DELETE STAGE</button></div></div>
      ${f("Stage name","sn_"+si,s.name)}
      <div id="tg_${si}">
        ${s.targets.map((t,ti)=>`
@@ -412,7 +526,8 @@ function renderStageSetup(m){
    </div>`).join(""):`<div class="note">Add the first stage.</div>`;
  m.stages.forEach((s,si)=>s.targets.forEach((t,ti)=>syncShapeDims(si,ti)));
 }
-window.removeStageSetup=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(!confirm("Remove this stage?"))return;m.stages.splice(si,1);renderStageSetup(m);bindAuto(()=>saveMatch(m))}
+window.duplicateStageSetup=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);const copy=duplicateStageRecord(m.stages[si],m.stages.length);m.stages.splice(si+1,0,copy);renderStageSetup(m);bindAuto(()=>saveMatch(m));autosave()}
+window.removeStageSetup=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(!confirm("Delete this stage and all of its target setup data?"))return;m.stages.splice(si,1);renderStageSetup(m);bindAuto(()=>saveMatch(m))}
 window.removePreTarget=(si,ti)=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(m.stages[si].targets.length<=1)return;if(!confirm("Remove this target?"))return;m.stages[si].targets.splice(ti,1);m.stages[si].targets.forEach((t,i)=>{if(!t.label||/^T\d+$/.test(t.label))t.label="T"+(i+1)});renderStageSetup(m);bindAuto(()=>saveMatch(m))}
 window.addPreTarget=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(m.stages[si].targets.length>=MAX_TARGETS){alert(`Easy Mode supports up to ${MAX_TARGETS} targets per stage.`);return;}m.stages[si].targets.push({id:uid("t"),label:"T"+(m.stages[si].targets.length+1),distanceM:"",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"});renderStageSetup(m);bindAuto(()=>saveMatch(m))}
 
