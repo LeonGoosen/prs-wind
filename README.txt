@@ -1,31 +1,24 @@
-PRS WIND — Easy Mode Engine Prototype v1
+WIND SIGHT PRS by ZealTech — v2.4 LIVE ENGINE INTEGRATION
 
-This build connects the locked fast workflow to a conservative calculation engine.
-
-Implemented:
-- Targets in meters / cm / DOF
-- Target shape capture
-- Calypso MIN / AVG / MAX / NOW + AVG/NOW direction
-- Multiple downrange observation points
+Major changes:
+- Live Stage six-step flow: DOF → WIND → DOWNRANGE → KESTREL → SHOOT → POST
+- Preloaded match/stage/target structure retained
+- Phone angle wheel fixed: background locked while dragging; DONE commits value
+- Easy Mode wind speed forced to whole mph
+- Decimal/comma Kestrel hold normalization
+- Kestrel screen simplified to "DOF" + "WD SHOULD SHOW"
 - Multiple observations per point
-- Multiple target-zone observations
-- User-calibrated Long Grass and Bush evidence
-- Published/general Tree evidence
-- Dust/Smoke/Mirage direction evidence
-- Conservative evidence fusion and conflict detection
-- Target-relative DOF geometry
-- Expected Kestrel WD cross-check
-- LOW/BEST/HIGH full-value-equivalent stage planning values
-- Kestrel MIN/MAX hold return
-- Safe hold window
-- Deterministic probability optimization of wind hold
-- WIND P(hit) (horizontal wind uncertainty only)
-- Shooter Intel sanity check only
-- Stage Card
-- Local storage / resume
-- Clock/degree angle wheel
+- Multiple downrange points
+- Same-zone conflict detection only
+- Shooter Intel remains sanity-check only
+- Evidence fusion connected
+- Match-learning prior connected conservatively
+- Optimal horizontal wind hold + WIND P(hit)
+- Stage card
+- Post-stage actual hold, score, impacts, shots, notes
+- Autosave + timestamps
 
-Important limitation:
-The build intentionally does NOT invent near/mid/far ballistic wind-region weights.
-Kestrel/Applied Ballistics remains ballistic authority through the MIN/MAX hold inputs.
-The current Wind P(hit) is a horizontal wind-only probability, not total rifle P(hit).
+Deliberate limitation:
+- WIND P(hit) is horizontal-wind-only.
+- Kestrel remains ballistic authority.
+- No invented near/mid/far ballistic weighting.

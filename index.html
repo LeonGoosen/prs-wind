@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07111d">
+<title>WIND SIGHT PRS by ZealTech — v2.4 Live Engine</title>
+<style>
+:root{
+  --bg:#07111d;--panel:#0d1a28;--panel2:#091522;--ink:#f7f9fc;--muted:#8ea0b4;--line:#223449;
+  --good:#38b979;--warn:#d7a93b;--bad:#e05c58;--blue:#009abf;--blue2:#007a98;
+  --silver:#d9dee7;--ztBase:#6f7271;--ztTonal:#98989a;--ztAccent:#d0cfcd;--r:18px
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0%,#10253a 0,#07111d 38%,#040a11 100%);color:var(--ink);overscroll-behavior-y:none}
+body.modal-open{overflow:hidden;touch-action:none}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{max-width:860px;margin:auto;min-height:100vh;padding-bottom:94px}
+header{position:sticky;top:0;z-index:50;background:rgba(4,10,17,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:12px 14px}
+.brandrow{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.brand{font-size:20px;font-weight:1000;letter-spacing:.05em;color:var(--silver)}
+.brand small{display:block;font-size:9px;letter-spacing:.16em;color:#6f8194;margin-top:2px}
+.save{font-size:12px;color:var(--muted);font-weight:800}
+nav{display:flex;gap:6px;overflow:auto;margin-top:10px;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.navbtn{white-space:nowrap;border:1px solid var(--line);background:#0a1521;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:900;color:#98a8b9}
+.navbtn.active{background:linear-gradient(180deg,var(--blue),var(--blue2));color:#fff;border-color:var(--blue)}
+main{padding:14px}
+.panel{background:linear-gradient(180deg,#0e1c2b,#0a1622);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:0 8px 28px rgba(0,0,0,.20)}
+.kicker{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:1000}
+h2,h3{margin:0}h2{font-size:26px;margin-top:4px}h3{font-size:18px}
+.sub{color:var(--muted);line-height:1.45;margin:7px 0 0}
+.grid{display:grid;gap:11px;margin-top:14px}.two{grid-template-columns:1fr 1fr}.three{grid-template-columns:repeat(3,1fr)}.four{grid-template-columns:repeat(4,1fr)}
+@media(max-width:650px){.two,.three,.four{grid-template-columns:1fr 1fr}.fullMobile{grid-column:1/-1}}
+@media(max-width:420px){.three,.four{grid-template-columns:1fr 1fr}}
+label{display:block;font-size:11px;font-weight:1000;letter-spacing:.05em;color:#9eafc1;text-transform:uppercase}
+input,select,textarea{width:100%;margin-top:6px;border:1px solid #2a3d52;border-radius:13px;background:#08131f;color:#f7f9fc;padding:12px;min-height:48px;outline:none;font-size:16px}
+input[type=text],input[type=number]{font-size:19px;font-weight:850}
+textarea{min-height:84px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,154,191,.18)}
+.btn{border:0;border-radius:13px;background:linear-gradient(180deg,var(--blue),var(--blue2));color:#fff;padding:12px 14px;min-height:46px;font-weight:950}
+.btn.secondary{background:#122235;color:#e5edf7;border:1px solid #263a50}
+.btn.outline{background:#08131f;color:#dbe7f4;border:1px solid var(--line)}
+.btn.small{min-height:38px;padding:8px 10px;font-size:13px}
+.btn.danger{background:#2a1114;color:#ff8c8c;border:1px solid #5d252b}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.card{border:1px solid var(--line);border-radius:15px;padding:13px;margin-top:10px;background:#0a1724}
+.cardhead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.tag{display:inline-block;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:1000;letter-spacing:.05em}
+.ready{background:#16283a;color:#9db0c3}.live{background:#2b2511;color:#f2c75b}.done{background:#10281d;color:#70d69d}
+.note,.warn,.bad{border-radius:12px;padding:10px 11px;margin-top:10px;font-size:12px;line-height:1.4}
+.note{background:#0a1724;border:1px solid #223449;color:#9eafc1}.warn{background:#2a2110;border:1px solid #5d4921;color:#efc35f}.bad{background:#2a1114;border:1px solid #5d252b;color:#ff8c8c}
+.listrow{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #17283a;padding:11px 0}.listrow:first-child{border-top:0}
+.small{font-size:12px;color:var(--muted)}
+.metric{font-size:31px;font-weight:1000;line-height:1}
+.bottom{position:fixed;bottom:0;left:0;right:0;z-index:40;background:rgba(4,10,17,.96);border-top:1px solid var(--line);padding:10px 14px max(10px,env(safe-area-inset-bottom))}
+.bottomin{max-width:860px;margin:auto;display:grid;grid-template-columns:1fr 1.4fr;gap:10px}.bigbtn{min-height:52px;border-radius:14px;border:1px solid var(--line);background:#0a1521;color:#dce7f2;font-weight:950}.bigbtn.primary{background:linear-gradient(180deg,var(--blue),var(--blue2));color:#fff;border-color:var(--blue)}
+.stepbar{display:flex;gap:6px;overflow:auto;margin-top:12px}.step{border:1px solid var(--line);background:#0a1521;color:#92a4b7;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:900;white-space:nowrap}.step.active{background:linear-gradient(180deg,var(--blue),var(--blue2));color:#fff}
+.tabs{display:flex;gap:7px;overflow:auto;margin-top:12px}.tab{border:1px solid var(--line);background:#0a1521;color:#9fb0c2;border-radius:11px;padding:9px 12px;font-weight:950}.tab.active{background:var(--blue2);color:#fff}
+.out3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.obox{border:1px solid var(--line);border-radius:14px;padding:11px;text-align:center;background:#08131f}.obox.best{border:2px solid var(--blue)}.obox .t{font-size:10px;font-weight:1000;color:var(--muted)}.obox .n{font-size:28px;font-weight:1000;margin-top:3px}.unit{font-size:11px;color:var(--muted)}
+.hero{border:2px solid var(--blue);border-radius:18px;padding:18px;text-align:center;margin-top:13px;background:#08131f}.hero .small{font-size:11px;font-weight:1000;letter-spacing:.1em}.hero .big{font-size:58px;line-height:1;font-weight:1000;margin-top:6px}
+.stagecard{background:#050b12;border:1px solid #1f3448;border-radius:18px;padding:16px}.stageLine{border-top:1px solid #18283a;padding:13px 0}.stageLine:first-child{border-top:0}.stageLine .hold{font-size:34px;font-weight:1000;color:#fff}.stageLine .meta{font-size:12px;color:#91a2b4;margin-top:3px}
+.obs{border-top:1px solid #17283a;padding-top:11px;margin-top:11px}.obs:first-of-type{border-top:0}
+.hidden{display:none!important}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:100;display:flex;align-items:flex-end;justify-content:center;padding:0;overscroll-behavior:contain;touch-action:none}
+.sheet{width:min(720px,100%);background:#08131f;border:1px solid #264056;border-bottom:0;border-radius:22px 22px 0 0;padding:17px 15px max(20px,env(safe-area-inset-bottom));max-height:90%;overflow:auto;touch-action:none}
+.wheelwrap{display:flex;justify-content:center;margin:14px 0;touch-action:none}
+.wheel{width:300px;height:300px;max-width:82vw;max-height:82vw;aspect-ratio:1;border-radius:50%;border:2px solid var(--silver);position:relative;background:radial-gradient(circle,#091522 0 55%,#101e2c 56% 100%);touch-action:none;user-select:none;-webkit-user-select:none}
+.tick{position:absolute;font-size:14px;font-weight:1000;transform:translate(-50%,-50%);color:#d8e2ec}.pointer{position:absolute;left:50%;top:50%;width:4px;height:108px;background:var(--blue);transform-origin:50% 100%;margin-left:-2px;margin-top:-108px;border-radius:4px}.pointer:after{content:"";position:absolute;left:-6px;top:-8px;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:14px solid var(--blue)}.dot{position:absolute;left:50%;top:50%;width:16px;height:16px;border-radius:50%;background:var(--silver);transform:translate(-50%,-50%)}.wheelValue{text-align:center;font-size:38px;font-weight:1000}.wheelSub{text-align:center;color:var(--muted);font-weight:900}
+.brandStrip{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.brandStrip img{max-width:220px;width:42%;min-width:150px;background:#fff;border-radius:10px;padding:7px}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<div class="brandrow">
+  <div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>BY ZEALTECH</small></div>
+  <div class="save" id="saveState">Saved</div>
+</div>
+<nav id="nav"></nav>
+</header>
+<main id="main"></main>
+</div>
+<div class="bottom" id="bottom"><div class="bottomin"><button class="bigbtn" id="backBtn">← BACK</button><button class="bigbtn primary" id="nextBtn">NEXT →</button></div></div>
+
+<div id="overlay" class="overlay hidden">
+  <div class="sheet" id="sheet">
+    <div class="cardhead"><div><div class="kicker">Angle tool</div><h2 id="wheelTitle">WIND FROM</h2></div><button class="btn secondary small" id="wheelDone">DONE</button></div>
+    <div id="wheelDeg" class="wheelValue">000°</div><div id="wheelClock" class="wheelSub">12:00</div>
+    <div class="wheelwrap"><div id="wheel" class="wheel"><div id="pointer" class="pointer"></div><div class="dot"></div></div></div>
+    <label>Exact degrees<input id="wheelInput" type="text" inputmode="numeric"></label>
+    <div class="note"><strong>Convention:</strong> WIND FROM for wind direction. TARGET DOF for target geometry.</div>
+  </div>
+</div>
+
+<script>
+const SCHEMA_VERSION=2, DBKEY="windSightPRS_v24";
+let st={screen:"home",step:0,selectedRifle:null,selectedAmmo:null,selectedMatch:null,selectedStage:null,liveStep:0,data:{schemaVersion:SCHEMA_VERSION,rifles:[],matches:[]}};
+let saveTimer=null,wheelCtx=null,drag=false;
+const iso=()=>new Date().toISOString(), uid=p=>p+"_"+Math.random().toString(36).slice(2,8)+"_"+Date.now().toString(36);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const normDec=x=>String(x??"").replace(",",".").trim();
+const n=x=>{const v=Number(normDec(x));return Number.isFinite(v)?v:null};
+function norm(a){a=Number(a);return ((a%360)+360)%360}
+function sdelta(a,b){return ((norm(a)-norm(b)+540)%360)-180}
+function clock(deg){deg=norm(deg);let total=deg/360*720,mins=Math.round(total)%60,hr=Math.floor(total/60);if(hr===0)hr=12;if(hr>12)hr-=12;return hr+":"+String(mins).padStart(2,"0")}
+function safeRead(){try{const raw=localStorage.getItem(DBKEY);if(raw){const d=JSON.parse(raw);st.data=d}}catch(e){console.error(e)}}
+function writeNow(){try{localStorage.setItem(DBKEY,JSON.stringify(st.data));if(!localStorage.getItem(DBKEY))throw new Error("verify");saveState.textContent="Saved ✓ "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"})}catch(e){saveState.textContent="SAVE FAILED"}}
+function autosave(){saveState.textContent="Saving…";clearTimeout(saveTimer);saveTimer=setTimeout(writeNow,350)}
+function navItems(){return [["home","HOME"],["rifles","RIFLES"],["matches","MATCHES"],["reports","REPORTS"]]}
+function renderNav(){nav.innerHTML="";navItems().forEach(([k,l])=>{let b=document.createElement("button");b.className="navbtn"+(st.screen===k?" active":"");b.textContent=l;b.onclick=()=>{saveCurrent();st.screen=k;st.step=0;render()};nav.appendChild(b)})}
+function setBottom(show=true,nextLabel="NEXT →",nextVisible=true){bottom.style.display=show?"block":"none";nextBtn.textContent=nextLabel;nextBtn.style.visibility=nextVisible?"visible":"hidden"}
+function render(){renderNav();main.innerHTML="";({home,rifles,rifleWizard,matches,matchWizard,liveStage,reports}[st.screen]||home)()}
+function saveCurrent(){try{if(st.screen==="liveStage")captureLive()}catch(e){}autosave()}
+function f(lbl,id,val,mode="text"){let im=mode==="numeric"?"numeric":mode==="decimal"?"decimal":"text";return `<label>${lbl}<input id="${id}" type="text" inputmode="${im}" value="${esc(val??"")}"></label>`}
+function ta(lbl,id,val){return `<label>${lbl}<textarea id="${id}">${esc(val??"")}</textarea></label>`}
+function v(id){return document.getElementById(id)?.value??""}
+function bindAuto(cb){main.querySelectorAll("input,select,textarea").forEach(el=>{el.addEventListener("input",cb);el.addEventListener("change",cb)})}
+
+function home(){setBottom(false);main.innerHTML=`<div class="panel"><div class="kicker">Precision wind & match intelligence</div><h2>Ready</h2><p class="sub">Calibrate. Prepare. Execute. Analyze. Improve.</p><div class="actions"><button class="btn" id="newMatch">+ NEW MATCH</button><button class="btn secondary" id="newRifle">+ NEW RIFLE</button></div></div><div class="panel brandStrip"><div><div class="kicker">Product publisher</div><h3 style="margin-top:4px">WIND SIGHT PRS</h3><div class="small">Developed by ZealTech</div></div><img src="zealtech-landscape.png" alt="ZealTech"></div><div class="panel"><h3>Recent matches</h3><div id="recent"></div></div>`;
+newMatch.onclick=()=>{st.screen="matchWizard";st.step=0;st.selectedMatch=null;render()};newRifle.onclick=()=>{st.screen="rifleWizard";st.step=0;st.selectedRifle=null;st.selectedAmmo=null;render()};recent.innerHTML=st.data.matches.length?st.data.matches.slice().reverse().slice(0,5).map(matchCard).join(""):`<div class="note">No matches yet.</div>`;bindMatchCards()}
+
+function rifles(){setBottom(false);main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Persistent profiles</div><h2>Rifles</h2></div><button class="btn" id="add">+ RIFLE</button></div><div id="list"></div></div>`;add.onclick=()=>{st.screen="rifleWizard";st.step=0;st.selectedRifle=null;st.selectedAmmo=null;render()};list.innerHTML=st.data.rifles.length?st.data.rifles.map(r=>`<div class="card"><div class="cardhead"><div><strong>${esc(r.name)}</strong><div class="small">${esc(r.cartridge||"")}</div></div><span class="tag ready">${r.ammo?.length||0} AMMO</span></div>${(r.ammo||[]).map(a=>`<div class="listrow"><div><strong>${esc(a.name)}</strong><div class="small">${esc(a.bullet||"")} • ${esc(a.mv||"—")} fps • Cal v${a.currentCalibrationVersion||0}</div></div></div>`).join("")}</div>`).join(""):`<div class="note">Create your first rifle profile.</div>`}
+function rifleWizard(){setBottom(true,"SAVE / FINISH");let r=st._rd||(st._rd={id:uid("r"),name:"",cartridge:"",ammo:[]});main.innerHTML=`<div class="panel"><div class="kicker">Quick profile</div><h2>Rifle</h2><div class="grid two">${f("Rifle name","rName",r.name)}${f("Cartridge","rCart",r.cartridge)}</div><div class="note">Full A/B/D calibration wizard remains supported from the hardened foundation; v2.4 focuses on Live Stage engine integration.</div></div>`;bindAuto(()=>{r.name=v("rName");r.cartridge=v("rCart");autosave()});backBtn.onclick=()=>{st.screen="rifles";render()};nextBtn.onclick=()=>{r.name=v("rName");r.cartridge=v("rCart");if(!r.ammo.length)r.ammo.push({id:uid("a"),name:"Default Ammo",mv:"",bullet:"",currentCalibrationVersion:0,calibrationVersions:[]});st.data.rifles.push(r);st._rd=null;writeNow();st.screen="rifles";render()}}
+
+function matches(){setBottom(false);main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Competition history</div><h2>Matches</h2></div><button class="btn" id="add">+ MATCH</button></div><div id="list"></div></div>`;add.onclick=()=>{st.screen="matchWizard";st.step=0;st.selectedMatch=null;render()};list.innerHTML=st.data.matches.length?st.data.matches.slice().reverse().map(matchCard).join(""):`<div class="note">No matches yet.</div>`;bindMatchCards()}
+function matchCard(m){let done=m.stages?.filter(s=>s.completedAt)||[];return `<div class="card" data-m="${m.id}"><div class="cardhead"><div><strong>${esc(m.name)}</strong><div class="small">${esc(m.date||"")} • ${esc(m.venue||"")}</div></div><span class="tag ${m.completedAt?"done":"live"}">${m.completedAt?"COMPLETE":"ACTIVE"}</span></div><div class="actions"><button class="btn secondary small open">OPEN</button></div></div>`}
+function bindMatchCards(){document.querySelectorAll("[data-m]").forEach(el=>el.querySelector(".open").onclick=()=>{st.selectedMatch=el.dataset.m;st.screen="matchWizard";st.step=3;render()})}
+function newStage(nm){return {id:uid("s"),name:nm,targets:[{id:uid("t"),label:"T1",distanceM:"",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"}],wind:{min:"",avg:"",max:"",now:"",avgDir:"",nowDir:"",window:"10 min"},points:[{id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[]}],targetObs:[],targetTerrain:"Open / normal",intel:[],score:"",pointsAvailable:"",impacts:"",shots:"",preNotes:"",postNotes:"",createdAt:iso()}}
+function matchWizard(){
+ const m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md||(st._md={id:uid("m"),name:"",date:new Date().toISOString().slice(0,10),venue:"",rifleId:"",ammoId:"",stages:[],createdAt:iso()});
+ setBottom(true,st.step===3?"DONE":"NEXT →");
+ main.innerHTML=`<div class="panel"><div class="kicker">Competition wizard</div><h2>Match Setup</h2><div class="stepbar">${["EVENT","RIFLE","STAGES","LIVE"].map((x,i)=>`<div class="step ${st.step===i?"active":""}">${x}</div>`).join("")}</div><div id="mw"></div></div>`;
+ if(st.step===0)mw.innerHTML=`<div class="grid two">${f("Event name","mName",m.name)}${f("Date","mDate",m.date)}${f("Venue / range","mVenue",m.venue)}</div>`;
+ if(st.step===1){mw.innerHTML=`<div class="grid two"><label>Rifle<select id="mRifle">${st.data.rifles.map(r=>`<option value="${r.id}" ${r.id===m.rifleId?"selected":""}>${esc(r.name)}</option>`).join("")}</select></label><label>Ammo<select id="mAmmo"></select></label></div>`;fillAmmo(m);mRifle.onchange=()=>fillAmmo(m)}
+ if(st.step===2){mw.innerHTML=`<div id="stageSetup"></div><button class="btn secondary" id="addStage">+ STAGE</button>`;renderStageSetup(m);addStage.onclick=()=>{m.stages.push(newStage("Stage "+(m.stages.length+1)));renderStageSetup(m)}}
+ if(st.step===3){mw.innerHTML=m.stages.length?m.stages.map((s,i)=>`<div class="card"><div class="cardhead"><strong>${i+1}. ${esc(s.name)}</strong><span class="tag ${s.completedAt?"done":s.liveStartedAt?"live":"ready"}">${s.completedAt?"COMPLETE":s.liveStartedAt?"LIVE":"READY"}</span></div><div class="small">${s.targets.length} targets</div><div class="actions"><button class="btn secondary small openStage" data-s="${s.id}">OPEN STAGE</button></div></div>`).join(""):`<div class="note">No stages.</div>`;document.querySelectorAll(".openStage").forEach(b=>b.onclick=()=>{commitMatch(m);st.selectedMatch=m.id;st.selectedStage=b.dataset.s;st.liveStep=0;st.screen="liveStage";render()})}
+ bindAuto(()=>saveMatch(m));
+ backBtn.onclick=()=>{saveMatch(m);if(st.step===0){st.screen="matches";render()}else{st.step--;render()}};
+ nextBtn.onclick=()=>{saveMatch(m);if(st.step<3){st.step++;render()}else{commitMatch(m);st.screen="matches";render()}}
+}
+function fillAmmo(m){let rid=mRifle.value||m.rifleId||st.data.rifles[0]?.id,r=st.data.rifles.find(x=>x.id===rid);mAmmo.innerHTML=(r?.ammo||[]).map(a=>`<option value="${a.id}" ${a.id===m.ammoId?"selected":""}>${esc(a.name)}</option>`).join("")}
+function saveMatch(m){if(st.step===0){m.name=v("mName");m.date=v("mDate");m.venue=v("mVenue")}if(st.step===1){m.rifleId=v("mRifle");m.ammoId=v("mAmmo")}if(st.step===2){m.stages.forEach((s,si)=>{s.name=v("sn_"+si)||s.name;s.targets.forEach((t,ti)=>{t.label=v("tl_"+si+"_"+ti)||t.label;t.distanceM=v("td_"+si+"_"+ti);t.shape=v("ts_"+si+"_"+ti);t.widthCm=v("tw_"+si+"_"+ti);t.heightCm=v("th_"+si+"_"+ti)})})}autosave()}
+function commitMatch(m){let i=st.data.matches.findIndex(x=>x.id===m.id);if(i>=0)st.data.matches[i]=m;else st.data.matches.push(m);st._md=null;writeNow()}
+function renderStageSetup(m){stageSetup.innerHTML=m.stages.length?m.stages.map((s,si)=>`<div class="card">${f("Stage name","sn_"+si,s.name)}<div id="tg_${si}">${s.targets.map((t,ti)=>`<div class="grid three" style="margin-top:10px">${f("Target","tl_"+si+"_"+ti,t.label)}${f("Distance (m)","td_"+si+"_"+ti,t.distanceM,"numeric")}<label>Shape<select id="ts_${si}_${ti}">${["Round","Square","Rectangle","Diamond","IPSC / Silhouette","Custom"].map(x=>`<option ${x===t.shape?"selected":""}>${x}</option>`).join("")}</select></label>${f("Width / diameter cm","tw_"+si+"_"+ti,t.widthCm,"decimal")}${f("Height cm","th_"+si+"_"+ti,t.heightCm,"decimal")}</div>`).join("")}</div><button class="btn secondary small" onclick="addPreTarget(${si})">+ TARGET</button></div>`).join(""):`<div class="note">Add the first stage.</div>`}
+window.addPreTarget=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;m.stages[si].targets.push({id:uid("t"),label:"T"+(m.stages[si].targets.length+1),distanceM:"",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"});renderStageSetup(m)}
+
+const behavior={
+ "Long grass":[["Rattles only",5,5,"speed"],["Starts bending; direction visible",7,8,"speed+direction"],["Bent over / picked up straight",9,11,"speed+direction"],["Bent + oscillating up/down",12,13,"speed+direction"],["Cannot determine",null,null,"none"]],
+ "Bush":[["No movement",5,5,"speed"],["Very slight movement",8,8,"speed"],["Tops moving lightly",9,10,"speed"],["Pushed / bent with wind",13,15,"speed+direction"],["Cannot determine",null,null,"none"]],
+ "Trees":[["Leaves rustling",4,7,"speed"],["Leaves + small twigs moving",8,12,"speed"],["Small branches moving",13,18,"speed"],["Small trees swaying",19,24,"speed"],["Large branches moving",25,31,"speed"],["Cannot determine",null,null,"none"]],
+ "Dust":[["No useful dust",null,null,"none"],["Rises almost vertically",null,null,"direction"],["Slow lateral drift",null,null,"direction"],["Clear lateral drift",null,null,"direction"],["Fast lateral movement",null,null,"direction"],["Turbulent",null,null,"direction"]],
+ "Mirage":[["No readable mirage",null,null,"none"],["Boiling / near axial",null,null,"direction"],["Slight angle",null,null,"direction"],["Moderate angle",null,null,"direction"],["Strong lateral flow",null,null,"direction"]],
+ "Smoke":[["Rises vertically",null,null,"direction"],["Shows direction",null,null,"direction"],["Clear lateral flow",null,null,"direction"],["Turbulent",null,null,"direction"]],
+ "None":[["No usable indicator",null,null,"none"]]
+};
+function rel(ind){return ind==="Long grass"||ind==="Bush"?1:ind==="Trees"?.75:ind==="Dust"||ind==="Mirage"||ind==="Smoke"?.55:0}
+function newObs(){return {id:uid("o"),indicator:"Long grass",behavior:0,quality:"Clear",dir:""}}
+function ensureLive(s){if(!s.wind)s.wind={min:"",avg:"",max:"",now:"",avgDir:"",nowDir:"",window:"10 min"};if(!s.points?.length)s.points=[{id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs()]}];if(!s.points[0].obs.length)s.points[0].obs=[newObs()];if(!s.targetObs)s.targetObs=[];if(!s.intel)s.intel=[]}
+function liveStage(){
+ const m=st.data.matches.find(x=>x.id===st.selectedMatch),s=m?.stages.find(x=>x.id===st.selectedStage);if(!s)return;
+ ensureLive(s);if(!s.liveStartedAt)s.liveStartedAt=iso();
+ const STEPS=["DOF","WIND","DOWNRANGE","KESTREL","SHOOT","POST"];
+ setBottom(true,st.liveStep===STEPS.length-1?"BACK TO MATCH":"NEXT →");
+ main.innerHTML=`<div class="panel"><div class="kicker">Live stage • ${esc(m.name)}</div><h2>${esc(s.name)}</h2><div class="stepbar">${STEPS.map((x,i)=>`<div class="step ${st.liveStep===i?"active":""}">${x}</div>`).join("")}</div><div id="live"></div></div>`;
+ if(st.liveStep===0)renderDOF(s);
+ if(st.liveStep===1)renderWind(s);
+ if(st.liveStep===2)renderDownrange(s);
+ if(st.liveStep===3)renderKestrel(s);
+ if(st.liveStep===4)renderShoot(s);
+ if(st.liveStep===5)renderPost(s);
+ backBtn.onclick=()=>{captureLive();if(st.liveStep===0){st.screen="matchWizard";st.step=3;render()}else{st.liveStep--;render()}};
+ nextBtn.onclick=()=>{captureLive();if(st.liveStep<STEPS.length-1){st.liveStep++;render()}else{st.screen="matchWizard";st.step=3;render()}}
+}
+function renderDOF(s){live.innerHTML=`<p class="sub">Targets are preloaded. Enter only the target DOFs measured on your tripod.</p><div class="tabs">${s.targets.map((t,i)=>`<button class="tab ${i===0?"active":""}">${t.label}</button>`).join("")}</div>${s.targets.map((t,i)=>`<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m • ${esc(t.shape)}</strong><span class="tag ready">TARGET</span></div><div class="grid two">${f("DOF (°)","dof_"+i,t.dof,"numeric")}<button class="btn outline fullMobile" type="button" onclick="openWheelField('dof_${i}','TARGET DOF')">◎ ANGLE WHEEL</button></div></div>`).join("")}`;bindAuto(captureLive)}
+function renderWind(s){let w=s.wind;live.innerHTML=`<div class="cardhead"><div><h3>Shooter wind</h3><div class="small">Calypso measured</div></div><span class="tag live">MEASURED</span></div><div class="grid four">${f("MIN mph","wmin",w.min,"numeric")}${f("AVG mph","wavg",w.avg,"numeric")}${f("MAX mph","wmax",w.max,"numeric")}${f("NOW mph","wnow",w.now,"numeric")}</div><div class="grid two">${f("AVG WIND FROM °","wdir",w.avgDir,"numeric")}${f("NOW WIND FROM °","wndir",w.nowDir,"numeric")}<button class="btn outline" type="button" onclick="openWheelField('wdir','AVG WIND FROM')">◎ AVG ANGLE</button><button class="btn outline" type="button" onclick="openWheelField('wndir','NOW WIND FROM')">◎ NOW ANGLE</button><label>Logging window<select id="wwin"><option ${w.window==="10 min"?"selected":""}>10 min</option><option ${w.window==="20 min"?"selected":""}>20 min</option><option ${w.window==="30 min"?"selected":""}>30 min</option></select></label></div><div class="note">Easy Mode stores wind speed as whole mph. Direction remains exact degrees.</div>`;bindAuto(captureLive)}
+function renderDownrange(s){live.innerHTML=`<p class="sub">Use one point by default. Add observations at the same point; add another point only if conditions genuinely change downrange.</p><div id="pts"></div><button class="btn secondary small" onclick="addPoint()">+ POINT</button><div class="card"><div class="cardhead"><h3>Target zone</h3><span class="tag ready">OBSERVED</span></div><div id="tobs"></div><button class="btn secondary small" onclick="addObs('target',0)">+ OBSERVATION</button></div><div class="card"><div class="cardhead"><h3>Shooter Intel</h3><span class="tag ready">SANITY ONLY</span></div><div id="intel"></div><button class="btn secondary small" onclick="addIntel()">+ HOLD</button></div>`;renderObsBlocks(s)}
+function renderObsBlocks(s){pts.innerHTML=s.points.map((p,pi)=>`<div class="card"><div class="cardhead"><strong>POINT ${pi+1}</strong>${s.points.length>1?`<button class="btn danger small" onclick="removePoint(${pi})">REMOVE</button>`:""}</div><div class="grid two">${f("Distance (m)","pd_"+pi,p.distanceM,"numeric")}<label>Terrain<select id="pt_"+pi>${["Open / normal","Sheltered","Ridge / exposed","Valley / channel","Turbulent / complex","Unknown"].map(x=>`<option ${x===p.terrain?"selected":""}>${x}</option>`).join("")}</select></label></div>${p.obs.map((o,oi)=>obsHTML(o,"point",pi,oi)).join("")}<button class="btn secondary small" onclick="addObs('point',${pi})">+ OBSERVATION</button></div>`).join("");tobs.innerHTML=s.targetObs.length?s.targetObs.map((o,oi)=>obsHTML(o,"target",0,oi)).join(""):`<div class="note">No target-zone observation required if nothing useful is visible.</div>`;intel.innerHTML=s.intel.length?s.intel.map((x,i)=>`<div class="grid two">${f("Target","intelT_"+i,x.target)}${f("Reported hold","intelH_"+i,x.hold,"decimal")}</div>`).join(""):`<div class="small">Optional. Sanity check only.</div>`;bindAuto(captureLive)}
+function obsHTML(o,where,pi,oi){return `<div class="obs"><div class="cardhead"><strong>Observation ${oi+1}</strong><button class="btn danger small" onclick="removeObs('${where}',${pi},${oi})">REMOVE</button></div><div class="grid two"><label>Indicator<select id="oi_${where}_${pi}_${oi}" onchange="changeIndicator('${where}',${pi},${oi},this.value)">${Object.keys(behavior).map(x=>`<option ${x===o.indicator?"selected":""}>${x}</option>`).join("")}</select></label><label>Behaviour<select id="ob_${where}_${pi}_${oi}" onchange="changeBehavior('${where}',${pi},${oi},this.value)">${behavior[o.indicator].map((x,i)=>`<option value="${i}" ${i===+o.behavior?"selected":""}>${x[0]}</option>`).join("")}</select></label><label>Direction quality<select id="oq_${where}_${pi}_${oi}"><option ${o.quality==="Clear"?"selected":""}>Clear</option><option ${o.quality==="Approximate"?"selected":""}>Approximate</option><option ${o.quality==="Unknown"?"selected":""}>Unknown</option></select></label>${o.quality==="Unknown"?"":f("Wind FROM °","od_"+where+"_"+pi+"_"+oi,o.dir,"numeric")}</div>${o.quality==="Unknown"?"":`<button class="btn outline small" onclick="openObsWheel('${where}',${pi},${oi})">◎ ANGLE</button>`}<div class="small" style="margin-top:8px">${evidenceText(o)}</div></div>`}
+function evidenceText(o){let b=behavior[o.indicator][+o.behavior||0];return b[1]!=null?(b[1]===b[2]?`~${b[1]} mph evidence`:`${b[1]}–${b[2]} mph evidence`) + (b[3].includes("direction")?" • direction useful":""):(b[3]==="direction"?"Direction evidence":"Qualitative only")}
+window.addPoint=()=>{captureLive();let s=getStage();s.points.push({id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs()]});renderDownrange(s)}
+window.removePoint=pi=>{captureLive();let s=getStage();s.points.splice(pi,1);if(!s.points.length)s.points.push({id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs()]});renderDownrange(s)}
+window.addObs=(where,pi)=>{captureLive();let s=getStage();if(where==="target")s.targetObs.push(newObs());else s.points[pi].obs.push(newObs());renderDownrange(s)}
+window.removeObs=(where,pi,oi)=>{captureLive();let s=getStage();if(where==="target")s.targetObs.splice(oi,1);else s.points[pi].obs.splice(oi,1);renderDownrange(s)}
+window.changeIndicator=(where,pi,oi,val)=>{let s=getStage(),o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];o.indicator=val;o.behavior=0;renderDownrange(s)}
+window.changeBehavior=(where,pi,oi,val)=>{let s=getStage(),o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];o.behavior=+val;renderDownrange(s)}
+window.addIntel=()=>{captureLive();let s=getStage();s.intel.push({target:s.targets[0]?.label||"T1",hold:""});renderDownrange(s)}
+
+function renderKestrel(s){let f=fuse(s);live.innerHTML=`<div class="cardhead"><div><h3>Wind solution</h3><div class="small">Kestrel remains ballistic authority</div></div><span class="tag live">${f.quality}</span></div>${!f.valid?`<div class="bad">${f.reason}</div>`:s.targets.map((t,i)=>kTargetHTML(t,i,f)).join("")}`;bindAuto(captureLive)}
+function kTargetHTML(t,i,f){let z=tWind(t,f);return `<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag ready">Kestrel</span></div><div class="hero"><div class="small">KESTREL SHOULD SHOW</div><div style="font-size:24px;font-weight:1000;margin-top:8px">DOF ${String(Math.round(+t.dof||0)).padStart(3,"0")}°</div><div style="font-size:38px;font-weight:1000;color:var(--blue)">WD ${String(Math.round(z.expectedWD)).padStart(3,"0")}°</div><div class="small">${clock(z.expectedWD)} • WIND FROM</div></div><div class="out3"><div class="obox"><div class="t">LOW FV-EQ</div><div class="n">${z.low.toFixed(1)}</div><div class="unit">mph</div></div><div class="obox best"><div class="t">BEST FV-EQ</div><div class="n">${z.best.toFixed(1)}</div><div class="unit">mph</div></div><div class="obox"><div class="t">HIGH FV-EQ</div><div class="n">${z.high.toFixed(1)}</div><div class="unit">mph</div></div></div><div class="grid two">${f("Kestrel MIN hold","kmin_"+i,t.kMin,"decimal")}${f("Kestrel MAX hold","kmax_"+i,t.kMax,"decimal")}</div>${f.conflicts?.length?`<div class="warn">${f.conflicts.join("<br>")}</div>`:""}<div class="note">You use the <strong>DOF</strong> and verify the <strong>WD</strong> shown above. Relative angle/value maths is hidden in Easy Mode.</div></div>`}
+function fuse(s){
+ let mi=n(s.wind.min),av=n(s.wind.avg),ma=n(s.wind.max),dir=n(s.wind.avgDir);
+ if(mi===null||av===null||ma===null||dir===null||!(mi<=av&&av<=ma))return {valid:false,reason:"Enter valid Calypso MIN / AVG / MAX and AVG WIND FROM.",quality:"WEAK"};
+ let low=mi,best=av,high=ma,conflicts=[],speedObs=[],dirObs=[];
+ const zones=[...s.points.map((p,idx)=>({name:`Point ${idx+1}`,terrain:p.terrain,obs:p.obs})),{name:"Target zone",terrain:s.targetTerrain,obs:s.targetObs}];
+ zones.forEach(z=>{
+   let zr=[];
+   (z.obs||[]).forEach(o=>{let b=behavior[o.indicator][+o.behavior||0],r=rel(o.indicator);if(b[1]!=null){zr.push({lo:b[1],hi:b[2],mid:(b[1]+b[2])/2,rel:r,source:o.indicator})}if(o.quality!=="Unknown"&&o.dir!==""){let dr=b[3].includes("direction")?Math.max(r,.8):r;dirObs.push({deg:+o.dir,rel:dr*(o.quality==="Clear"?1:.55),zone:z.name})}});
+   if(zr.length>1){let il=Math.max(...zr.map(x=>x.lo)),ih=Math.min(...zr.map(x=>x.hi));if(il>ih)conflicts.push(`${z.name}: observations disagree.`)}
+   speedObs.push(...zr.map(x=>({...x,zone:z.name})));
+ });
+ // observations at different points may differ; they influence mode, not false global conflict.
+ let sw=3,sm=3*av;speedObs.forEach(e=>{sw+=e.rel;sm+=e.rel*e.mid});best=Math.max(low,Math.min(high,sm/sw));
+ // If all speed observations overlap measured envelope, narrow only modestly; otherwise keep Calypso envelope.
+ if(speedObs.length){let ol=Math.max(...speedObs.map(e=>e.lo)),oh=Math.min(...speedObs.map(e=>e.hi));if(ol<=oh){let nl=Math.max(low,ol),nh=Math.min(high,oh);if(nl<=nh){low=nl;high=nh;best=Math.max(low,Math.min(high,best))}}}
+ let vx=3*Math.cos(dir*Math.PI/180),vy=3*Math.sin(dir*Math.PI/180);dirObs.forEach(e=>{vx+=e.rel*Math.cos(e.deg*Math.PI/180);vy+=e.rel*Math.sin(e.deg*Math.PI/180)});
+ let dBest=norm(Math.atan2(vy,vx)*180/Math.PI), q="STRONG";if(conflicts.length||speedObs.length===0)q="MODERATE";if(conflicts.length>1)q="WEAK";
+ // match-learning sanity prior: recency-weighted completed stages, but only as small capped shift.
+ let learned=learnedBias(s);if(learned!==null){best=Math.max(low,Math.min(high,best+learned))}
+ return {valid:true,low,best,high,dir:dBest,quality:q,conflicts,learnedBias:learned}
+}
+function learnedBias(currentStage){
+ let m=st.data.matches.find(x=>x.id===st.selectedMatch);if(!m)return null;let now=Date.now(),vals=[];
+ (m.stages||[]).filter(x=>x.completedAt&&x.id!==currentStage.id).forEach(s=>{
+   let ageH=(now-new Date(s.completedAt).getTime())/36e5,wt=Math.exp(-ageH/2);
+   s.targets.forEach(t=>{let a=n(t.actualHold),lo=n(t.kMin),hi=n(t.kMax);if(a!==null&&lo!==null&&hi!==null&&hi>lo){let pos=(a-lo)/(hi-lo)-.5;vals.push({bias:pos,wt})}})
+ });
+ if(!vals.length)return null;let sw=vals.reduce((x,y)=>x+y.wt,0),b=vals.reduce((x,y)=>x+y.bias*y.wt,0)/sw;return Math.max(-.5,Math.min(.5,b))*.5
+}
+function tWind(t,f){let rel=sdelta(f.dir,+t.dof||0),factor=Math.abs(Math.sin(rel*Math.PI/180));return {expectedWD:norm(f.dir-(+t.dof||0)),rel,factor,low:f.low*factor,best:f.best*factor,high:f.high*factor}}
+
+function renderShoot(s){let f=fuse(s);if(!f.valid){live.innerHTML=`<div class="bad">${f.reason}</div>`;return}live.innerHTML=`<div class="cardhead"><div><h3>Shoot plan</h3><div class="small">Horizontal wind probability only</div></div><span class="tag live">${f.quality}</span></div>${s.targets.map(t=>shootHTML(t,f)).join("")}<div class="card"><h3>Stage Card</h3><div class="stagecard">${s.targets.map(t=>stageLine(t,f)).join("")}</div></div>`}
+function widthMil(t){let d=n(t.distanceM),w=n(t.widthCm);return d&&w?((w/100)/d)*1000:null}
+function triCDF(x,a,m,b){if(x<=a)return 0;if(x>=b)return 1;if(b<=a)return x>=b?1:0;if(m<=a+1e-9)return 1-Math.pow((b-x)/(b-a),2);if(m>=b-1e-9)return Math.pow((x-a)/(b-a),2);return x<=m?Math.pow(x-a,2)/((b-a)*(m-a)):1-Math.pow(b-x,2)/((b-a)*(b-m))}
+function opt(t,f){let lo=n(t.kMin),hi=n(t.kMax),w=widthMil(t);if(lo===null||hi===null||hi<lo||!w)return null;let z=tWind(t,f),den=z.high-z.low,mode=den>1e-9?lo+(z.best-z.low)/den*(hi-lo):(lo+hi)/2;mode=Math.max(lo,Math.min(hi,mode));let bh=lo,bp=-1;for(let h=lo-w/2;h<=hi+w/2;h+=.001){let p=triCDF(h+w/2,lo,mode,hi)-triCDF(h-w/2,lo,mode,hi);if(p>bp){bp=p;bh=h}}let sl=hi-w/2,sh=lo+w/2;return {lo,hi,w,mode,bh,bp:Math.max(0,Math.min(1,bp)),safe:sl<=sh,sl,sh}}
+function shootHTML(t,f){let r=opt(t,f);if(!r)return `<div class="note">${t.label}: enter valid Kestrel MIN/MAX holds and target width.</div>`;let ints=getStage().intel.filter(x=>x.target===t.label&&x.hold!=="").map(x=>n(x.hold)).filter(x=>x!==null),iw=ints.length&&(Math.max(...ints)<r.lo||Math.min(...ints)>r.hi);return `<div class="card"><div class="cardhead"><strong>${t.label} • ${t.distanceM} m</strong><span class="tag done">WIND P(HIT)</span></div><div class="hero"><div class="small">OPTIMAL WIND HOLD</div><div class="big">${r.bh.toFixed(2)}</div><div class="unit">mil</div></div><div class="listrow"><span>Kestrel bracket</span><strong>${r.lo.toFixed(2)}–${r.hi.toFixed(2)}</strong></div><div class="listrow"><span>WIND P(HIT)</span><strong>${(r.bp*100).toFixed(0)}%</strong></div><div class="listrow"><span>Safe hold window</span><strong>${r.safe?r.sl.toFixed(2)+"–"+r.sh.toFixed(2):"NONE"}</strong></div>${ints.length?`<div class="${iw?"warn":"note"}">Shooter Intel: ${ints.map(x=>x.toFixed(2)).join(" / ")}${iw?" • outside model bracket":""}</div>`:""}<div class="small" style="margin-top:8px">Shape stored: ${esc(t.shape)}. Easy Mode probability is horizontal-wind-only; full 2D shape dispersion remains Advanced Mode.</div></div>`}
+function stageLine(t,f){let r=opt(t,f);return `<div class="stageLine"><strong>${t.label} • ${t.distanceM} m</strong><div class="hold">${r?r.bh.toFixed(2):"—"}</div><div class="meta">${r?`Bracket ${r.lo.toFixed(2)}–${r.hi.toFixed(2)} • P(hit) ${(r.bp*100).toFixed(0)}%`:"Kestrel holds required"}</div></div>`}
+
+function renderPost(s){live.innerHTML=`<div class="cardhead"><div><h3>Post-stage</h3><div class="small">What actually worked</div></div><span class="tag done">LEARNING</span></div>${s.targets.map((t,i)=>`<div class="card"><strong>${t.label} • ${t.distanceM} m</strong><div class="grid two">${f("Actual working hold","act_"+i,t.actualHold,"decimal")}<label>Side<select id="side_"+i"><option ${t.holdSide==="L"?"selected":""}>L</option><option ${t.holdSide==="R"?"selected":""}>R</option></select></label></div></div>`).join("")}<div class="grid four">${f("Score","score",s.score,"numeric")}${f("Points available","pts",s.pointsAvailable,"numeric")}${f("Impacts","imp",s.impacts,"numeric")}${f("Shots / opportunities","shots",s.shots,"numeric")}</div>${ta("Stage notes","postNotes",s.postNotes)}<div id="postMsg"></div><div class="actions"><button class="btn" id="completeStage">MARK STAGE COMPLETE</button></div>`;bindAuto(captureLive);completeStage.onclick=()=>{captureLive();if(!validPost(s))return;if(!s.preShootSnapshot)s.preShootSnapshot={createdAt:iso(),data:JSON.parse(JSON.stringify(s))};s.completedAt=iso();s.postStageSnapshot={createdAt:iso(),data:JSON.parse(JSON.stringify(s))};writeNow();st.screen="matchWizard";st.step=3;render()}}
+function validPost(s){let sc=n(s.score),pa=n(s.pointsAvailable),im=n(s.impacts),sh=n(s.shots),msg=[];if(sc!==null&&pa!==null&&(sc<0||sc>pa))msg.push("Score must be between 0 and points available.");if(im!==null&&sh!==null&&(im<0||im>sh))msg.push("Impacts must be between 0 and shots.");postMsg.innerHTML=msg.length?`<div class="bad">${msg.join(" ")}</div>`:"";return !msg.length}
+
+function captureLive(){
+ let s=getStage();if(!s)return;
+ if(st.liveStep===0)s.targets.forEach((t,i)=>t.dof=v("dof_"+i));
+ if(st.liveStep===1){s.wind.min=whole(v("wmin"));s.wind.avg=whole(v("wavg"));s.wind.max=whole(v("wmax"));s.wind.now=whole(v("wnow"));s.wind.avgDir=v("wdir");s.wind.nowDir=v("wndir");s.wind.window=v("wwin")}
+ if(st.liveStep===2){s.points.forEach((p,pi)=>{p.distanceM=v("pd_"+pi);p.terrain=v("pt_"+pi);p.obs.forEach((o,oi)=>{o.indicator=v(`oi_point_${pi}_${oi}`)||o.indicator;o.behavior=+(v(`ob_point_${pi}_${oi}`)||0);o.quality=v(`oq_point_${pi}_${oi}`)||o.quality;if(o.quality!=="Unknown")o.dir=v(`od_point_${pi}_${oi}`)})});s.targetObs.forEach((o,oi)=>{o.indicator=v(`oi_target_0_${oi}`)||o.indicator;o.behavior=+(v(`ob_target_0_${oi}`)||0);o.quality=v(`oq_target_0_${oi}`)||o.quality;if(o.quality!=="Unknown")o.dir=v(`od_target_0_${oi}`)});s.intel.forEach((x,i)=>{x.target=v("intelT_"+i);x.hold=normDec(v("intelH_"+i))})}
+ if(st.liveStep===3)s.targets.forEach((t,i)=>{t.kMin=normDec(v("kmin_"+i));t.kMax=normDec(v("kmax_"+i))});
+ if(st.liveStep===5){s.targets.forEach((t,i)=>{t.actualHold=normDec(v("act_"+i));t.holdSide=v("side_"+i)});s.score=v("score");s.pointsAvailable=v("pts");s.impacts=v("imp");s.shots=v("shots");s.postNotes=v("postNotes")}
+ s.lastModifiedAt=iso();autosave()
+}
+function whole(x){let z=n(x);return z===null?"":String(Math.round(z))}
+function getStage(){let m=st.data.matches.find(x=>x.id===st.selectedMatch);return m?.stages.find(x=>x.id===st.selectedStage)}
+
+function reports(){setBottom(false);main.innerHTML=`<div class="panel"><div class="kicker">Post-match analytics</div><h2>Reports</h2><div id="rep"></div></div>`;if(!st.data.matches.length){rep.innerHTML=`<div class="note">No match history yet.</div>`;return}rep.innerHTML=st.data.matches.slice().reverse().map(m=>{let done=m.stages.filter(s=>s.completedAt),score=done.reduce((x,s)=>x+(n(s.score)||0),0),avail=done.reduce((x,s)=>x+(n(s.pointsAvailable)||0),0),imp=done.reduce((x,s)=>x+(n(s.impacts)||0),0),shots=done.reduce((x,s)=>x+(n(s.shots)||0),0);return `<div class="card"><div class="cardhead"><strong>${esc(m.name)}</strong><span class="tag done">${done.length}/${m.stages.length} STAGES</span></div><div class="grid three"><div><div class="small">SCORE</div><div class="metric">${avail?Math.round(score/avail*100)+"%":"—"}</div></div><div><div class="small">IMPACT RATIO</div><div class="metric">${shots?Math.round(imp/shots*100)+"%":"—"}</div></div><div><div class="small">COMPLETED</div><div class="metric">${done.length}</div></div></div><div class="note">Full charts are next: wind over time, actual vs recommended hold, DOF/angle, bracket capture, score and calibration drift.</div></div>`}).join("")}
+
+function openWheelField(id,title){let el=document.getElementById(id);wheelCtx={type:"field",id,title};openWheel(el?.value||0,title)}
+function openObsWheel(where,pi,oi){captureLive();let s=getStage(),o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];wheelCtx={type:"obs",where,pi,oi,title:"WIND FROM"};openWheel(o.dir||0,"WIND FROM")}
+function openWheel(val,title){wheelTitle.textContent=title;document.body.classList.add("modal-open");overlay.classList.remove("hidden");setWheel(n(val)||0)}
+function closeWheel(commit=true){if(commit&&wheelCtx){let val=String(Math.round(n(wheelInput.value)||0));if(wheelCtx.type==="field"){let el=document.getElementById(wheelCtx.id);if(el){el.value=val;el.dispatchEvent(new Event("input",{bubbles:true}))}}else{let s=getStage(),o=wheelCtx.where==="target"?s.targetObs[wheelCtx.oi]:s.points[wheelCtx.pi].obs[wheelCtx.oi];o.dir=val;captureLive();if(st.liveStep===2)renderDownrange(s)}}overlay.classList.add("hidden");document.body.classList.remove("modal-open");wheelCtx=null}
+function setWheel(vv){let d=norm(vv);pointer.style.transform=`rotate(${d}deg)`;wheelDeg.textContent=String(Math.round(d)).padStart(3,"0")+"°";wheelClock.textContent=clock(d);wheelInput.value=String(Math.round(d))}
+function evtAngle(e){e.preventDefault();let r=wheel.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),d=Math.atan2(x,-y)*180/Math.PI;if(d<0)d+=360;setWheel(d)}
+wheel.addEventListener("pointerdown",e=>{e.preventDefault();drag=true;wheel.setPointerCapture(e.pointerId);evtAngle(e)},{passive:false});
+wheel.addEventListener("pointermove",e=>{if(drag)evtAngle(e)},{passive:false});
+wheel.addEventListener("pointerup",e=>{drag=false;e.preventDefault()},{passive:false});
+wheel.addEventListener("touchmove",e=>e.preventDefault(),{passive:false});
+sheet.addEventListener("touchmove",e=>{if(e.target.closest(".wheel"))e.preventDefault()},{passive:false});
+overlay.addEventListener("touchmove",e=>{if(e.target===overlay)e.preventDefault()},{passive:false});
+wheelInput.addEventListener("input",()=>setWheel(n(wheelInput.value)||0));wheelDone.onclick=()=>closeWheel(true);
+for(let h=1;h<=12;h++){let el=document.createElement("div"),deg=h*30,rad=(deg-90)*Math.PI/180,r=124;el.className="tick";el.style.left=(150+r*Math.cos(rad))+"px";el.style.top=(150+r*Math.sin(rad))+"px";el.textContent=h;wheel.appendChild(el)}
+
+safeRead();render();
+</script>
+</body>
+</html>
