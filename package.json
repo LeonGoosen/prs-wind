@@ -1,6 +1,6 @@
 {
   "name": "wind-sight-prs",
-  "version": "3.8.2",
+  "version": "3.8.3",
   "private": true,
   "description": "WIND SIGHT PRS by ZealTech \u2014 native BLE shell source package",
   "scripts": {

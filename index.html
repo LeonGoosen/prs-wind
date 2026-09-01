@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.8.2 Wind-Hit Call Optimizer</title>
+<title>WIND SIGHT PRS by ZealTech — v3.8.3 Calypso Browser UX Fix</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -260,7 +260,7 @@ html,body{touch-action:manipulation}
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.8.2</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.8.3</small></div></div>
   <div class="save" id="saveState">Saved</div>
 </div>
 <nav id="nav"></nav>
@@ -590,6 +590,11 @@ async function connectCalypsoDevice(device,manual=false){
    console.error("Calypso connect",e);calypsoRuntime.status="error";calypsoRuntime.lastError=e.message||String(e);refreshCalypsoStrip();return false;
  }finally{calypsoRuntime.connecting=false}
 }
+function calypsoBleCapability(){
+ const native=!!nativeCalypsoBridge();
+ const web=!!navigator.bluetooth;
+ return {native,web,available:native||web};
+}
 async function pairCalypso(){
  const native=nativeCalypsoBridge();
  if(native){
@@ -597,7 +602,7 @@ async function pairCalypso(){
    try{await bindNativeCalypsoEvents();const r=await native.pairCalypso();const cfg=ensureCalypsoSettings();cfg.paired=true;cfg.deviceId=r?.deviceId||cfg.deviceId||"";cfg.name=r?.deviceName||cfg.name||"Calypso";calypsoRuntime.model=cfg.name;calypsoRuntime.protocolVariant=r?.protocol||"CALYPSO_NATIVE";calypsoRuntime.status="connected";writeNow()}catch(e){calypsoRuntime.status="error";calypsoRuntime.lastError=e?.message||String(e)}finally{calypsoRuntime.connecting=false;refreshCalypsoStrip()}
    return;
  }
- if(!navigator.bluetooth){alert("This browser does not provide Web Bluetooth. Install/run the native WIND SIGHT iOS/Android shell for Calypso BLE.");return}
+ if(!navigator.bluetooth){calypsoRuntime.status="native_required";calypsoRuntime.lastError="Native WIND SIGHT app required for Bluetooth on iPhone/iPad.";refreshCalypsoStrip();return}
  try{
    const dev=await navigator.bluetooth.requestDevice({filters:[{services:[CALYPSO.LEGACY_SERVICE]}],optionalServices:[CALYPSO.LEGACY_SERVICE]});
    const cfg=ensureCalypsoSettings();cfg.deviceId=dev.id||"";cfg.name=dev.name||cfg.name||"Calypso";writeNow();await connectCalypsoDevice(dev,true);
@@ -616,7 +621,7 @@ function calypsoStripHTML(){
  ${calypsoRuntime.status==="connected"?`<div class="calypsoGrid"><div class="calypsoMetric"><div class="k">NOW</div><div class="v">${stx?Math.round(stx.last.mph):"—"} mph</div></div><div class="calypsoMetric"><div class="k">AVG</div><div class="v">${stx?Math.round(stx.avg):"—"} mph</div></div><div class="calypsoMetric"><div class="k">DIR</div><div class="v">${stx?.dirReferenced?Math.round(stx.dir)+"°":"REF?"}</div></div><div class="calypsoMetric"><div class="k">MIN/MAX</div><div class="v">${stx?`${Math.round(stx.min)}/${Math.round(stx.max)}`:"—"}</div></div><div class="calypsoMetric"><div class="k">BATTERY</div><div class="v">${calypsoRuntime.battery!=null?calypsoRuntime.battery+"%":calypsoRuntime.batteryMv!=null?Math.round(calypsoRuntime.batteryMv)+" mV":"—"}</div></div><div class="calypsoMetric"><div class="k">SAMPLES</div><div class="v">${stx?.count||0}</div></div></div>
  ${!dirReady?`<div class="calypsoWarn">DIRECTION NOT REFERENCED — speed is live; direction is excluded from the model until reference is set.</div>`:""}
  <div class="fastHint">${esc(calypsoRuntime.model||"Calypso")} ${calypsoRuntime.firmware?`• FW ${esc(calypsoRuntime.firmware)}`:""} • ${cfg.sampleWindowSec}s tactical window • ${calypsoTransport()} • ${esc(calypsoRuntime.protocolVariant)}</div>`:""}</div>
- <div class="actions"><button class="btn secondary small" id="calypsoPairBtn">${calypsoRuntime.status==="connected"?"RECONNECT":"PAIR"}</button><button class="btn outline small" id="calypsoRefBtn">SET REFERENCE</button></div></div>`;
+ ${(()=>{const cap=calypsoBleCapability();if(!cap.available)return `<div class="calypsoWarn" style="margin-top:12px"><b>IPHONE BLUETOOTH REQUIRES THE NATIVE WIND SIGHT APP</b><br><span style="opacity:.82">Safari / Home Screen mode can view the instrument page but cannot pair to Calypso.</span></div><div class="actions"><button class="btn secondary small" id="calypsoPairBtn" disabled aria-disabled="true">NATIVE APP REQUIRED</button><button class="btn outline small" id="calypsoRefBtn">SET REFERENCE</button></div>`;return `<div class="actions"><button class="btn secondary small" id="calypsoPairBtn">${calypsoRuntime.status==="connected"?"RECONNECT":"PAIR"}</button><button class="btn outline small" id="calypsoRefBtn">SET REFERENCE</button></div>`})()}</div>`;
 }
 
 function setCalypsoReference(){
@@ -628,7 +633,7 @@ function setCalypsoReference(){
 }
 function bindCalypsoStrip(){
  const p=document.getElementById("calypsoPairBtn"),r=document.getElementById("calypsoRefBtn");
- if(p)p.onclick=pairCalypso;if(r)r.onclick=setCalypsoReference;
+ if(p&&!p.disabled)p.onclick=pairCalypso;if(r)r.onclick=setCalypsoReference;
 }
 
 function refreshCalypsoStrip(){

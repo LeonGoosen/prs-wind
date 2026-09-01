@@ -1,0 +1,15 @@
+WIND SIGHT PRS v3.8.3 — UAT
+
+PASS — version 3.8.3 visible
+PASS — old Web Bluetooth alert removed
+PASS — inline native-required state present
+PASS — pair disabled without BLE
+PASS — set reference retained
+PASS — native bridge pairing retained
+PASS — web BLE pairing retained
+PASS — wind-hit optimizer retained
+PASS — call curve retained
+PASS — cache bumped
+PASS — JavaScript syntax
+
+RESULT: 11 PASS / 0 FAIL
