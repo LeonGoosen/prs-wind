@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.2.2 Workflow UAT Fix</title>
+<title>WIND SIGHT PRS by ZealTech — v3.2.3 SHOOT Cleanup</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -174,13 +174,29 @@ input[type="date"]::-webkit-date-and-time-value{text-align:center}
 .matchSaveExit{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
 .matchSaveExit .btn{flex:1 1 180px}
 .shootError{border:1px solid #773d43;background:#2a1117;border-radius:14px;padding:14px;color:#ffd5d9}
+
+.shootCompact{border:1px solid #29435a;border-radius:16px;padding:14px;margin-top:12px;background:#07131f}
+.shootTop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.shootTarget{font-size:19px;font-weight:1000}
+.shootMeta{font-size:12px;color:#8fa4b7;margin-top:3px}
+.shootHold{font-size:42px;font-weight:1000;line-height:1;color:#fff;text-align:center;margin:14px 0 8px}
+.shootHold small{display:block;font-size:11px;color:#8fa4b7;margin-top:6px;letter-spacing:.08em}
+.shootTriplet{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+.shootTriplet>div{background:#0a1824;border:1px solid #243b50;border-radius:11px;padding:8px 5px;text-align:center}
+.shootTriplet span{display:block;font-size:10px;color:#8fa4b7;font-weight:900}
+.shootTriplet strong{display:block;font-size:17px;margin-top:2px}
+.shootQuickGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.shootQuickGrid>div{border:1px solid #243b50;border-radius:11px;padding:9px 10px;background:#08131f}
+.shootQuickGrid .k{font-size:10px;color:#8fa4b7;font-weight:900}
+.shootQuickGrid .v{font-size:17px;font-weight:1000;margin-top:2px}
+@media(max-width:380px){.shootQuickGrid{grid-template-columns:1fr}.shootHold{font-size:38px}}
 </style>
 </head>
 <body>
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.2.2</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.2.3</small></div></div>
   <div class="save" id="saveState">Saved</div>
 </div>
 <nav id="nav"></nav>
@@ -1088,56 +1104,41 @@ function loadTargetVisual(targetId,details){
 
 function renderShoot(s){
  try{
- const fz=fuse(s);if(!fz.valid){live.innerHTML=`<div class="bad">${fz.reason}</div><div class="note">Go back to WIND / BALLISTICS and complete required values.</div>`;return}
- const results=s.targets.map(tt=>({tt,r:opt(tt,fz),z:tWind(tt,fz),flip:sideFlipForTarget(tt,fz)}));
- results.forEach(({tt,r,z})=>{if(r)ensureFireTargetState(tt,r,z)});
- live.innerHTML=`<div class="cardhead"><div><h3>FIRE</h3><div class="small">Final WIND SIGHT stage solution</div></div><span class="tag live">${fz.quality}</span></div>
- ${results.map(({tt,r,z,flip})=>shootResultHTML(tt,r,z,flip,fz)).join("")}
- <div class="card"><h3>Stage Card</h3><div class="stagecard">${results.map(({tt,r,z,flip})=>stageLineFast(tt,r,z,flip)).join("")}</div></div>`;
- bindAuto(captureLive);
-
- }catch(e){console.error("FIRE render error",e);live.innerHTML=`<div class="shootError"><strong>FIRE could not render.</strong><br>${esc(e?.message||"Unknown rendering error")}<br><span class="small">Your stage data remains saved. Go back one step and reopen FIRE.</span></div>`}
+   const fz=fuse(s);
+   if(!fz.valid){live.innerHTML=`<div class="bad">${fz.reason}</div><div class="note">Go back to WIND / BALLISTICS and complete required values.</div>`;return}
+   const results=s.targets.map(tt=>({tt,r:opt(tt,fz),z:tWind(tt,fz),flip:sideFlipForTarget(tt,fz)}));
+   live.innerHTML=`<div class="cardhead"><div><h3>SHOOT</h3><div class="small">Immediate stage holds</div></div><span class="tag live">${fz.quality}</span></div>
+   ${results.map(({tt,r,z,flip})=>shootResultHTML(tt,r,z,flip,fz)).join("")}
+   <div class="card"><h3>Stage Card</h3><div class="stagecard">${results.map(({tt,r,z,flip})=>stageLineFast(tt,r,z,flip)).join("")}</div></div>`;
+ }catch(e){
+   console.error("SHOOT render error",e);
+   live.innerHTML=`<div class="shootError"><strong>SHOOT could not render.</strong><br>${esc(e?.message||"Unknown rendering error")}<br><span class="small">Your stage data remains saved. Go back one step and reopen SHOOT.</span></div>`;
+ }
 }
 function shootResultHTML(tt,r,z,flip,fz){
- if(flip)return `<div class="warn"><strong>${esc(tt.label)} • SIDE FLIP RISK</strong><br>Wind-direction uncertainty crosses the bore line. FIRE will not issue a single-side hold. Recheck direction.</div>`;
- if(!r)return `<div class="note">${esc(tt.label)}: enter valid solver MIN/MAX holds and target width.</div>`;
- ensureFireTargetState(tt,r,z);
- const dims=targetDimsMil(tt),tip=windSightAimTip(tt,r,z),score=windSightImpactScore(r);
- const side=z.rel>=0?"R":"L",selected=hold1(tt.selectedHold);
- const ints=getStage().intel.filter(x=>x.target===tt.label&&x.hold!=="").map(x=>n(x.hold)).filter(x=>x!==null),iw=ints.length&&(Math.max(...ints)<r.lo||Math.min(...ints)>r.hi);
- const corrected=fireCorrectedHold(tt);
- return `<div class="card"><div class="cardhead"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><span class="tag done">FIRE</span></div>
- <div class="targetDimBox"><div class="targetDimMain">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div><div class="targetDimSub">Horizontal ${dims?dims.w.toFixed(2):"—"} mil • Height ${dims?dims.h.toFixed(2):"—"} mil</div></div>
- <div class="hero"><div class="small">SELECTED HOLD</div><div class="big">${selected} ${tt.selectedHoldSide}</div><div class="unit">mil • ${esc(tt.selectedHoldSource||"WIND SIGHT")}</div></div>
- <div class="firePresetRow">
-   <button class="firePreset ${tt.selectedHoldSource==="MIN"?"active":""}" onclick="setFirePreset('${tt.id}','MIN')">MIN<span class="hold">${hold1(r.lo)} ${side}</span></button>
-   <button class="firePreset ${tt.selectedHoldSource==="WIND SIGHT"?"active":""}" onclick="setFirePreset('${tt.id}','WIND')">WIND SIGHT<span class="hold">${hold1(r.bh)} ${side}</span></button>
-   <button class="firePreset ${tt.selectedHoldSource==="MAX"?"active":""}" onclick="setFirePreset('${tt.id}','MAX')">MAX<span class="hold">${hold1(r.hi)} ${side}</span></button>
- </div>
- <details class="fireDetails"><summary><span>SET CUSTOM SELECTED HOLD</span><span>⌄</span></summary><div class="fireDetailBody">
-   <div class="small">Use this only when you deliberately want a hold different from MIN / WIND SIGHT / MAX.</div>
-   <div class="grid two">${f("Selected hold (mil)",`manualHold_${tt.id}`,tt.selectedHold,"decimal")}<label>Side<select id="manualSide_${tt.id}"><option ${tt.selectedHoldSide==="L"?"selected":""}>L</option><option ${tt.selectedHoldSide==="R"?"selected":""}>R</option></select></label></div>
-   <div class="actions"><button class="btn secondary small" onclick="setManualFireHold('${tt.id}')">USE CUSTOM HOLD</button><button class="btn outline small" onclick="resetFireHold('${tt.id}')">RESET TO WIND SIGHT</button></div>
- </div></details>
- <div class="listrow"><span>Solver bracket</span><strong>${hold1(r.lo)}–${hold1(r.hi)} ${side}</strong></div>
- <div class="listrow"><span>WIND SIGHT IMPACT SCORE</span><strong class="windSightScore">${score}/100</strong></div>
- <div class="listrow"><span>Safe hold window</span><strong>${r.safe?hold1(r.sl)+"–"+hold1(r.sh)+" "+side:"NONE"}</strong></div>
- ${tip?`<div class="aimTip"><strong>WIND SIGHT AIM TIP: ${tip.label}</strong><div class="whyHold">${tip.text}</div></div>`:""}
- <div class="note"><strong>WHY ${hold1(r.bh)}?</strong><br>${whyOptimalHold(tt,r,fz)}<br><span class="small">Impact Score is a WIND SIGHT modeled wind-window score, not total hit probability.</span></div>
- <details class="fireDetails" ontoggle="loadTargetVisual('${tt.id}',this)"><summary><span>VIEW TARGET / HOLD VISUAL</span><span>⌄</span></summary><div class="fireDetailBody" id="targetVisual_${tt.id}"><div class="small">Open to render target visual.</div></div></details>
- <details class="fireDetails"><summary><span>SHOT / MISS CORRECTION</span><span>⌄</span></summary><div class="fireDetailBody">
-   <div class="small">Enter observed horizontal impact offset. WIND SIGHT returns the mechanical hold correction; it does not assume wind caused the miss.</div>
-   <div class="grid two">${f("Observed offset (mil)",`missOffset_${tt.id}`,tt.missOffset,"decimal")}<label>Impact was<select id="missSide_${tt.id}" onchange="updateFireCorrection('${tt.id}')"><option ${tt.missSide==="L"?"selected":""}>L</option><option ${tt.missSide==="R"?"selected":""}>R</option></select></label></div>
-   <div class="actions"><button class="btn secondary small" onclick="updateFireCorrection('${tt.id}')">CALCULATE CORRECTION</button>${corrected?`<button class="btn outline small" onclick="useCorrectedHold('${tt.id}')">USE CORRECTED HOLD</button>`:""}</div>
-   <div id="corrResult_${tt.id}">${corrected?`<div class="correctionResult"><strong>IMPACT CORRECTION</strong><br>Observed impact ${hold1(tt.missOffset)} mil ${tt.missSide}. Mechanical correction: ${hold1(tt.missOffset)} mil ${tt.missSide==="L"?"RIGHT":"LEFT"}.<br><strong>Corrected hold: ${hold1(corrected.mag)} ${corrected.side}</strong><div class="fireQuickNote">Impact correction only; not automatic wind attribution.</div></div>`:""}</div>
- </div></details>
- ${ints.length?`<div class="${iw?"warn":"note"}">Shooter Intel: ${ints.map(x=>x.toFixed(1)).join(" / ")}${iw?" • outside model bracket":""}</div>`:""}</div>`;
+ if(flip)return `<div class="warn"><strong>${esc(tt.label)} • SIDE FLIP RISK</strong><br>Re-check wind direction before shooting.</div>`;
+ if(!r)return `<div class="note">${esc(tt.label)}: solver MIN/MAX holds and target width required.</div>`;
+ const dims=targetDimsMil(tt),tip=windSightAimTip(tt,r,z),score=windSightImpactScore(r),side=z.rel>=0?"R":"L",miss=suggestedMissCorrection(tt);
+ return `<div class="shootCompact">
+   <div class="shootTop"><div><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootMeta">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div></div><span class="tag done">SHOOT</span></div>
+   <div class="shootHold">${hold1(r.bh)} ${side}<small>WIND SIGHT HOLD</small></div>
+   <div class="shootTriplet">
+     <div><span>MIN</span><strong>${hold1(r.lo)} ${side}</strong></div>
+     <div><span>WIND SIGHT</span><strong>${hold1(r.bh)} ${side}</strong></div>
+     <div><span>MAX</span><strong>${hold1(r.hi)} ${side}</strong></div>
+   </div>
+   <div class="shootQuickGrid">
+     <div><div class="k">WIND SIGHT SHOT INDEX</div><div class="v">${score}/100</div></div>
+     <div><div class="k">AIM</div><div class="v">${tip?esc(tip.label):"CENTER"}</div></div>
+     <div><div class="k">SAFE HOLD</div><div class="v">${r.safe?`${hold1(r.sl)}–${hold1(r.sh)} ${side}`:"NONE"}</div></div>
+     <div><div class="k">MISS CORRECTION</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div></div>
+   </div>
+ </div>`;
 }
 function stageLineFast(tt,r,z,flip){
  if(!r)return `<div class="stageLine"><strong>${esc(tt.label)}</strong><div class="hold">—</div><div class="meta">Solver holds required</div></div>`;
- ensureFireTargetState(tt,r,z);
- const score=windSightImpactScore(r);
- return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m • ${esc(targetSizeText(tt))}</strong><div class="hold">${flip?"SIDE FLIP":`${hold1(tt.selectedHold)} ${tt.selectedHoldSide}`}</div><div class="meta">${!flip?`MIN ${hold1(r.lo)} • WS ${hold1(r.bh)} • MAX ${hold1(r.hi)} • ${esc(tt.selectedHoldSource||"SELECTED")} • Impact ${score}/100`:"Recheck wind side"}</div></div>`;
+ const side=z.rel>=0?"R":"L",score=windSightImpactScore(r),miss=suggestedMissCorrection(tt);
+ return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m • ${esc(targetSizeText(tt))}</strong><div class="hold">${flip?"SIDE FLIP":`${hold1(r.bh)} ${side}`}</div><div class="meta">${!flip?`MIN ${hold1(r.lo)} • MAX ${hold1(r.hi)} • Shot Index ${score}/100${miss!==null?` • Miss corr ${hold1(miss)}`:""}`:"Recheck wind side"}</div></div>`;
 }
 function targetDimsMil(tt){
  const d=n(tt.distanceM),w=n(tt.widthCm),h=n(tt.heightCm||tt.widthCm);
@@ -1167,8 +1168,8 @@ function whyOptimalHold(tt,r,fz){
 function widthMil(t){let d=n(t.distanceM),w=n(t.widthCm);return d&&w?((w/100)/d)*1000:null}
 function triCDF(x,a,m,b){if(x<=a)return 0;if(x>=b)return 1;if(b<=a)return x>=b?1:0;if(m<=a+1e-9)return 1-Math.pow((b-x)/(b-a),2);if(m>=b-1e-9)return Math.pow((x-a)/(b-a),2);return x<=m?Math.pow(x-a,2)/((b-a)*(m-a)):1-Math.pow(b-x,2)/((b-a)*(b-m))}
 function opt(t,f){let lo=n(t.kMin),hi=n(t.kMax),w=widthMil(t);if(lo===null||hi===null||hi<lo||!w)return null;let z=tWind(t,f),den=z.high-z.low,mode=den>1e-9?lo+(z.best-z.low)/den*(hi-lo):(lo+hi)/2;mode=Math.max(lo,Math.min(hi,mode));let bh=lo,bp=-1;for(let h=lo-w/2;h<=hi+w/2;h+=.001){let p=triCDF(h+w/2,lo,mode,hi)-triCDF(h-w/2,lo,mode,hi);if(p>bp){bp=p;bh=h}}let sl=hi-w/2,sh=lo+w/2;return {lo,hi,w,mode,bh,bp:Math.max(0,Math.min(1,bp)),safe:sl<=sh,sl,sh}}
-function shootHTML(t,f){if(sideFlipForTarget(t,f))return `<div class="card critical"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag live">SIDE FLIP</span></div><div class="warn">Wind evidence crosses the bore line. Easy Mode will not issue a single-side optimal hold or Impact Score. Recheck current direction and use the Solver bracket deliberately.</div></div>`;let r=opt(t,f);if(!r)return `<div class="note">${esc(t.label)}: enter valid solver MIN/MAX holds and target width.</div>`;let ints=getStage().intel.filter(x=>x.target===t.label&&x.hold!=="").map(x=>n(x.hold)).filter(x=>x!==null),iw=ints.length&&(Math.max(...ints)<r.lo||Math.min(...ints)>r.hi);return `<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag done">WIND SIGHT IMPACT SCORE</span></div><div class="hero"><div class="small">OPTIMAL WIND HOLD</div><div class="big">${r.bh.toFixed(1)} ${tWind(t,f).rel>=0?"R":"L"}</div><div class="unit">mil</div></div><div class="listrow"><span>Solver bracket</span><strong>${r.lo.toFixed(1)}–${r.hi.toFixed(1)}</strong></div><div class="listrow"><span>WIND SIGHT IMPACT SCORE</span><strong>${(r.bp*100).toFixed(0)}%</strong></div><div class="listrow"><span>Safe hold window</span><strong>${r.safe?r.sl.toFixed(1)+"–"+r.sh.toFixed(1):"NONE"}</strong></div>${ints.length?`<div class="${iw?"warn":"note"}">Shooter Intel: ${ints.map(x=>x.toFixed(1)).join(" / ")}${iw?" • outside model bracket":""}</div>`:""}<div class="small" style="margin-top:8px">Shape stored: ${esc(t.shape)}. WIND SIGHT Impact Score is horizontal-wind-only; full 2D shape dispersion remains Advanced Mode.</div></div>`}
-function stageLine(t,f){if(sideFlipForTarget(t,f))return `<div class="stageLine"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><div class="hold">FLIP</div><div class="meta">Recheck wind side / Kestrel</div></div>`;let r=opt(t,f);return `<div class="stageLine"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><div class="hold">${r?r.bh.toFixed(1)+" "+(tWind(t,f).rel>=0?"R":"L"):"—"}</div><div class="meta">${r?`Bracket ${r.lo.toFixed(1)}–${r.hi.toFixed(1)} • Impact Score ${(r.bp*100).toFixed(0)}%`:"Solver holds required"}</div></div>`}
+function shootHTML(t,f){if(sideFlipForTarget(t,f))return `<div class="card critical"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag live">SIDE FLIP</span></div><div class="warn">Wind evidence crosses the bore line. Easy Mode will not issue a single-side optimal hold or Shot Index. Recheck current direction and use the Solver bracket deliberately.</div></div>`;let r=opt(t,f);if(!r)return `<div class="note">${esc(t.label)}: enter valid solver MIN/MAX holds and target width.</div>`;let ints=getStage().intel.filter(x=>x.target===t.label&&x.hold!=="").map(x=>n(x.hold)).filter(x=>x!==null),iw=ints.length&&(Math.max(...ints)<r.lo||Math.min(...ints)>r.hi);return `<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag done">WIND SIGHT SHOT INDEX</span></div><div class="hero"><div class="small">OPTIMAL WIND HOLD</div><div class="big">${r.bh.toFixed(1)} ${tWind(t,f).rel>=0?"R":"L"}</div><div class="unit">mil</div></div><div class="listrow"><span>Solver bracket</span><strong>${r.lo.toFixed(1)}–${r.hi.toFixed(1)}</strong></div><div class="listrow"><span>WIND SIGHT SHOT INDEX</span><strong>${(r.bp*100).toFixed(0)}%</strong></div><div class="listrow"><span>Safe hold window</span><strong>${r.safe?r.sl.toFixed(1)+"–"+r.sh.toFixed(1):"NONE"}</strong></div>${ints.length?`<div class="${iw?"warn":"note"}">Shooter Intel: ${ints.map(x=>x.toFixed(1)).join(" / ")}${iw?" • outside model bracket":""}</div>`:""}<div class="small" style="margin-top:8px">Shape stored: ${esc(t.shape)}. WIND SIGHT Shot Index is horizontal-wind-only; full 2D shape dispersion remains Advanced Mode.</div></div>`}
+function stageLine(t,f){if(sideFlipForTarget(t,f))return `<div class="stageLine"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><div class="hold">FLIP</div><div class="meta">Recheck wind side / Kestrel</div></div>`;let r=opt(t,f);return `<div class="stageLine"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><div class="hold">${r?r.bh.toFixed(1)+" "+(tWind(t,f).rel>=0?"R":"L"):"—"}</div><div class="meta">${r?`Bracket ${r.lo.toFixed(1)}–${r.hi.toFixed(1)} • Shot Index ${(r.bp*100).toFixed(0)}%`:"Solver holds required"}</div></div>`}
 
 function matchLearningStats(currentStage){
  const m=st.data.matches.find(x=>x.id===st.selectedMatch);if(!m)return null;let total=0,inside=0,errs=[];
@@ -1191,7 +1192,7 @@ function inferActualCondition(stage,tt){
 function renderPost(s){
  live.innerHTML=`<div class="cardhead"><div><h3>Post-stage</h3><div class="small">Record the final working hold and score</div></div><span class="tag done">LEARNING</span></div>
  ${s.targets.map((tt,i)=>{const est=inferActualCondition(s,tt);return `<div class="targetCard"><div class="targetHeader"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><span class="tag ready">TARGET ${i+1}</span></div>
- <div class="listrow"><span>Pre-shot selected hold</span><strong>${tt.selectedHold!==""&&tt.selectedHold!=null?`${hold1(tt.selectedHold)} ${tt.selectedHoldSide} • ${esc(tt.selectedHoldSource||"SELECTED")}`:"—"}</strong></div>
+ 
  <div class="grid two">${f("Final working hold","act_"+i,tt.actualHold,"decimal")}<label>Side<select id="side_${i}"><option ${tt.holdSide==="L"?"selected":""}>L</option><option ${tt.holdSide==="R"?"selected":""}>R</option></select></label></div>
  ${tt.missOffset?`<div class="note">Recorded impact correction: ${hold1(tt.missOffset)} mil ${tt.missSide}.</div>`:""}
  ${est?est.reason?`<div class="warn"><strong>INFERRED WIND</strong><br>${esc(est.reason)}</div>`:`<div class="note"><strong>INFERRED CONDITION — ESTIMATE ONLY</strong><br>At modeled direction ${Math.round(est.modeledAngle)}°: ~${est.envAtModeledAngle.toFixed(1)} mph environmental wind.<br>At modeled BEST speed ${est.speedForAngles.toFixed(1)} mph, equivalent WIND FROM angles are approximately ${Math.round(est.possibleAngles[0])}° or ${Math.round(est.possibleAngles[1])}°.<br>FV-equivalent ${est.fv.toFixed(1)} mph • Confidence ${est.confidence}.</div>`:""}</div>`}).join("")}
