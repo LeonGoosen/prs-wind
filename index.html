@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.0.3 Match Gate Fix</title>
+<title>WIND SIGHT PRS by ZealTech — v3.0.4 Profile Workflow Fix</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -120,13 +120,24 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 
 }
 
 .comboCard{border:1px solid #29435a;border-radius:16px;padding:14px;margin-top:12px;background:#07131f}.comboTitle{font-size:18px;font-weight:1000}.comboMeta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}.matchCardBtn{width:100%;text-align:left;background:#08131f;color:var(--ink);border:1px solid var(--line);border-radius:15px;padding:14px;margin-top:10px}.matchCardBtn strong{display:block;font-size:17px}.stageSelect{width:100%;text-align:left;border:1px solid #29435a;border-radius:16px;padding:14px;margin-top:10px;background:#08131f;color:var(--ink)}.stageSelect .stageName{font-size:19px;font-weight:1000}.stageSelect .stageMeta{font-size:12px;color:var(--muted);margin-top:4px}.publisherFooter{margin:28px 0 4px;padding:18px 8px 4px;text-align:center;border-top:1px solid #1d3042}.publisherFooter img{max-width:260px;width:70%;height:auto}.wizardTitle{font-size:24px;line-height:1.15;margin-top:6px}.calTableWrap{overflow-x:auto;margin-top:12px}.holdCell{display:grid;grid-template-columns:minmax(80px,1fr) 72px;gap:6px;min-width:150px}.holdCell select,.holdCell input{min-height:42px;padding:8px}.validationList{margin-top:10px}.stageBuilder{border:1px solid #29435a;border-radius:18px;padding:14px;margin-top:14px;background:#07131f}.stageBuilder summary{cursor:pointer;list-style:none;font-weight:1000;font-size:18px}.stageBuilder summary::-webkit-details-marker{display:none}.summaryPill{display:inline-block;font-size:10px;padding:4px 7px;border-radius:999px;background:#14283a;color:#a9bbcc;margin-left:8px}.liveOverview{border:1px solid #29435a;border-radius:18px;padding:14px;background:#07131f}.reportChart{width:100%;height:180px;margin-top:10px;background:#07131f;border:1px solid #223449;border-radius:14px}.reportLegend{font-size:11px;color:var(--muted);margin-top:6px}@media(max-width:650px){.wizardTitle{font-size:22px}}
-.calModuleTitle{position:sticky;top:calc(118px + env(safe-area-inset-top,0px));z-index:20;background:#0b1825;border:1px solid #29435a;border-radius:14px;padding:12px;margin:10px 0;font-size:16px;font-weight:1000}.mobileCalCard{border:1px solid #29435a;border-radius:16px;padding:14px;margin-top:12px;background:#07131f}.mobileCalHead{font-size:22px;font-weight:1000;border-bottom:1px solid #203449;padding-bottom:10px;margin-bottom:10px}.mobileHold{display:grid;grid-template-columns:82px 1fr 70px;gap:8px;align-items:center;margin-top:8px}.mobileHold input,.mobileHold select{margin:0}@media(max-width:380px){.mobileHold{grid-template-columns:68px 1fr 62px}}</style>
+.calModuleTitle{position:sticky;top:calc(118px + env(safe-area-inset-top,0px));z-index:20;background:#0b1825;border:1px solid #29435a;border-radius:14px;padding:12px;margin:10px 0;font-size:16px;font-weight:1000}.mobileCalCard{border:1px solid #29435a;border-radius:16px;padding:14px;margin-top:12px;background:#07131f}.mobileCalHead{font-size:22px;font-weight:1000;border-bottom:1px solid #203449;padding-bottom:10px;margin-bottom:10px}.mobileHold{display:grid;grid-template-columns:82px 1fr 70px;gap:8px;align-items:center;margin-top:8px}.mobileHold input,.mobileHold select{margin:0}@media(max-width:380px){.mobileHold{grid-template-columns:68px 1fr 62px}}
+.profileModuleNav{display:flex;gap:6px;overflow-x:auto;margin-top:12px;padding-bottom:3px;scrollbar-width:none}
+.profileModuleNav::-webkit-scrollbar{display:none}
+.profileModuleNav .step{cursor:pointer}
+.profileModuleNav .step:disabled{opacity:.45;cursor:not-allowed}
+.comboReview{border:1px solid #29435a;border-radius:18px;padding:15px;background:#07131f;margin-top:14px}
+.comboReviewTitle{font-size:20px;font-weight:1000}
+.comboReviewLine{font-size:13px;color:#9eb1c4;margin-top:6px;line-height:1.55}
+.profileSaveBar{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+.profileSaveBar .btn{flex:1 1 180px}
+.autoWd{background:#0b2130!important;color:#89d9ed!important;font-weight:1000!important}
+</style>
 </head>
 <body>
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.0.3</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.0.4</small></div></div>
   <div class="save" id="saveState">Saved</div>
 </div>
 <nav id="nav"></nav>
@@ -232,154 +243,263 @@ function home(){
  document.getElementById("setupFirst")?.addEventListener("click",()=>{st.screen="rifleWizard";st.step=0;st.selectedRifle=null;st.selectedAmmo=null;render()});document.getElementById("newMatch")?.addEventListener("click",()=>{st.screen="matchWizard";st.step=0;st.selectedMatch=null;render()});profilesBtn.onclick=()=>{st.screen="rifles";render()};allMatches.onclick=()=>{st.screen="matches";render()};document.querySelectorAll(".recentOpen").forEach(b=>b.onclick=()=>{st.selectedMatch=b.dataset.m;st.screen="matchDashboard";render()});
 }
 
-function profileCombos(){const out=[];st.data.rifles.forEach(r=>(r.ammo||[]).forEach(a=>out.push({r,a})));return out}
-function deleteCombo(rid,aid){const r=st.data.rifles.find(x=>x.id===rid);if(!r)return;const a=r.ammo.find(x=>x.id===aid);if(!a)return;if(!confirm(`Delete profile "${r.name} + ${a.name}"?`))return;if(!confirm("Delete permanently? Historical matches keep their frozen snapshots."))return;r.ammo=r.ammo.filter(x=>x.id!==aid);if(!r.ammo.length)st.data.rifles=st.data.rifles.filter(x=>x.id!==rid);writeNow();render()}
-function rifles(){setBottom(false);const combos=profileCombos();main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Rifle + ammo combos</div><h2>Profiles</h2></div><button class="btn" id="addCombo">+ NEW COMBO</button></div>${combos.length?combos.map(({r,a})=>`<div class="comboCard" data-r="${r.id}" data-a="${a.id}"><div class="comboTitle">${esc(r.name)} + ${esc(a.name)}</div><div class="comboMeta">${esc(r.cartridge||"")} • ${esc(a.bullet||"")} • ${esc(a.mv||"—")} ${esc(a.mvUnit||"fps")} • ${esc(a.bcType||"G7")} ${esc(a.bcValue||a.bc||"—")}<br>${a.currentCalibrationVersion?`Calibration v${a.currentCalibrationVersion} ✓`:`Calibration incomplete`}</div><div class="actions"><button class="btn secondary small editCombo">VIEW / EDIT</button><button class="btn danger small deleteCombo">DELETE PROFILE</button></div></div>`).join(""):`<div class="note">No rifle + ammo combos yet.</div>`}</div>`;addCombo.onclick=()=>{st.screen="rifleWizard";st.step=0;st.selectedRifle=null;st.selectedAmmo=null;render()};document.querySelectorAll(".comboCard").forEach(el=>{el.querySelector(".editCombo").onclick=()=>{st.selectedRifle=el.dataset.r;st.selectedAmmo=el.dataset.a;st.step=0;st.screen="rifleWizard";render()};el.querySelector(".deleteCombo").onclick=()=>deleteCombo(el.dataset.r,el.dataset.a)});}
-
+function profileCombos(){
+ const out=[];
+ st.data.rifles.forEach(r=>{
+   if((r.ammo||[]).length){r.ammo.forEach(a=>out.push({r,a,incomplete:false}))}
+   else out.push({r,a:null,incomplete:true});
+ });
+ return out;
+}
+function deleteCombo(rid,aid){
+ const r=st.data.rifles.find(x=>x.id===rid);if(!r)return;
+ if(!confirm(`Delete profile "${r.name}${aid?" + ammo":""}"?`))return;
+ if(!confirm("Delete permanently? Historical matches keep their frozen snapshots."))return;
+ if(aid){r.ammo=r.ammo.filter(x=>x.id!==aid);if(!r.ammo.length)st.data.rifles=st.data.rifles.filter(x=>x.id!==rid)}
+ else st.data.rifles=st.data.rifles.filter(x=>x.id!==rid);
+ writeNow();render();
+}
+function rifles(){
+ setBottom(false);const combos=profileCombos();
+ main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Rifle + ammo combos</div><h2>Profiles</h2></div><button class="btn" id="addCombo">+ NEW COMBO</button></div>
+ ${combos.length?combos.map(({r,a,incomplete})=>`<div class="comboCard" data-r="${r.id}" data-a="${a?.id||""}"><div class="comboTitle">${esc(r.name)}${a?` + ${esc(a.name)}`:" • SETUP INCOMPLETE"}</div><div class="comboMeta">${esc(r.cartridge||"")}${a?` • ${esc(a.bullet||"")} • ${esc(a.mv||"—")} ${esc(a.mvUnit||"fps")} • ${esc(a.bcType||"G7")} ${esc(a.bcValue||a.bc||"—")}<br>${a.currentCalibrationVersion?`Calibration v${a.currentCalibrationVersion} ✓`:`Calibration incomplete`}`:` • Add ammunition to complete this combo`}</div><div class="actions"><button class="btn secondary small editCombo">VIEW / EDIT</button><button class="btn danger small deleteCombo">DELETE PROFILE</button></div></div>`).join(""):`<div class="note">No rifle + ammo combos yet.</div>`}</div>`;
+ addCombo.onclick=()=>{st.screen="rifleWizard";st.step=0;st.selectedRifle=null;st.selectedAmmo=null;render()};
+ document.querySelectorAll(".comboCard").forEach(el=>{
+   el.querySelector(".editCombo").onclick=()=>{st.selectedRifle=el.dataset.r;st.selectedAmmo=el.dataset.a||null;st.step=0;st.screen="rifleWizard";render()};
+   el.querySelector(".deleteCombo").onclick=()=>deleteCombo(el.dataset.r,el.dataset.a||null);
+ });
+}
 
 function rifleWizard(){
- const steps=["RIFLE","AMMO","WIND SPEED","WIND ANGLE","TARGET DOF","REVIEW"], last=steps.length-1;
+ const steps=["RIFLE","AMMO","WIND SPEED","WIND ANGLE","TARGET DOF","REVIEW"],last=5;
  setBottom(true,st.step===last?"FINISH / SAVE":"NEXT →");
- let r=st.selectedRifle?st.data.rifles.find(x=>x.id===st.selectedRifle):(st._rd||loadDraft("rifle")||(st._rd={id:uid("r"),name:"",cartridge:"",twist:"",zeroM:"100",sightHeight:"",kestrelModel:"5700 Elite",notes:"",ammo:[]}));
+
+ let r=st.selectedRifle?st.data.rifles.find(x=>x.id===st.selectedRifle):(st._rd||loadDraft("rifle")||(st._rd={
+   id:uid("r"),name:"",cartridge:"",twistValue:"",twist:"",zeroM:"100",sightHeight:"",sightHeightUnit:"cm",kestrelModel:"Kestrel / Applied Ballistics",notes:"",ammo:[]
+ }));
  let a=null;
- if(st.step>=1){
-   a=st.selectedAmmo?r.ammo.find(x=>x.id===st.selectedAmmo):(st._ad||loadDraft("ammo")||(st._ad={id:uid("a"),name:"",bullet:"",weightGr:"",mv:"",bc:"",lot:"",notes:"",currentCalibrationVersion:0,calibrationVersions:[],_work:{A:[],B:[],D:[]}}));
-   if(!a._work){const lastv=a.calibrationVersions?.[a.calibrationVersions.length-1];a._work=lastv?JSON.parse(JSON.stringify(lastv.data)):{A:[],B:[],D:[],meta:{A:{speeds:[5,10,15]},B:{speed:10,distances:[500,900]},D:{distance:700,stageWindFrom:90,ws1:8,ws2:12}}};}a._work.meta=a._work.meta||{A:{speeds:[5,10,15]},B:{speed:10,distances:[500,900]},D:{distance:700,stageWindFrom:90,ws1:8,ws2:12}};
+ if(st.step>=1 || st.selectedAmmo){
+   a=st.selectedAmmo?r.ammo.find(x=>x.id===st.selectedAmmo):(st._ad||loadDraft("ammo")||(st._ad={
+     id:uid("a"),name:"",bullet:"",weightGr:"",mv:"",mvUnit:"fps",bcType:"G7",bcValue:"",bc:"",lot:"",notes:"",currentCalibrationVersion:0,calibrationVersions:[],_work:{A:[],B:[],D:[]}
+   }));
+   loadAmmoWork(a);
  }
- main.innerHTML=`<div class="panel"><div class="kicker">Profile setup wizard</div><h2 class="wizardTitle">${["Rifle Setup","Ammunition & Ballistics","Wind Speed Calibration","Wind Angle Calibration","Target DOF Validation","Review Combo"][st.step]}</h2>
-   <div class="stepbar">${steps.map((x,i)=>`<div class="step ${st.step===i?"active":""}">${x}</div>`).join("")}</div><div id="rw"></div></div>`;
+ window.__rwR=r;window.__rwA=a;
+
+ const nav=steps.map((x,i)=>`<button type="button" class="step ${st.step===i?"active":""}" ${canJumpProfileStep(i,r,a)?"":'disabled'} onclick="navigateProfileStep(${i})">${x}</button>`).join("");
+ main.innerHTML=`<div class="panel"><div class="kicker">Profile setup</div><h2 class="wizardTitle">${["Rifle Setup","Ammunition & Ballistics","Wind Speed Calibration","Wind Angle Calibration","Target DOF Validation","Review Combo"][st.step]}</h2>
+ <div class="profileModuleNav">${nav}</div><div id="rw"></div></div>`;
+
  if(st.step===0){
    rw.innerHTML=`<div class="grid two">
      ${f("Rifle name","rName",r.name)}
      ${f("Cartridge","rCart",r.cartridge)}
-     <label>Barrel twist<div style="display:flex;gap:8px;align-items:center;margin-top:6px"><strong style="font-size:20px">1 :</strong><input id="rTwist" type="text" inputmode="decimal" value="${esc(r.twistValue||r.twist||"")}" placeholder="7.5"></div><div class="dimensionNote">Example: enter 7.5 for a 1:7.5 twist.</div></label>
+     <label>Barrel twist<div style="display:flex;gap:8px;align-items:center;margin-top:6px"><strong style="font-size:20px">1 :</strong><input id="rTwist" type="text" inputmode="decimal" value="${esc(twistInputValue(r))}" placeholder="7.5"></div><div class="dimensionNote">Example: enter 7.5 for a 1:7.5 twist.</div></label>
      ${f("Zero distance (m)","rZero",r.zeroM,"decimal")}
      <label>Sight height<div style="display:grid;grid-template-columns:1fr 95px;gap:8px;margin-top:6px"><input id="rSight" type="text" inputmode="decimal" value="${esc(r.sightHeight||"")}"><select id="rSightUnit"><option ${r.sightHeightUnit==="inch"?"":"selected"}>cm</option><option ${r.sightHeightUnit==="inch"?"selected":""}>inch</option></select></div></label>
      <label>Ballistic software<select id="rKestrel"><option ${r.kestrelModel==="Kestrel / Applied Ballistics"||r.kestrelModel==="5700 Elite"?"selected":""}>Kestrel / Applied Ballistics</option><option ${r.kestrelModel==="Applied Ballistics App"?"selected":""}>Applied Ballistics App</option><option ${r.kestrelModel==="Hornady 4DOF"?"selected":""}>Hornady 4DOF</option><option ${r.kestrelModel==="GeoBallistics"?"selected":""}>GeoBallistics</option><option ${r.kestrelModel==="Shooter"?"selected":""}>Shooter</option><option ${r.kestrelModel==="Other / Custom"?"selected":""}>Other / Custom</option></select></label>
      ${ta("Notes","rNotes",r.notes)}
-   </div>${st.selectedRifle?`<div class="actions"><button class="btn secondary" id="quickSaveRifle">SAVE RIFLE ONLY</button></div>`:""}`;
+   </div>`;
  }else if(st.step===1){
    rw.innerHTML=`<div class="grid two">
      ${f("Ammo profile name","aName",a.name)}
      ${f("Bullet / model","aBullet",a.bullet)}
      ${f("Bullet weight (gr)","aWeight",a.weightGr,"decimal")}
      <label>Muzzle velocity<div style="display:grid;grid-template-columns:1fr 95px;gap:8px;margin-top:6px"><input id="aMv" type="text" inputmode="decimal" value="${esc(a.mv||"")}"><select id="aMvUnit"><option ${a.mvUnit==="m/s"?"":"selected"}>fps</option><option ${a.mvUnit==="m/s"?"selected":""}>m/s</option></select></div></label>
-     <label>BC model<select id="aBcType"><option ${a.bcType==="G1"?"":"selected"}>G7</option><option ${a.bcType==="G1"?"selected":""}>G1</option><option ${a.bcType==="Custom Drag Model"?"selected":""}>Custom Drag Model</option></select></label>${f("BC value / CDM reference","aBc",a.bcValue||a.bc)}<div class="dimensionNote">For G1/G7 enter a decimal between 0 and 1, e.g. 0.290.</div>
+     <label>BC model<select id="aBcType"><option ${a.bcType==="G1"?"":"selected"}>G7</option><option ${a.bcType==="G1"?"selected":""}>G1</option><option ${a.bcType==="Custom Drag Model"?"selected":""}>Custom Drag Model</option></select></label>
+     ${f("BC value / CDM reference","aBc",a.bcValue||a.bc)}<div class="dimensionNote">For G1/G7 enter a value between 0 and 1, e.g. 0.290.</div>
      ${f("Lot / batch","aLot",a.lot)}
      ${ta("Ammo notes","aNotes",a.notes)}
-   </div><div class="note">Calibration belongs to this rifle + ammo combination.</div>`;
+   </div><div class="note">This ammunition stays paired with this rifle as one operational profile.</div>`;
  }else if(st.step===2){
-   rw.innerHTML=`<div class="calHelp"><strong>WIND SPEED CALIBRATION</strong><br>Purpose: teach WIND SIGHT how this rifle + ammo responds as wind speed changes.<br><br><strong>In your selected ballistic software:</strong> set DOF = 000°, inclination = 0°, and WIND FROM = 90° (full-value crosswind). Keep the same rifle profile and atmosphere. At every distance shown below, set 5 mph, 10 mph and 15 mph and copy the ballistic solver wind hold in mil into the table.</div>`+calTableA(a);
+   rw.innerHTML=calTableA(a);
  }else if(st.step===3){
-   rw.innerHTML=`<div class="calHelp"><strong>WIND ANGLE CALIBRATION</strong><br>Purpose: teach WIND SIGHT how the ballistic solution changes as the same wind approaches the bullet path from different angles.<br><br><strong>In your selected ballistic software:</strong> keep DOF = 000° and wind speed = 10 mph. For each WIND FROM angle (15°, 30°, 45°, 60°, 75°, 90°), copy the Kestrel hold at 500 m and 900 m.</div>`+calTableB(a);
+   rw.innerHTML=calTableB(a);
  }else if(st.step===4){
-   rw.innerHTML=`<div class="calHelp"><strong>TARGET DOF VALIDATION</strong><br>Purpose: verify WIND SIGHT and your Kestrel reference the same physical wind correctly when you pan between targets.<br><br><strong>In your selected ballistic software:</strong> set WD Chg = w/ DOF. Use a fixed 700 m target. Establish the physical stage wind as WIND FROM 90° at T1 / DOF 000°. Set WS1 = 8 mph and WS2 = 12 mph. Change only DOF. Enter the WD, Wnd1 and Wnd2 displayed by Kestrel.</div>`+calTableD(a);
+   rw.innerHTML=calTableD(a);
+   setTimeout(refreshDofWdPreview,0);
  }else{
-   rw.innerHTML=`<div class="card"><strong>${esc(r.name||"Unnamed rifle")}</strong><div class="small">${esc(r.cartridge||"")}</div></div>
-   <div class="card"><strong>${esc(a?.name||"Unnamed ammo")}</strong><div class="small">${esc(a?.bullet||"")} • ${esc(a?.mv||"—")} fps • next calibration version will be saved if changed</div></div>`;
+   const c=["A","B","D"].filter(k=>calPartComplete(a,k)).length;
+   rw.innerHTML=`<div class="comboReview">
+     <div class="kicker">Rifle + Ammo Combo</div>
+     <div class="comboReviewTitle">${esc(r.name||"Unnamed rifle")} + ${esc(a?.name||"Unnamed ammo")}</div>
+     <div class="comboReviewLine"><strong>Rifle:</strong> ${esc(r.cartridge||"—")} • Twist 1:${esc(twistInputValue(r)||"—")} • Zero ${esc(r.zeroM||"—")} m • Sight ${esc(r.sightHeight||"—")} ${esc(r.sightHeightUnit||"cm")}</div>
+     <div class="comboReviewLine"><strong>Ammo:</strong> ${esc(a?.bullet||"—")} • ${esc(a?.weightGr||"—")} gr • ${esc(a?.mv||"—")} ${esc(a?.mvUnit||"fps")} • ${esc(a?.bcType||"G7")} ${esc(a?.bcValue||a?.bc||"—")}</div>
+     <div class="comboReviewLine"><strong>Ballistic software:</strong> ${esc(r.kestrelModel||"—")}</div>
+     <div class="comboReviewLine"><strong>Calibration:</strong> ${c}/3 modules complete ${c===3?"✓":"⚠"}</div>
+   </div>`;
  }
- window.__rwR=r;window.__rwA=a;bindAuto(()=>saveRifleWizard(r,a));
- if(document.getElementById("quickSaveRifle"))quickSaveRifle.onclick=()=>{saveRifleWizard(r,a);const ix=st.data.rifles.findIndex(x=>x.id===r.id);if(ix>=0)st.data.rifles[ix]=r;writeNow();st.screen="rifles";render()};
- backBtn.onclick=()=>{saveRifleWizard(r,a);if(st.step===0){st.screen="rifles";render()}else{st.step--;render()}};
- nextBtn.onclick=()=>{saveRifleWizard(r,a);if(st.step===1&&a&&["G1","G7"].includes(a.bcType)){const bc=n(a.bcValue);if(!(bc>0&&bc<1)){alert("BC value for G1/G7 must be between 0 and 1, e.g. 0.290.");return;}}if(st.step<last){st.step++;render()}else{commitRifleWizard(r,a);st.screen="rifles";st.step=0;render()}};
+ rw.insertAdjacentHTML("beforeend",`<div class="profileSaveBar"><button class="btn outline" id="saveExitProfile">SAVE & EXIT</button></div>`);
+ saveExitProfile.onclick=profileSaveAndExit;
+
+ bindAuto(()=>saveRifleWizard(r,a));
+
+ backBtn.onclick=()=>{
+   saveRifleWizard(r,a);
+   if(st.step===0){st.screen="rifles";render()}else{st.step--;render()}
+ };
+ nextBtn.onclick=()=>{
+   saveRifleWizard(r,a);
+   if(st.step===0){
+     if(!r.name){alert("Enter a rifle name.");return}
+     const tv=n(twistInputValue(r));if(!(tv>0)){alert("Enter barrel twist as the value after 1:, for example 7.5.");return}
+   }
+   if(st.step===1){
+     if(!a.name||!a.bullet||!(n(a.mv)>0)){alert("Complete ammo name, bullet and muzzle velocity.");return}
+     if(["G1","G7"].includes(a.bcType)){const bc=n(a.bcValue);if(!(bc>0&&bc<1)){alert("BC value for G1/G7 must be between 0 and 1, e.g. 0.290.");return}}
+   }
+   if(st.step===2&&!autoValidateCalibrationStep(a,"A"))return;
+   if(st.step===3&&!autoValidateCalibrationStep(a,"B"))return;
+   if(st.step===4&&!autoValidateCalibrationStep(a,"D"))return;
+
+   if(st.step<last){st.step++;render()}
+   else{commitRifleWizard(r,a);st.screen="rifles";st.step=0;render()}
+ };
 }
-function wizardSolverName(r){return r?.kestrelModel||"Ballistic software"}
-function validateCalibrationNow(r,a){saveRifleWizard(r,a);render()}
 
 function saveRifleWizard(r,a){
- if(st.step===0){r.name=v("rName");r.cartridge=v("rCart");r.twistValue=v("rTwist");r.twist="1:"+v("rTwist");r.zeroM=v("rZero");r.sightHeight=v("rSight");r.sightHeightUnit=v("rSightUnit")||"cm";r.kestrelModel=v("rKestrel");r.notes=v("rNotes")}
- if(st.step===1&&a){a.name=v("aName");a.bullet=v("aBullet");a.weightGr=v("aWeight");a.mv=v("aMv");a.mvUnit=v("aMvUnit")||"fps";a.bcType=v("aBcType")||"G7";a.bcValue=v("aBc");a.bc=a.bcValue;a.lot=v("aLot");a.notes=v("aNotes")}
+ if(!r)return;
+ if(st.step===0){
+   r.name=v("rName");r.cartridge=v("rCart");
+   const tw=normDec(v("rTwist"));r.twistValue=tw;r.twist=tw?`1:${tw}`:"";
+   r.zeroM=v("rZero");r.sightHeight=v("rSight");r.sightHeightUnit=v("rSightUnit")||"cm";r.kestrelModel=v("rKestrel")||"Kestrel / Applied Ballistics";r.notes=v("rNotes");
+ }
+ if(st.step===1&&a){
+   a.name=v("aName");a.bullet=v("aBullet");a.weightGr=v("aWeight");a.mv=v("aMv");a.mvUnit=v("aMvUnit")||"fps";a.bcType=v("aBcType")||"G7";a.bcValue=v("aBc");a.bc=a.bcValue;a.lot=v("aLot");a.notes=v("aNotes");
+ }
  if(st.step===2&&a){
+   loadAmmoWork(a);
    a._work.meta.A.speeds=[...document.querySelectorAll('[id^="aS"]')].map(el=>n(el.value)).filter(x=>x!==null);
-   a._work.A=readCalAdvanced("calA","A",a);
+   a._work.A=readMobileCal("A",a);
  }
  if(st.step===3&&a){
+   loadAmmoWork(a);
    a._work.meta.B.speed=n(v("bSpeed"))||10;
-   a._work.meta.B.distances=[...document.querySelectorAll('[id^="bD"]')].map(el=>n(el.value)).filter(x=>x!==null);
-   a._work.B=readCalAdvanced("calB","B",a);
+   a._work.B=readMobileCal("B",a);
  }
  if(st.step===4&&a){
-   a._work.meta.D={distance:n(v("dDist"))||700,stageWindFrom:n(v("dWind"))||90,ws1:n(v("dWS1"))||8,ws2:n(v("dWS2"))||12};
-   ensureSideMeta(a);
-   const rows=[...document.querySelectorAll("#calD tbody tr")];
-   a._work.D=rows.map((tr,ri)=>{
-     const inputs=[...tr.querySelectorAll("input")].map(x=>normDec(x.value));
-     a._work.sides.D[`${ri}_0`]=tr.querySelector(`[data-side="D1_${ri}"]`)?.value||"R";
-     a._work.sides.D[`${ri}_1`]=tr.querySelector(`[data-side="D2_${ri}"]`)?.value||"R";
-     return inputs;
-   });
+   loadAmmoWork(a);
+   a._work.meta.D={distance:n(v("dDist"))||700,stageWindFrom:angleValue(v("dWind")||90),ws1:n(v("dWS1"))||8,ws2:n(v("dWS2"))||12};
+   a._work.D=readMobileCalD(a);
  }
+ if(a && a.name && !r.ammo.find(x=>x.id===a.id))r.ammo.push(a);
  if(r&&!st.selectedRifle)saveDraft("rifle",r);
  if(a&&!st.selectedAmmo)saveDraft("ammo",a);
  autosave();
 }
-
-function holdInput(value,side,id){return `<div class="holdCell"><input data-hold="${id}" inputmode="decimal" value="${esc(value??"")}"><select data-side="${id}"><option ${side==="L"?"selected":""}>L</option><option ${side==="R"?"selected":""}>R</option></select></div>`}
-function ensureSideMeta(a){a._work.sides=a._work.sides||{A:{},B:{},D:{}}}
-function currentWizardAmmo(){let r=st.selectedRifle?st.data.rifles.find(x=>x.id===st.selectedRifle):st._rd;return st.selectedAmmo?r?.ammo.find(x=>x.id===st.selectedAmmo):st._ad}
-function readCalAdvanced(id,key,a){ensureSideMeta(a);return [...document.querySelectorAll(`#${id} tbody tr`)].map((tr,ri)=>{const axis=normDec(tr.querySelector('[data-axis]')?.value||'');const vals=[...tr.querySelectorAll('[data-hold]')].map((inp,ci)=>{a._work.sides[key][`${ri}_${ci}`]=tr.querySelector(`[data-side="${inp.dataset.hold}"]`)?.value||'R';return normDec(inp.value)});return [axis,...vals]})}
+function readMobileCal(key,a){
+ ensureSideMeta(a);
+ return [...document.querySelectorAll(".mobileCalCard")].map((card,ri)=>{
+   const axis=normDec(card.querySelector("[data-axis]")?.value||"");
+   const vals=[...card.querySelectorAll("[data-hold]")].map((inp,ci)=>{
+     a._work.sides[key][`${ri}_${ci}`]=card.querySelector(`[data-side="${inp.dataset.hold}"]`)?.value||"R";
+     return normDec(inp.value);
+   });
+   return [axis,...vals];
+ });
+}
+function readMobileCalD(a){
+ ensureSideMeta(a);
+ const stageWind=angleValue(v("dWind")||90);
+ return [...document.querySelectorAll(".mobileCalCard")].map((card,ri)=>{
+   const dof=angleValue(card.querySelector("[data-axis]")?.value||0);
+   const wd=norm(stageWind-dof);
+   const vals=[...card.querySelectorAll("[data-hold]")].map((inp,ci)=>{
+     a._work.sides.D[`${ri}_${ci}`]=card.querySelector(`[data-side="${inp.dataset.hold}"]`)?.value||"R";
+     return normDec(inp.value);
+   });
+   return [String(dof),String(Math.round(wd)),...vals];
+ });
+}
+function refreshDofWdPreview(){
+ const stageWind=angleValue(v("dWind")||90);
+ document.querySelectorAll(".mobileCalCard").forEach(card=>{
+   const dof=angleValue(card.querySelector("[data-axis]")?.value||0);
+   const wd=card.querySelector("[data-wd]");
+   if(wd)wd.value=String(Math.round(norm(stageWind-dof)));
+ });
+}
+function ensureSideMeta(a){loadAmmoWork(a);a._work.sides=a._work.sides||{A:{},B:{},D:{}}}
 function calWarnings(a,key){
- const w=[];ensureSideMeta(a);
- if(key==='A'){
-   const rows=(a._work.A||[]).slice().sort((x,y)=>n(x[0])-n(y[0])),speeds=a._work.meta?.A?.speeds||[5,10,15];
-   rows.forEach((r,ri)=>{
+ const w=[];loadAmmoWork(a);
+ if(key==="A"){
+   const rows=(a._work.A||[]).slice().sort((x,y)=>n(x[0])-n(y[0])),speeds=a._work.meta.A.speeds||[5,10,15];
+   rows.forEach(r=>{
      const vals=r.slice(1).map(n);
      for(let i=1;i<vals.length;i++)if(vals[i]!=null&&vals[i-1]!=null&&vals[i]+.001<vals[i-1])w.push(`${r[0]} m: higher wind speed produced a lower hold`);
-     for(let i=1;i<vals.length;i++){if(vals[i]!=null&&vals[0]!=null&&speeds[i]>0&&speeds[0]>0){const ratio=vals[i]/Math.max(vals[0],.001),expected=speeds[i]/speeds[0];if(Math.abs(ratio-expected)/expected>.35)w.push(`${r[0]} m: hold scaling across wind speeds looks unusual — verify ballistic-solver entry`) }}
    });
    for(let c=1;c<=speeds.length;c++){let prev=null;rows.forEach(r=>{const cur=n(r[c]);if(cur!=null&&prev!=null&&cur+.001<prev)w.push(`${r[0]} m: hold is lower than the previous distance at ${speeds[c-1]} mph`);if(cur!=null)prev=cur})}
  }
- if(key==='B'){
+ if(key==="B"){
    const rows=(a._work.B||[]).slice().sort((x,y)=>n(x[0])-n(y[0]));
-   if(rows.length)for(let c=1;c<rows[0].length;c++){let prev=null;rows.forEach(r=>{const x=n(r[c]);if(x!=null&&prev!=null&&x+.001<prev)w.push(`${r[0]}°: hold dropped as wind angle increased`);if(x!=null)prev=x})}
+   if(rows.length)for(let c=1;c<rows[0].length;c++){let prev=null;rows.forEach(r=>{const cur=n(r[c]);if(cur!=null&&prev!=null&&cur+.001<prev)w.push(`${r[0]}°: hold dropped as wind angle increased`);if(cur!=null)prev=cur})}
  }
- if(key==='D'){
-   const meta=a._work.meta?.D||{stageWindFrom:90};
-   (a._work.D||[]).forEach((r,ri)=>{const dof=n(r[0]),wd=n(r[1]),h1=n(r[2]),h2=n(r[3]);if(dof!=null&&wd!=null&&Math.abs(sdelta(wd,norm(meta.stageWindFrom-dof)))>8)w.push(`DOF ${dof}°: software WD differs materially from expected geometry`);if(h1!=null&&h2!=null&&h2+.001<h1)w.push(`DOF ${dof}°: higher wind speed produced lower hold`)})
+ if(key==="D"){
+   const meta=a._work.meta.D||{stageWindFrom:90};
+   (a._work.D||[]).forEach(r=>{
+     const dof=n(r[0]),wd=n(r[1]),h1=n(r[2]),h2=n(r[3]);
+     if(dof!=null&&wd!=null&&Math.abs(sdelta(wd,norm(meta.stageWindFrom-dof)))>2)w.push(`DOF ${dof}°: Wind Direction does not match Stage WIND FROM and DOF`);
+     if(h1!=null&&h2!=null&&h2+.001<h1)w.push(`DOF ${dof}°: higher wind speed produced a lower hold`);
+   });
  }
  return [...new Set(w)];
 }
-function addCalRow(key){const a=currentWizardAmmo();if(!a)return;
- if(key==='A'){const cols=(a._work.meta?.A?.speeds||[5,10,15]).length;a._work.A.push(['',...Array(cols).fill('')]);}
- if(key==='B'){const cols=(a._work.meta?.B?.distances||[500,900]).length;a._work.B.push(['',...Array(cols).fill('')]);}
- if(key==='D')a._work.D.push(['','','','']);render()}
-function removeCalRow(key,i){const a=currentWizardAmmo();if(!a)return;a._work[key].splice(i,1);render()}
-function addBDistance(){const a=currentWizardAmmo();if(!a)return;const d=prompt('New calibration distance in meters');if(!(n(d)>0))return;a._work.meta.B.distances.push(n(d));a._work.B=a._work.B.map(r=>[...r,'']);render()}
 function calibrationComplete(a){
- if(!a||!a._work)return false;
+ if(!a)return false;loadAmmoWork(a);
  const A=a._work.A||[],B=a._work.B||[],D=a._work.D||[];
- return A.length>=3&&A.every(r=>n(r[0])>0&&r.slice(1).every(x=>n(x)!==null)) && B.length>=3&&B.every(r=>n(r[0])!==null&&r.slice(1).every(x=>n(x)!==null)) && D.length>=3&&D.every(r=>angleOK(r[0])&&r.slice(1).every(x=>n(x)!==null));
+ return A.length>=1&&A.every(r=>n(r[0])>0&&r.slice(1).every(x=>n(x)!==null)) &&
+        B.length>=1&&B.every(r=>angleOK(r[0])&&r.slice(1).every(x=>n(x)!==null)) &&
+        D.length>=1&&D.every(r=>angleOK(r[0])&&r.slice(1).every(x=>n(x)!==null));
 }
-
 function commitRifleWizard(r,a){
+ saveRifleWizard(r,a);
+ if(!r?.name){alert("Enter a rifle name.");return}
  if(a){
-   if(!a.name){alert("Enter an ammo profile name.");return;}
-   if(!r.ammo.find(x=>x.id===a.id))r.ammo.push(a);
-   const data=JSON.parse(JSON.stringify(a._work||{A:[],B:[],D:[]}));
-   const prev=a.calibrationVersions?.[a.calibrationVersions.length-1];
-   if(calibrationComplete(a) && (!prev||JSON.stringify(prev.data)!==JSON.stringify(data))){
-     a.currentCalibrationVersion=(a.currentCalibrationVersion||0)+1;
-     a.calibrationVersions=a.calibrationVersions||[];
-     a.calibrationVersions.push({version:a.currentCalibrationVersion,createdAt:iso(),data});
-   }
+   if(a.name && !r.ammo.find(x=>x.id===a.id))r.ammo.push(a);
+   maybeVersionCalibration(a);
  }
- const ix=st.data.rifles.findIndex(x=>x.id===r.id); if(ix>=0)st.data.rifles[ix]=r; else st.data.rifles.push(r);
+ const ix=st.data.rifles.findIndex(x=>x.id===r.id);if(ix>=0)st.data.rifles[ix]=r;else st.data.rifles.push(r);
  st._rd=null;st._ad=null;clearDraft("rifle");clearDraft("ammo");writeNow();
 }
-function mobileHold(vv,side,id,label){return `<div class="mobileHold"><strong>${label}</strong><input data-hold="${id}" inputmode="decimal" placeholder="mil" value="${esc(vv??"")}"><select data-side="${id}"><option ${side==="L"?"selected":""}>L</option><option ${side==="R"?"selected":""}>R</option></select></div>`}
+function addCalRow(key){
+ const a=currentWizardAmmo();if(!a)return;saveRifleWizard(window.__rwR,a);loadAmmoWork(a);
+ if(key==="A"){const cols=a._work.meta.A.speeds.length;a._work.A.push(["",...Array(cols).fill("")]);}
+ if(key==="B"){const cols=a._work.meta.B.distances.length;a._work.B.push(["",...Array(cols).fill("")]);}
+ if(key==="D")a._work.D.push(["","","",""]);
+ render();
+}
+function removeCalRow(key,i){const a=currentWizardAmmo();if(!a)return;saveRifleWizard(window.__rwR,a);a._work[key].splice(i,1);render()}
+function addBDistance(){
+ const a=currentWizardAmmo();if(!a)return;saveRifleWizard(window.__rwR,a);
+ const d=prompt("New calibration distance in meters");if(!(n(d)>0))return;
+ a._work.meta.B.distances.push(n(d));a._work.meta.B.distances=[...new Set(a._work.meta.B.distances)].sort((x,y)=>x-y);
+ a._work.B=a._work.B.map(r=>[r[0],...a._work.meta.B.distances.map((_,i)=>r[i+1]??"")]);render();
+}
+function mobileHold(vv,side,id,label){
+ return `<div class="mobileHold"><strong>${esc(label)}</strong><input data-hold="${id}" inputmode="decimal" placeholder="mil" value="${esc(vv??"")}"><select data-side="${id}"><option ${side==="L"?"selected":""}>L</option><option ${side==="R"?"selected":""}>R</option></select></div>`;
+}
 function calTableA(a){
- ensureSideMeta(a);if(!a._work.A?.length)a._work.A=[300,400,500,600,700,800,900].map(d=>[d,"","",""]);a._work.meta=a._work.meta||{};a._work.meta.A=a._work.meta.A||{speeds:[5,10,15]};const sp=a._work.meta.A.speeds,w=calWarnings(a,"A");
- return `<div class="calModuleTitle">WIND SPEED CALIBRATION</div><div class="calHelp"><strong>ENTER YOUR BALLISTIC SOFTWARE WIND HOLDS.</strong><br>Pre-populated distances: 300–900 m. Enter each solver wind hold and select L/R.</div>${a._work.A.map((r,i)=>`<div class="mobileCalCard"><div class="mobileCalHead"><input data-axis inputmode="numeric" value="${esc(r[0])}" style="width:100px;display:inline-block;margin:0"> m</div>${sp.map((x,c)=>mobileHold(r[c+1],a._work.sides.A[`${i}_${c}`]||"R",`A_${i}_${c}`,`${x} mph`)).join("")}${a._work.A.length>1?`<button class="btn danger small" onclick="removeCalRow('A',${i})">REMOVE DISTANCE</button>`:""}</div>`).join("")}<div class="actions"><button class="btn secondary" onclick="addCalRow('A')">+ ADD DISTANCE</button><button class="btn outline" onclick="validateCalibrationNow(window.__rwR,window.__rwA)">VALIDATE</button></div>${w.length?`<div class="warn">${w.map(x=>"• "+esc(x)).join("<br>")}</div>`:""}`;
+ loadAmmoWork(a);const rows=a._work.A,sp=a._work.meta.A.speeds||[5,10,15];
+ return `<div class="calModuleTitle">WIND SPEED CALIBRATION</div><div class="calHelp"><strong>ENTER YOUR BALLISTIC SOFTWARE WIND HOLDS.</strong><br>Default distances are 300–900 m. Values remain editable at any time.</div>
+ <div class="grid three">${sp.map((x,i)=>f(`Wind ${i+1} mph`,`aS${i+1}`,x,"decimal")).join("")}</div>
+ ${rows.map((r,i)=>`<div class="mobileCalCard"><div class="mobileCalHead"><input data-axis inputmode="numeric" value="${esc(r[0])}" style="width:100px;display:inline-block;margin:0"> m</div>${sp.map((x,c)=>mobileHold(r[c+1],a._work.sides.A[`${i}_${c}`]||"R",`A_${i}_${c}`,`${x} mph`)).join("")}${rows.length>1?`<button class="btn danger small" onclick="removeCalRow('A',${i})">REMOVE DISTANCE</button>`:""}</div>`).join("")}
+ <div class="actions"><button class="btn secondary" onclick="addCalRow('A')">+ ADD DISTANCE</button></div>`;
 }
 function calTableB(a){
- ensureSideMeta(a);if(!a._work.B?.length)a._work.B=[15,30,45,60,75,90].map(x=>[x,"",""]);a._work.meta=a._work.meta||{};a._work.meta.B=a._work.meta.B||{speed:10,distances:[500,900]};const m=a._work.meta.B,w=calWarnings(a,"B");
- return `<div class="calModuleTitle">WIND ANGLE CALIBRATION</div><div class="calHelp"><strong>ENTER YOUR BALLISTIC SOFTWARE WIND HOLDS.</strong><br>Default distances are 500 m and 900 m. Each card is a WIND FROM angle.</div>${a._work.B.map((r,i)=>`<div class="mobileCalCard"><div class="mobileCalHead"><input data-axis inputmode="numeric" value="${esc(r[0])}" style="width:100px;display:inline-block;margin:0">° WIND FROM</div>${m.distances.map((d,c)=>mobileHold(r[c+1],a._work.sides.B[`${i}_${c}`]||"R",`B_${i}_${c}`,`${d} m`)).join("")}</div>`).join("")}<div class="actions"><button class="btn secondary" onclick="addCalRow('B')">+ ADD ANGLE</button><button class="btn secondary" onclick="addBDistance()">+ ADD DISTANCE</button><button class="btn outline" onclick="validateCalibrationNow(window.__rwR,window.__rwA)">VALIDATE</button></div>${w.length?`<div class="warn">${w.map(x=>"• "+esc(x)).join("<br>")}</div>`:""}`;
+ loadAmmoWork(a);const rows=a._work.B,meta=a._work.meta.B;
+ return `<div class="calModuleTitle">WIND ANGLE CALIBRATION</div><div class="calHelp"><strong>ENTER YOUR BALLISTIC SOFTWARE WIND HOLDS.</strong><br>Default distances are 500 m and 900 m. Values remain editable at any time.</div>
+ ${f("Calibration wind mph","bSpeed",meta.speed,"decimal")}
+ <div class="note">Distances: ${meta.distances.map(x=>`${x} m`).join(" • ")}</div>
+ ${rows.map((r,i)=>`<div class="mobileCalCard"><div class="mobileCalHead"><input data-axis inputmode="numeric" value="${esc(r[0])}" style="width:100px;display:inline-block;margin:0">° WIND FROM</div>${meta.distances.map((d,c)=>mobileHold(r[c+1],a._work.sides.B[`${i}_${c}`]||"R",`B_${i}_${c}`,`${d} m`)).join("")}</div>`).join("")}
+ <div class="actions"><button class="btn secondary" onclick="addCalRow('B')">+ ADD ANGLE</button><button class="btn secondary" onclick="addBDistance()">+ ADD DISTANCE</button></div>`;
 }
 function calTableD(a){
- ensureSideMeta(a);if(!a._work.D?.length)a._work.D=[0,30,60,120,180,240,330].map(x=>[x,"","",""]);a._work.meta=a._work.meta||{};a._work.meta.D=a._work.meta.D||{distance:700,stageWindFrom:90,ws1:8,ws2:12};const m=a._work.meta.D,w=calWarnings(a,"D");
- return `<div class="calModuleTitle">TARGET DOF VALIDATION</div><div class="calHelp"><strong>ENTER VALUES SHOWN BY YOUR BALLISTIC SOFTWARE.</strong><br>Default validation distance is 700 m. Enter software WD plus both wind holds and L/R.</div><div class="grid four">${f("Distance m","dDist",m.distance,"numeric")}${f("Stage WIND FROM °","dWind",m.stageWindFrom,"numeric")}${f("WS1 mph","dWS1",m.ws1,"decimal")}${f("WS2 mph","dWS2",m.ws2,"decimal")}</div>${a._work.D.map((r,i)=>`<div class="mobileCalCard"><div class="mobileCalHead">DOF <input data-axis inputmode="numeric" value="${esc(r[0])}" style="width:100px;display:inline-block;margin:0">°</div><div class="mobileHold"><strong>WD</strong><input data-wd inputmode="numeric" value="${esc(r[1])}"><span></span></div>${mobileHold(r[2],a._work.sides.D[`${i}_0`]||"R",`D1_${i}`,`${m.ws1} mph`)}${mobileHold(r[3],a._work.sides.D[`${i}_1`]||"R",`D2_${i}`,`${m.ws2} mph`)}</div>`).join("")}<div class="actions"><button class="btn secondary" onclick="addCalRow('D')">+ ADD DOF</button><button class="btn outline" onclick="validateCalibrationNow(window.__rwR,window.__rwA)">VALIDATE</button></div>${w.length?`<div class="warn">${w.map(x=>"• "+esc(x)).join("<br>")}</div>`:""}`;
+ loadAmmoWork(a);const rows=a._work.D,meta=a._work.meta.D;
+ return `<div class="calModuleTitle">TARGET DOF VALIDATION</div><div class="calHelp"><strong>ENTER YOUR BALLISTIC SOFTWARE WIND HOLDS.</strong><br><strong>Wind Direction</strong> is calculated automatically from Stage WIND FROM and each target DOF. You only enter the two solver holds and L/R side.</div>
+ <div class="grid four">${f("Distance m","dDist",meta.distance,"numeric")}<label>Stage WIND FROM °<input id="dWind" type="text" inputmode="numeric" value="${esc(meta.stageWindFrom)}" oninput="refreshDofWdPreview()"></label>${f("WS1 mph","dWS1",meta.ws1,"decimal")}${f("WS2 mph","dWS2",meta.ws2,"decimal")}</div>
+ ${rows.map((r,i)=>{const wd=Math.round(norm((n(meta.stageWindFrom)||90)-(n(r[0])||0)));return `<div class="mobileCalCard"><div class="mobileCalHead">DOF <input data-axis inputmode="numeric" value="${esc(r[0])}" oninput="refreshDofWdPreview()" style="width:100px;display:inline-block;margin:0">°</div><div class="mobileHold"><strong>Wind Direction</strong><input class="autoWd" data-wd readonly value="${wd}°"><span></span></div>${mobileHold(r[2],a._work.sides.D[`${i}_0`]||"R",`D1_${i}`,`${meta.ws1} mph`)}${mobileHold(r[3],a._work.sides.D[`${i}_1`]||"R",`D2_${i}`,`${meta.ws2} mph`)}</div>`}).join("")}
+ <div class="actions"><button class="btn secondary" onclick="addCalRow('D')">+ ADD DOF</button></div>`;
 }
-function readCal(id){return []}
 
 function deepClone(x){return JSON.parse(JSON.stringify(x))}
 function regenTargetIds(targets){return (targets||[]).map((t,i)=>({...deepClone(t),id:uid("t"),label:t.label||("T"+(i+1)),dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"}))}
