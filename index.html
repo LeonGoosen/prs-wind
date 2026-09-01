@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.8.1 Shoot UI Cleanup</title>
+<title>WIND SIGHT PRS by ZealTech — v3.8.2 Wind-Hit Call Optimizer</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -203,7 +203,7 @@ input[type="date"]::-webkit-date-and-time-value{text-align:center}
 .confHigh{color:#74d59b}.confMed{color:#f1c36b}.confLow{color:#ff8d8d}
 @media(max-width:390px){.wsMetricGrid{grid-template-columns:1fr 1fr}.wsMetric .v{font-size:17px}}
 .liveSensorStrip{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #223a50;border-radius:12px;padding:9px 11px;background:#07131f;margin-top:8px;margin-bottom:10px}
-.liveSensorLeft{display:flex;align-items:center;gap:8px;min-width:0}.liveSensorName{font-size:11px;font-weight:1000;color:#aebdcc;white-space:nowrap}.liveSensorData{font-size:13px;font-weight:1000;color:#fff;white-space:nowrap}.liveSensorHint{font-size:10px;color:#7f93a7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.liveSensorLock{flex:0 0 auto;padding:8px 10px!important;min-height:36px!important;font-size:10px!important}.impactSecondary{font-size:10px;color:#71869a;margin-top:4px}.shootCompact{padding:13px}.shootHold{margin:11px 0 7px}.wsMetric.primaryMetric{border-color:#31536c;background:#091b29}.wsMetric.primaryMetric .v{font-size:24px}.shootTop .tag{opacity:.72}
+.liveSensorLeft{display:flex;align-items:center;gap:8px;min-width:0}.liveSensorName{font-size:11px;font-weight:1000;color:#aebdcc;white-space:nowrap}.liveSensorData{font-size:13px;font-weight:1000;color:#fff;white-space:nowrap}.liveSensorHint{font-size:10px;color:#7f93a7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.liveSensorLock{flex:0 0 auto;padding:8px 10px!important;min-height:36px!important;font-size:10px!important}.impactSecondary{font-size:10px;color:#71869a;margin-top:4px}.shootCompact{padding:13px}.shootHold{margin:11px 0 7px}.wsMetric.primaryMetric{border-color:#31536c;background:#091b29}.wsMetric.primaryMetric .v{font-size:24px}.shootTop .tag{opacity:.72}.curveBest{border-color:var(--blue)!important;background:#0a2634!important}.curveBest .hold{color:var(--blue)!important}
 @media(max-width:390px){.liveSensorHint{display:none}.liveSensorData{font-size:12px}.liveSensorName{font-size:10px}.liveSensorStrip{gap:6px;padding:8px 9px}}
 html,body{touch-action:manipulation}
 
@@ -260,7 +260,7 @@ html,body{touch-action:manipulation}
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.8.1</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.8.2</small></div></div>
   <div class="save" id="saveState">Saved</div>
 </div>
 <nav id="nav"></nav>
@@ -510,9 +510,9 @@ function calypsoStateEstimate(){
    count30:w30.length,count120:w120.length
  };
 }
-function decisionHysteresis(prev,next){if(!prev)return next;if(prev.locked)return prev;if(prev.side!==next.side)return next;const diff=Math.abs((prev.hold||0)-(next.hold||0)),gain=(next.modeledHit||0)-(prev.modeledHit||0);if(diff<=.100001&&gain<.04){const signed=prev.side==="L"?-Math.abs(prev.hold):Math.abs(prev.hold),cand=next.candidates?.find(x=>Math.abs(x.h-signed)<.0001);return {...next,hold:prev.hold,side:prev.side,signedHold:signed,modeledHit:cand?.p??prev.modeledHit,hysteresisHeld:true}}return next}
-function liveCommandSolutions(s){const N=s.targets.length>4?500:s.targets.length>2?750:1000;return s.targets.map(tt=>{const sol=optimizeImpactHoldV4(s,tt,N),z=targetDirectionState(s,tt);if(!sol)return {tt,sol:null,z};const prev=s.liveDecision?.[tt.id],final=decisionHysteresis(prev,{...sol,locked:false});s.liveDecision=s.liveDecision||{};s.liveDecision[tt.id]=final;return {tt,sol:final,z}})}
-function lockStageCall(){const s=getStage();if(!s)return;const sols=liveCommandSolutions(s);s.lockedCall={at:iso(),targets:{}};sols.forEach(({tt,sol})=>{if(sol)s.lockedCall.targets[tt.id]={hold:sol.hold,side:sol.side,modeledHit:sol.modeledHit,confidence:sol.confidence,robustMin:sol.robustMin,robustMax:sol.robustMax,sideAmbiguous:sol.sideAmbiguous,sideMinorProb:sol.sideMinorProb}});autosave();renderLiveCommand(s)}
+function decisionHysteresis(prev,next){if(!prev)return next;if(prev.locked)return prev;if(prev.side!==next.side)return next;const diff=Math.abs((prev.hold||0)-(next.hold||0)),gain=(next.windHit||0)-(prev.windHit||0);if(diff<=.100001&&gain<.04){const signed=prev.side==="L"?-Math.abs(prev.hold):Math.abs(prev.hold),cand=next.candidates?.find(x=>Math.abs(x.h-signed)<.0001);return {...next,hold:prev.hold,side:prev.side,signedHold:signed,windHit:cand?.p??prev.windHit,hysteresisHeld:true}}return next}
+function liveCommandSolutions(s){const N=s.targets.length>4?500:s.targets.length>2?750:1000;return s.targets.map(tt=>{const sol=optimizeShootSolutionV5(s,tt,N),z=targetDirectionState(s,tt);if(!sol)return {tt,sol:null,z};const prev=s.liveDecision?.[tt.id],final=decisionHysteresis(prev,{...sol,locked:false});s.liveDecision=s.liveDecision||{};s.liveDecision[tt.id]=final;return {tt,sol:final,z}})}
+function lockStageCall(){const s=getStage();if(!s)return;const sols=liveCommandSolutions(s);s.lockedCall={at:iso(),targets:{}};sols.forEach(({tt,sol})=>{if(sol)s.lockedCall.targets[tt.id]={hold:sol.hold,side:sol.side,modeledHit:sol.modeledHit,windHit:sol.windHit,confidence:sol.confidence,robustMin:sol.robustMin,robustMax:sol.robustMax,sideAmbiguous:sol.sideAmbiguous,sideMinorProb:sol.sideMinorProb}});autosave();renderLiveCommand(s)}
 function unlockStageCall(){const s=getStage();if(!s)return;s.lockedCall=null;autosave();renderLiveCommand(s)}
 function renderLiveCommand(s){
  const host=document.getElementById("liveCommandHost");if(!host)return;
@@ -1326,8 +1326,19 @@ function evidenceSpeedStats(s,tt){
  vals.forEach(x=>{const z=x.zone==="shooter"?zw.shooter:x.zone==="target"?zw.target:zw.mid;const w=x.w*z;vr+=w*(x.v-mu)*(x.v-mu)});
  let sigma=Math.sqrt(vr/Math.max(sw,.0001));
  const spread=Math.max(0,(n(s.wind?.max)||mu)-(n(s.wind?.min)||mu));
- sigma=Math.max(.6,sigma,spread/3);
- return {mu,sigma,spread,count:vals.length};
+ // Live Calypso is a state estimate, not a permanent MIN/MAX bracket. When a current
+ // stream is stable, allow the posterior to narrow to the measured recent variation.
+ // TREND/SHIFT states are deliberately inflated so a changing wind never earns a
+ // falsely high hit probability merely because the latest few samples are tight.
+ if(cse){
+   const measured=Math.max(.25,n(cse.sd)||0);
+   const regimeInflation=cse.regime==="SHIFT"?1.85:cse.regime==="TREND"?1.35:1.0;
+   const trendInflation=Math.min(1.0,Math.abs(n(cse.speedTrend)||0)*6);
+   sigma=Math.max(.35,measured*regimeInflation+trendInflation);
+ }else{
+   sigma=Math.max(.6,sigma,spread/3);
+ }
+ return {mu,sigma,spread,count:vals.length,liveState:cse?.regime||null};
 }
 function solverHoldAtWind(tt,speed,s){
  const lo=n(tt.kMin),hi=n(tt.kMax);if(lo===null||hi===null)return null;
@@ -1492,6 +1503,57 @@ function optimizeWindHoldV2(s,tt){
    q10,q50,q90,candidates,model:mc
  };
 }
+function optimizeWindHoldV3(s,tt){
+ const dm=targetDimsMil(tt);if(!dm)return null;
+ const mc=monteCarloRequiredHolds(s,tt,7000),samples=[...mc.samples];
+ if(!samples.length)return null;
+ // Preserve confirmed same-match learning without allowing it to dominate fresh evidence.
+ const mb=matchBiasEstimate(tt),shift=mb.bias*mb.weight;
+ if(shift)for(let i=0;i<samples.length;i++)samples[i]+=shift;
+ const minS=Math.min(...samples),maxS=Math.max(...samples),candidates=[];
+ const start=Math.floor((minS-.5)*10)/10,end=Math.ceil((maxS+.5)*10)/10;
+ for(let h=start;h<=end+1e-9;h+=.1){const hs=Number(h.toFixed(1));candidates.push({h:hs,p:probabilityInside(samples,hs,dm.w)})}
+ candidates.sort((a,b)=>b.p-a.p||Math.abs(a.h)-Math.abs(b.h));
+ const best=candidates[0],thr=best.p*.95,robust=candidates.filter(x=>x.p>=thr).sort((a,b)=>a.h-b.h);
+ const absSamples=samples.map(Math.abs).sort((a,b)=>a-b),q=p=>absSamples[Math.min(absSamples.length-1,Math.floor((absSamples.length-1)*p))];
+ const directionAgreement=mc.dir.concentration,speedRel=mc.spd.mu>0?mc.spd.sigma/mc.spd.mu:1;
+ let confScore=.45*directionAgreement+.30*clamp(1-speedRel,0,1)+.15*clamp(mc.dir.evidence/4,0,1)+.10*(calibrationCompleteForMatch(s)?1:.45);
+ if(s.wind?.source==="CALYPSO LIVE"&&calypsoRuntime.status==="connected"){const cs=calypsoStats();if(cs?.count>=10)confScore+=.06;if(cs?.count>=30)confScore+=.03}
+ if((s.wind?.terrain||"").includes("Turbulent"))confScore-=.12;
+ confScore=clamp(confScore,0,1);
+ return {signedHold:best.h,hold:Math.abs(best.h),side:best.h<0?"L":"R",windHit:best.p,
+   confidence:confScore>=.72?"HIGH":confScore>=.48?"MEDIUM":"LOW",confidenceScore:confScore,
+   robustMin:Math.abs(robust[0]?.h??best.h),robustMax:Math.abs(robust[robust.length-1]?.h??best.h),robustSide:best.h<0?"L":"R",
+   q10:q(.10),q50:q(.50),q90:q(.90),candidates,model:{...mc,samples},matchBias:mb.bias,matchBiasWeight:mb.weight};
+}
+
+function optimizeShootSolutionV5(s,tt,N=10000){
+ // Shooter-facing call is explicitly optimized for WIND HIT. The full 2-D impact
+ // model validates that same call; it no longer silently chooses a different hold.
+ const wind=optimizeWindHoldV3(s,tt);if(!wind)return null;
+ const sim=simulateImpactSamplesV3(s,tt,N);if(!sim.samples.length)return null;
+ const shift=(wind.matchBias||0)*(wind.matchBiasWeight||0);if(shift)sim.samples.forEach(x=>x.requiredWind+=shift);
+ const modeledAtCall=impactProbability2D(sim,tt,wind.signedHold);
+ const req=sim.samples.map(x=>x.requiredWind),start=Math.floor((Math.min(...req)-.6)*10)/10,end=Math.ceil((Math.max(...req)+.6)*10)/10,impactCandidates=[];
+ for(let h=start;h<=end+1e-9;h+=.1){const hh=Number(h.toFixed(1));impactCandidates.push({h:hh,p:impactProbability2D(sim,tt,hh)})}
+ impactCandidates.sort((a,b)=>b.p-a.p||Math.abs(a.h)-Math.abs(b.h));
+ const impactBest=impactCandidates[0]||{h:wind.signedHold,p:modeledAtCall},minor=sim.wind.side?.minor||0;
+ let cs=wind.confidenceScore??.4;const {a}=currentMatchAndAmmo();if(n(a?.mvSd)>0)cs+=.03;if(n(a?.precision)>0||n(a?.hPrecision)>0||n(a?.vPrecision)>0)cs+=.04;
+ const cov=sim.components.coeffCoverage||0;cs-=.06*(1-cov);const dq=dofValidationQuality();if(dq.mae!==null&&!dq.ok)cs-=.08;if(minor>.1)cs-=Math.min(.3,minor*.8);cs=clamp(cs,0,1);
+ return {engine:"AccuracyCore-5",signedHold:wind.signedHold,hold:wind.hold,side:wind.side,windHit:wind.windHit,modeledHit:modeledAtCall,
+   impactBestHold:impactBest.h,impactBest:impactBest.p,confidence:cs>=.72?"HIGH":cs>=.48?"MEDIUM":"LOW",confidenceScore:cs,
+   robustMin:wind.robustMin,robustMax:wind.robustMax,robustSide:wind.robustSide,matchBias:wind.matchBias,matchBiasWeight:wind.matchBiasWeight,
+   sideMinorProb:minor,sideAmbiguous:minor>=.15,candidates:wind.candidates,impactCandidates,components:sim.components,direction:targetDirectionState(s,tt),model:wind.model};
+}
+
+function callCurveHTML(s,tt){
+ const sol=optimizeShootSolutionV5(s,tt,4500);if(!sol?.candidates?.length)return "";
+ const best=sol.windHit,near=sol.candidates.filter(x=>x.p>=Math.max(0,best-.18)).sort((a,b)=>a.h-b.h);
+ let rows=near.slice(Math.max(0,near.findIndex(x=>x.h===sol.signedHold)-3),Math.max(0,near.findIndex(x=>x.h===sol.signedHold)-3)+7);
+ if(!rows.some(x=>x.h===sol.signedHold))rows=[...sol.candidates].sort((a,b)=>Math.abs(a.h-sol.signedHold)-Math.abs(b.h-sol.signedHold)).slice(0,7).sort((a,b)=>a.h-b.h);
+ return `<details class="fastSection"><summary>CALL CURVE • ${esc(tt.label)} <span class="optionalChip">DIAGNOSTIC</span></summary><div class="small">0.1 mil candidates ranked against the current wind posterior. The highlighted call is the actual WIND SIGHT optimization, not the midpoint of MIN/MAX.</div><div style="margin-top:10px">${rows.map(x=>`<div class="stageLine ${Math.abs(x.h-sol.signedHold)<.001?'curveBest':''}"><strong>${hold1(Math.abs(x.h))} ${x.h<0?'L':'R'}</strong><div class="hold">${Math.round(x.p*100)}%</div><div class="meta">${Math.abs(x.h-sol.signedHold)<.001?'SELECTED • MAX WIND HIT':'candidate'}</div></div>`).join('')}</div></details>`;
+}
+
 function calibrationCompleteForMatch(s){
  const m=st.data.matches.find(x=>x.id===st.selectedMatch);
  return !!m?.calibrationVersion;
@@ -1513,7 +1575,7 @@ function buildCalypsoBlocks(samples,blockSec=30){
  return out;
 }
 
-function buildPreShootSolution(s){return {engine:"AccuracyCore-4",createdAt:iso(),targets:s.targets.map(tt=>{const sol=optimizeImpactHoldV4(s,tt,10000),dir=targetDirectionState(s,tt);return {targetId:tt.id,label:tt.label,distanceM:tt.distanceM,dof:tt.dof,fusedGlobalDir:dir.globalDir,targetWD:dir.targetWD,hold:sol?.hold??null,side:sol?.side??null,modeledHit:sol?.modeledHit??null,windHit:sol?.windHit??null,confidence:sol?.confidence??null,confidenceScore:sol?.confidenceScore??null,robustMin:sol?.robustMin??null,robustMax:sol?.robustMax??null,sideAmbiguous:sol?.sideAmbiguous??false,sideMinorProb:sol?.sideMinorProb??0,matchBias:sol?.matchBias??0,matchBiasWeight:sol?.matchBiasWeight??0,components:sol?.components??null,calibrationD:dofValidationQuality(),kMin:tt.kMin,kMax:tt.kMax,targetWidthMil:targetDimsMil(tt)?.w??null}})}}
+function buildPreShootSolution(s){return {engine:"AccuracyCore-5",createdAt:iso(),targets:s.targets.map(tt=>{const sol=optimizeShootSolutionV5(s,tt,10000),dir=targetDirectionState(s,tt);return {targetId:tt.id,label:tt.label,distanceM:tt.distanceM,dof:tt.dof,fusedGlobalDir:dir.globalDir,targetWD:dir.targetWD,hold:sol?.hold??null,side:sol?.side??null,modeledHit:sol?.modeledHit??null,windHit:sol?.windHit??null,confidence:sol?.confidence??null,confidenceScore:sol?.confidenceScore??null,robustMin:sol?.robustMin??null,robustMax:sol?.robustMax??null,sideAmbiguous:sol?.sideAmbiguous??false,sideMinorProb:sol?.sideMinorProb??0,matchBias:sol?.matchBias??0,matchBiasWeight:sol?.matchBiasWeight??0,components:sol?.components??null,calibrationD:dofValidationQuality(),kMin:tt.kMin,kMax:tt.kMax,targetWidthMil:targetDimsMil(tt)?.w??null}})}}
 function renderCompletedStage(m,s){setBottom(true,"BACK TO MATCH",false);main.innerHTML=`<div class="panel"><div class="kicker">Completed stage • locked record</div><h2>${esc(s.name)}</h2><div class="lockedPanel"><div class="listrow"><span>Completed</span><strong>${s.completedAt?new Date(s.completedAt).toLocaleString():"—"}</strong></div><div class="listrow"><span>Score</span><strong>${esc(s.score||"—")}/${esc(s.pointsAvailable||"—")}</strong></div>${s.targets.map(t=>`<div class="listrow"><span>${esc(t.label)} • ${esc(t.distanceM)} m</span><strong>${esc(t.actualHold||"—")} ${esc(t.holdSide||"")}</strong></div>`).join("")}<div class="note">${esc(s.postNotes||"No stage notes.")}</div></div><div class="actions"><button class="btn danger" id="correctStage">CORRECT POST-STAGE RECORD</button></div></div>`;correctStage.onclick=()=>{s.revisionHistory=s.revisionHistory||[];s.revisionHistory.push({createdAt:iso(),snapshot:JSON.parse(JSON.stringify(s.postStageSnapshot||s))});s.correctionMode=true;st.liveStep=5;render()};backBtn.onclick=()=>{st.screen="matchDashboard";render()}}
 
 
@@ -1556,7 +1618,7 @@ function liveStage(){
    captureLive();
    const err=liveValidationFast(s,st.liveStep);if(err){alert(err);return}
    if(st.liveStep===4&&!s.preShootSnapshot){
-     try{s.targets.forEach(tt=>{const ps=optimizeImpactHoldV4(s,tt,10000);if(ps){tt.preShootPredictedHold=ps.hold;tt.preShootPredictedSide=ps.side}})}catch(e){}
+     try{s.targets.forEach(tt=>{const ps=optimizeShootSolutionV5(s,tt,10000);if(ps){tt.preShootPredictedHold=ps.hold;tt.preShootPredictedSide=ps.side}})}catch(e){}
      s.preShootSolution=buildPreShootSolution(s);
      s.preShootSnapshot={createdAt:iso(),data:JSON.parse(JSON.stringify(s))};
      writeNow();
@@ -1611,7 +1673,7 @@ function renderKestrel(s){
  live.innerHTML=`<div class="cardhead"><div><h3>Ballistic Software</h3><div class="small">${esc(getBallisticSoftware())}</div></div><span class="tag live">${fz.quality}</span></div>${fz.valid?matchLearningHTML(s):""}${content}`;
  bindAuto(captureLive);
 }
-function kTargetHTML(t,i,fz){const ds=targetDirectionState(getStage(),t),cwd=calypsoMeasuredTargetWD(t);return `<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag ready">SOLVER</span></div><div class="hero"><div class="small">BALLISTIC INPUT / VERIFY</div><div style="font-size:24px;font-weight:1000;margin-top:8px">DOF ${String(Math.round(norm(n(t.dof)||0))).padStart(3,"0")}°</div>${cwd!==null?`<div class="small" style="margin-top:8px">CALYPSO / MEASURED TARGET WD</div><div style="font-size:22px;font-weight:1000">${String(Math.round(cwd)).padStart(3,"0")}°</div>`:`<div class="small" style="margin-top:8px">CALYPSO TARGET WD — NOT REFERENCED</div>`}<div class="small" style="margin-top:8px">WIND SIGHT FUSED TARGET WD</div><div style="font-size:32px;font-weight:1000;color:var(--blue)">${String(Math.round(ds.targetWD)).padStart(3,"0")}°</div><div class="small">${clock(ds.targetWD)} • SAME DIRECTION STATE USED BY ACCURACY ENGINE</div></div><div class="out3"><div class="obox"><div class="t">LOW WIND</div><div class="n">${fz.low.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox best"><div class="t">BEST WIND</div><div class="n">${fz.best.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox"><div class="t">HIGH WIND</div><div class="n">${fz.high.toFixed(0)}</div><div class="unit">mph</div></div></div><div class="grid two">${f("Solver MIN hold","kmin_"+i,t.kMin,"decimal")}${f("Solver MAX hold","kmax_"+i,t.kMax,"decimal")}</div><div class="note">Enter solver holds using the FUSED Target WD shown above. WIND SIGHT treats these holds as already angle-corrected and does not apply the angle a second time.</div></div>`}
+function kTargetHTML(t,i,fz){const ds=targetDirectionState(getStage(),t),cwd=calypsoMeasuredTargetWD(t);return `<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag ready">SOLVER</span></div><div class="hero"><div class="small">BALLISTIC INPUT / VERIFY</div><div style="font-size:24px;font-weight:1000;margin-top:8px">DOF ${String(Math.round(norm(n(t.dof)||0))).padStart(3,"0")}°</div>${cwd!==null?`<div class="small" style="margin-top:8px">CALYPSO / MEASURED TARGET WD</div><div style="font-size:22px;font-weight:1000">${String(Math.round(cwd)).padStart(3,"0")}°</div>`:`<div class="small" style="margin-top:8px">CALYPSO TARGET WD — NOT REFERENCED</div>`}<div class="small" style="margin-top:8px">WIND SIGHT FUSED TARGET WD</div><div style="font-size:32px;font-weight:1000;color:var(--blue)">${String(Math.round(ds.targetWD)).padStart(3,"0")}°</div><div class="small">${clock(ds.targetWD)} • SAME DIRECTION STATE USED BY ACCURACY ENGINE</div></div><div class="out3"><div class="obox"><div class="t">LOW WIND</div><div class="n">${fz.low.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox best"><div class="t">BEST WIND</div><div class="n">${fz.best.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox"><div class="t">HIGH WIND</div><div class="n">${fz.high.toFixed(0)}</div><div class="unit">mph</div></div></div><div class="grid two">${f("Solver MIN hold","kmin_"+i,t.kMin,"decimal")}${f("Solver MAX hold","kmax_"+i,t.kMax,"decimal")}</div><div class="note">Enter solver holds using the FUSED Target WD shown above. WIND SIGHT treats these holds as already angle-corrected and does not apply the angle a second time.</div>${n(t.kMin)!==null&&n(t.kMax)!==null?callCurveHTML(getStage(),t):""}</div>`}
 function fuse(s){
  let mi=n(s.wind.min),av=n(s.wind.avg),ma=n(s.wind.max),dir=n(s.wind.avgDir);
  if(mi===null||av===null||ma===null||dir===null||mi<0||av<0||ma<0||!(mi<=av&&av<=ma)||!angleOK(dir))return {valid:false,reason:"Enter valid non-negative Calypso MIN / AVG / MAX and AVG WIND FROM.",quality:"WEAK"};
@@ -1660,7 +1722,7 @@ function renderShoot(s){
  try{
    const fz=fuse(s);
    if(!fz.valid){live.innerHTML=`<div class="bad">${fz.reason}</div><div class="note">Go back to WIND / BALLISTICS and complete required values.</div>`;return}
-   const rows=s.targets.map(tt=>({tt,sol:optimizeImpactHoldV4(s,tt,10000),fallback:(n(tt.kMin)!==null&&n(tt.kMax)!==null&&n(tt.widthCm)>0&&n(tt.distanceM)>0),z:targetDirectionState(s,tt)}));
+   const rows=s.targets.map(tt=>({tt,sol:optimizeShootSolutionV5(s,tt,10000),fallback:(n(tt.kMin)!==null&&n(tt.kMax)!==null&&n(tt.widthCm)>0&&n(tt.distanceM)>0),z:targetDirectionState(s,tt)}));
    live.innerHTML=`<div class="cardhead"><div><h3>SHOOT</h3><div class="small">Immediate firing solution</div></div><span class="tag live">${fz.quality}</span></div>
    ${rows.map(x=>shootResultV2(x.tt,x.sol,x.fallback,x.z)).join("")}`;
  }catch(e){
@@ -1674,7 +1736,7 @@ function shootResultV2(tt,sol,fallback,z){
  if(!fallback)return `<div class="note">${esc(tt.label)}: solver MIN/MAX holds and target width required.</div>`;
  if(!sol)return `<div class="shootCompact"><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootHold">—<small>WIND SIGHT HOLD UNAVAILABLE</small></div></div>`;
  const dims=targetDimsMil(tt),miss=suggestedMissCorrection(tt),confClass=sol.confidence==="HIGH"?"confHigh":sol.confidence==="MEDIUM"?"confMed":"confLow",lo=Math.min(n(tt.kMin)||0,n(tt.kMax)||0),hi=Math.max(n(tt.kMin)||0,n(tt.kMax)||0);
- return `<div class="shootCompact"><div class="shootTop"><div><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootMeta">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div></div><span class="tag done">CORE 4</span></div><div class="shootHold">${hold1(sol.hold)} ${sol.side}<small>WIND SIGHT HOLD</small></div><div class="wsHoldBand"><div><span>MIN</span><strong>${hold1(lo)} ${sol.side}</strong></div><div class="rec"><span>CALL</span><strong>${hold1(sol.hold)} ${sol.side}</strong></div><div><span>MAX</span><strong>${hold1(hi)} ${sol.side}</strong></div></div><div class="wsMetricGrid"><div class="wsMetric primaryMetric"><div class="k">WIND HIT</div><div class="v">${Math.round(sol.windHit*100)}%</div><div class="impactSecondary">Est. impact ${Math.round(sol.modeledHit*100)}%</div></div><div class="wsMetric"><div class="k">CONFIDENCE</div><div class="v ${confClass}">${sol.confidence}</div></div><div class="wsMetric"><div class="k">ROBUST</div><div class="v">${robustHoldText(sol)}</div></div><div class="wsMetric"><div class="k">MISS</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div>${dims?`<div class="fastHint">${dims.w.toFixed(1)} mil target</div>`:""}</div></div></div>`;
+ return `<div class="shootCompact"><div class="shootTop"><div><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootMeta">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div></div><span class="tag done">CORE 5</span></div><div class="shootHold">${hold1(sol.hold)} ${sol.side}<small>WIND SIGHT HOLD</small></div><div class="wsHoldBand"><div><span>MIN</span><strong>${hold1(lo)} ${sol.side}</strong></div><div class="rec"><span>CALL</span><strong>${hold1(sol.hold)} ${sol.side}</strong></div><div><span>MAX</span><strong>${hold1(hi)} ${sol.side}</strong></div></div><div class="wsMetricGrid"><div class="wsMetric primaryMetric"><div class="k">WIND HIT</div><div class="v">${Math.round(sol.windHit*100)}%</div><div class="impactSecondary">Est. impact ${Math.round(sol.modeledHit*100)}%</div></div><div class="wsMetric"><div class="k">CONFIDENCE</div><div class="v ${confClass}">${sol.confidence}</div></div><div class="wsMetric"><div class="k">ROBUST</div><div class="v">${robustHoldText(sol)}</div></div><div class="wsMetric"><div class="k">MISS</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div>${dims?`<div class="fastHint">${dims.w.toFixed(1)} mil target</div>`:""}</div></div></div>`;
 }
 function stageLineV2(tt,sol,fallback,z){if(sol?.sideAmbiguous)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><div class="hold">SIDE?</div><div class="meta">Recheck wind direction</div></div>`;if(sol)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m • ${esc(targetSizeText(tt))}</strong><div class="hold">${hold1(sol.hold)} ${sol.side}</div><div class="meta">Wind Hit ${Math.round(sol.windHit*100)}% • ${sol.confidence} • Robust ${robustHoldText(sol)}</div></div>`;return `<div class="stageLine"><strong>${esc(tt.label)}</strong><div class="hold">—</div><div class="meta">Solver holds required</div></div>`}
 

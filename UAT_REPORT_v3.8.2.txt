@@ -1,0 +1,16 @@
+WIND SIGHT PRS v3.8.2 — UAT REPORT
+
+PASS — version visible
+PASS — Core 5 shoot badge
+PASS — primary optimizer exists
+PASS — wind optimizer exists
+PASS — call curve exists
+PASS — stable Calypso narrowing
+PASS — wind-hit objective used in live hysteresis
+PASS — impact evaluated at selected call
+PASS — robust from wind optimizer
+PASS — cache bumped
+PASS — package bumped
+PASS — JavaScript syntax
+
+RESULT: 12 PASS / 0 FAIL
