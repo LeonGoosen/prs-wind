@@ -1,0 +1,90 @@
+WIND SIGHT PRS v3.1.3 — FORMAL UAT SIMULATION REPORT
+================================================================
+
+Scope:
+- Profile creation/edit/resume and calibration navigation
+- Match creation/open/delete and stage builder contracts
+- Live DOF/Wind/Downrange/Ballistics/Shoot/Post workflow
+- Dynamic observation controls and state rerender paths
+- Wind/DOF geometry and target angular-size edge cases
+- Shooter-facing one-decimal wind-hold display policy
+- PWA asset/package integrity
+
+RESULT: 48 PASS / 0 FAIL
+
+CODE
+[PASS] JavaScript syntax
+[PASS] Runtime symbol references
+[PASS] Inline button/field handlers
+[PASS] Removed-screen references
+
+SCREENS
+[PASS] home
+[PASS] rifles
+[PASS] rifleWizard
+[PASS] matches
+[PASS] matchWizard
+[PASS] matchDashboard
+[PASS] liveStage
+[PASS] reports
+[PASS] renderDOF
+[PASS] renderWind
+[PASS] renderFastDownrange
+[PASS] renderKestrel
+[PASS] renderShoot
+[PASS] renderPost
+
+WORKFLOW
+[PASS] Recent match opens Match Dashboard
+[PASS] Profile View/Edit handler
+[PASS] Profile module direct navigation
+[PASS] Profile Save & Exit
+[PASS] Match can use incomplete calibration
+[PASS] Stage add target
+[PASS] Stage delete
+[PASS] Match delete confirmation
+[PASS] 6-step live workflow
+[PASS] DOF wheel
+[PASS] Unknown direction hides direction input
+[PASS] Clear/Approx restores direction field
+[PASS] Ballistic holds accepted
+[PASS] Shoot target mil dimensions
+[PASS] WIND SIGHT Impact Score
+[PASS] Optimal displayed hold 1 decimal
+[PASS] Solver bracket displayed 1 decimal
+[PASS] Safe hold displayed 1 decimal
+[PASS] Post stage actual hold
+[PASS] Reports total points
+[PASS] Reports bracket capture
+[PASS] Offline shell
+
+ENGINE
+[PASS] 0/360 wrap +2°
+[PASS] Full-value 90° factor
+[PASS] Headwind 0° factor
+[PASS] DOF transform example
+[PASS] 30cm at 500m = 0.60mil
+[PASS] One-decimal 0.66=>0.7
+[PASS] One-decimal 0.64=>0.6
+
+PWA
+[PASS] Referenced assets exist
+
+DEFECTS FOUND IN v3.1.2 AND FIXED
+- Profile editor had missing runtime helper functions and could render blank.
+- Direct Profile module navigation referenced undefined functions.
+- Downrange dynamic Add/Remove controls called screens removed by the 6-step performance rewrite.
+- Shoot target-size / Impact Score / Aim Tip helpers were referenced but missing at runtime.
+- Several shooter-facing wind holds still used two decimals despite the one-decimal rule.
+- PWA manifest/service-worker files referenced by the app were absent from the package.
+
+DEVICE VALIDATION REQUIRED
+- Physical iPhone Safari/Home-Screen touch inertia and keyboard behavior.
+- Safe-area/Dynamic Island rendering on the actual device.
+- PWA close/reopen/offline lifecycle on iOS.
+- Angle-wheel touch feel under real finger input.
+
+PENDING PRODUCT REQUIREMENTS NOT SILENTLY ADDED DURING UAT
+- Expandable target/hold visual.
+- MIN / SELECTED / MAX visual selector.
+- Interactive miss/impact correction workflow.

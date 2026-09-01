@@ -1,0 +1,57 @@
+WIND SIGHT PRS v3.5.0 — CALYPSO LIVE BETA UAT
+======================================================================
+
+RESULT: 29 PASS / 0 FAIL
+
+CALYPSO DATA INGESTED FROM DOCUMENTED BLE SERVICES:
+- Apparent wind speed (0x2A72 equivalent Web Bluetooth name).
+- Apparent wind direction (0x2A73 equivalent Web Bluetooth name).
+- Battery level.
+- Model number.
+- Firmware revision.
+- Connection status and timestamps.
+- Rolling raw telemetry retained for stage analysis.
+
+LIVE STAGE BEHAVIOR:
+- Attempts automatic reconnect whenever a live stage opens.
+- Green CALYPSO CONNECTED indicator when GATT is live.
+- Rolling 30-second MIN / AVG / MAX / NOW and circular mean direction feed directly into stage wind.
+- Manual wind remains available if device is absent.
+
+IMPORTANT PLATFORM LIMIT:
+- The current iPhone Safari/Home-Screen PWA does not expose Web Bluetooth. On iPhone this build will correctly show NATIVE BLE REQUIRED rather than pretending to connect.
+- Actual automatic BLE on iPhone requires the planned native iOS shell using CoreBluetooth. The device adapter in this build is structured to map directly to that later layer.
+
+DATA NOT CLAIMED AS CALYPSO SENSOR DATA:
+- Temperature, pressure and humidity are not read from the documented Portable Mini/Solar BLE services used here. Calypso's Anemotracker documentation says those may come from an online weather station, so WIND SIGHT does not fabricate them as device telemetry.
+
+UAT MATRIX:
+[PASS] JavaScript syntax
+[PASS] pairCalypso
+[PASS] autoConnectCalypso
+[PASS] connectCalypsoDevice
+[PASS] onCalypsoSpeed
+[PASS] onCalypsoDir
+[PASS] onCalypsoBatt
+[PASS] calypsoStats
+[PASS] applyCalypsoToStage
+[PASS] calypsoStripHTML
+[PASS] Calypso Environmental Sensing service
+[PASS] Apparent Wind Speed characteristic
+[PASS] Apparent Wind Direction characteristic
+[PASS] Battery characteristic
+[PASS] Device model characteristic
+[PASS] Firmware characteristic
+[PASS] First pair requires explicit action
+[PASS] Auto reconnect uses getDevices
+[PASS] Live stage autoconnect
+[PASS] Green connected icon
+[PASS] Stage gets live min/avg/max
+[PASS] Stage gets live current wind
+[PASS] Stage gets live direction
+[PASS] Raw telemetry retained
+[PASS] Rolling sample window
+[PASS] No fake temp/humidity from Calypso
+[PASS] iOS native-BLE limitation surfaced
+[PASS] PWA manifest
+[PASS] Service worker

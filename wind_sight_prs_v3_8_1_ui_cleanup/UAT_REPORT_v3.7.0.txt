@@ -1,0 +1,111 @@
+WIND SIGHT PRS v3.7.0 — DEEP DIAGNOSTIC + RUNTIME UAT
+==============================================================================
+
+RESULT: 66 PASS / 0 FAIL
+
+Representative browser runtime after prepared calibration optimization: live 1-target ~19 ms at 1,000-sample preview; full 10,000-sample target ~44 ms in the diagnostic Chromium run.
+
+CRITICAL CORRECTIONS FROM v3.6.1 SECOND DIAGNOSTIC:
+- Removed double application of wind angle. Solver MIN/MAX holds are treated as already angle-corrected at the displayed baseline Target WD.
+- Wind Angle Calibration B now supplies the rifle/ammo angle-response curve; ideal sine response is only the fallback.
+- Wind Speed Calibration A is used as the full-value fallback when the baseline Target WD is close to the bore line.
+- Target DOF Validation D now contributes a confidence penalty when the stored solver WD convention does not validate.
+- Ballistics and the probability engine now use the same target-specific fused direction state.
+- Pre-shoot snapshots freeze the exact Accuracy Core 4 output seen by the shooter.
+- Existing matches calculate from frozen rifle/ammo snapshots, not editable/deletable current profiles.
+- L/R ambiguity is derived from Monte Carlo sign probability.
+- Match learning shifts the required-hold distribution before optimization.
+- Hysteresis uses a floating-point-safe 0.1-mil comparison and recalculates probability for a retained hold.
+- MV is normalized to fps internally for solver response coefficients.
+- DA uncertainty is not stacked on top of temperature/pressure uncertainty.
+- Partial solver response coefficients replace only the dimensions actually supplied.
+- Raw stage telemetry is separated into IndexedDB rather than growing the main localStorage object.
+- Calypso stage ownership is tagged per sample and pending samples are flushed before stage switching.
+- Live preview uses 500/750/1000 samples based on target count; SHOOT and frozen stage calls retain 10,000 samples.
+- Calypso pairing persists the exact granted device ID and no longer reconnects to an arbitrary ds[0].
+- Data Service presence is detected but not decoded without the official protocol contract.
+
+STANDALONE CALYPSO INSTRUMENT:
+- New top-level CALYPSO screen.
+- Live sensor view only — no target/ballistic calculations.
+- Premium large NOW speed and WIND FROM display.
+- Compass, 10 s / 30 s / 2 min averages, min/max, volatility, trend, direction state, battery, samples, protocol and live speed history.
+- Own reference-bearing / direction-offset / history-window settings.
+
+VALIDATION MATRIX:
+[PASS] JavaScript syntax
+[PASS] calypsoScreen defined
+[PASS] optimizeImpactHoldV4 defined
+[PASS] requiredHoldForSample defined
+[PASS] calibAFullValueHold defined
+[PASS] angleResponseFactor defined
+[PASS] dofValidationQuality defined
+[PASS] targetDirectionState defined
+[PASS] idbPutTelemetry defined
+[PASS] idbGetStageTelemetry defined
+[PASS] preparedAngleCurve defined
+[PASS] prepareHoldResponse defined
+[PASS] Standalone CALYPSO nav
+[PASS] Standalone explicitly no ballistics
+[PASS] Live command host present
+[PASS] Calibration A connected
+[PASS] Calibration B connected
+[PASS] Calibration D connected to confidence
+[PASS] No double-angle sin multiplier
+[PASS] Frozen match snapshots used
+[PASS] Pre-shoot snapshot current engine
+[PASS] Match learning shifts distribution
+[PASS] Monte Carlo side probability
+[PASS] Hysteresis float tolerant
+[PASS] Hysteresis reevaluates retained probability
+[PASS] Partial solver coefficient fallback
+[PASS] MV converted to fps
+[PASS] DA avoids temp/pressure double count
+[PASS] Telemetry separate IndexedDB store
+[PASS] Stage telemetry tagged
+[PASS] Stage switch flush before ownership change
+[PASS] Pair stores exact device ID
+[PASS] Reconnect exact device only
+[PASS] Data service fallback is not falsely decoded
+[PASS] Live preview adaptive low sample
+[PASS] Full SHOOT 10k sample
+[PASS] Legacy optimizeImpactHoldV3 removed
+[PASS] Legacy triCDF/opt removed
+[PASS] One-decimal shooter holds
+[PASS] PWA manifest exists
+[PASS] Service worker exists
+[PASS] Runtime: Unified target direction is 60°
+[PASS] Runtime: No double angle at baseline (.4 stays .4)
+[PASS] Runtime: Calibration B changes 45° response
+[PASS] Runtime: Calibration A connected
+[PASS] Runtime: Calibration D validates
+[PASS] Runtime: SHOOT renders current engine
+[PASS] Runtime: Live command host exists
+[PASS] Runtime: Snapshot engine current
+[PASS] Runtime: Snapshot modeled hit exists
+[PASS] Runtime: Snapshot hold matches full engine
+[PASS] Runtime: Frozen match rifle survives profile deletion
+[PASS] Runtime: Frozen match ammo survives profile deletion
+[PASS] Runtime: Near-bore L/R ambiguity detected
+[PASS] Runtime: Near-bore confidence not HIGH
+[PASS] Runtime: Hysteresis tolerates floating 0.1
+[PASS] Runtime: Hysteresis probability belongs to retained hold
+[PASS] Runtime: Confirmed prior stage produces positive match bias
+[PASS] Runtime: Standalone Calypso screen opens
+[PASS] Runtime: Standalone Calypso no target calculations
+[PASS] Runtime: Standalone premium metrics render
+[PASS] Runtime: 390px no page horizontal overflow
+[PASS] Runtime: Live preview one-target <100ms
+[PASS] Runtime: Full 10k one-target <150ms
+[PASS] Runtime: Reports render with current snapshot
+[PASS] Runtime: No browser page errors
+
+NOT CERTIFIED YET:
+- Physical Calypso BLE UUID/payload contract against the official current Developer Manual.
+- Native iPhone CoreBluetooth implementation; iPhone Safari/Home-Screen PWA still cannot provide production BLE.
+- Empirical calibration of MODELED HIT / CONFIDENCE against real match outcomes.
+- Solver-response coefficients until generated from controlled ballistic-solver perturbation tests.
+
+RELEASE VERDICT:
+Automated/runtime diagnostic gate: PASS
+Physical hardware/empirical accuracy gate: PENDING

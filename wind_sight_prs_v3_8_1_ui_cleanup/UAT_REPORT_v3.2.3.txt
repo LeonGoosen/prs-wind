@@ -1,0 +1,46 @@
+WIND SIGHT PRS v3.2.3 — SHOOT CLEANUP UAT
+==============================================================
+
+RESULT: 21 PASS / 0 FAIL
+
+SHOOT DESIGN:
+- Immediate numeric data only.
+- Large WIND SIGHT hold first.
+- MIN / WIND SIGHT / MAX retained.
+- P(hit)-style model retained but renamed WIND SIGHT SHOT INDEX.
+- Aim Tip retained as a one-line label.
+- Safe Hold retained.
+- Target size retained.
+- Custom Selected Hold removed.
+- Target visual removed.
+- Interactive shot/miss correction removed.
+- Miss Correction is a precomputed practical guide from target angular width.
+
+MISS CORRECTION RULE:
+- Suggested correction = 75% of horizontal target width in mil, rounded to nearest 0.1 mil.
+- Example: 0.4 mil gong -> 0.3 mil suggested correction.
+- Example: 0.6 mil gong -> 0.5 mil suggested correction.
+- This is a stage-use correction guide, not a claim about the cause of a miss.
+
+UAT MATRIX:
+[PASS] SHOOT compact screen exists
+[PASS] Primary WIND SIGHT hold shown
+[PASS] MIN shown
+[PASS] WIND SIGHT shown
+[PASS] MAX shown
+[PASS] Shot Index retained
+[PASS] Old Impact Score label removed
+[PASS] Custom Selected Hold removed from SHOOT
+[PASS] Target visual removed from SHOOT
+[PASS] Interactive shot/miss correction removed
+[PASS] Suggested miss correction shown
+[PASS] 0.4 mil target => 0.3 mil correction
+[PASS] 0.6 mil target => 0.5 mil correction
+[PASS] One decimal WIND SIGHT hold
+[PASS] One decimal MIN/MAX
+[PASS] Aim tip retained
+[PASS] Safe Hold retained
+[PASS] Stage Card retained
+[PASS] Target size retained
+[PASS] Target mil dimensions retained
+[PASS] JavaScript syntax

@@ -1,0 +1,60 @@
+WIND SIGHT PRS v3.4.0 — PROBABILISTIC IMPACT ENGINE UAT
+========================================================================
+
+RESULT: 35 PASS / 0 FAIL
+
+ENGINE:
+- Horizontal and vertical rifle/ammo dispersion
+- MV SD
+- Range uncertainty + range quality
+- Target-size uncertainty
+- Environmental residual uncertainty
+- Optional residual aerodynamic-jump uncertainty
+- 2D round/diamond/rectangular target geometry
+- 10,000 deterministic impact samples per target
+- 0.1-mil hold optimization
+- MODELED HIT %, wind-only diagnostic, Confidence, Robust Hold
+
+GUARDRAILS:
+- Ballistic solver remains truth layer.
+- MV SD and precision are only used when supplied.
+- Environmental and residual AJ uncertainty default to zero.
+- Precision input is treated as approximate group size; sigma proxy = group size / 4.
+- Vertical response proxies remain interim until replaced by solver-derived rifle-specific response functions.
+
+UAT MATRIX:
+[PASS] JavaScript syntax
+[PASS] precisionSigmaMil
+[PASS] mvVerticalSigmaMil
+[PASS] rangeVerticalSigmaMil
+[PASS] envVerticalSigmaMil
+[PASS] ajSigmaMil
+[PASS] insideTarget2D
+[PASS] simulateImpactSamplesV3
+[PASS] impactProbability2D
+[PASS] optimizeImpactHoldV3
+[PASS] MV SD
+[PASS] Rifle / ammo precision
+[PASS] Horizontal precision
+[PASS] Vertical precision
+[PASS] Range quality
+[PASS] Range uncertainty ±m
+[PASS] Target-size uncertainty %
+[PASS] ADVANCED UNCERTAINTY
+[PASS] Residual aerodynamic-jump uncertainty mil
+[PASS] MODELED HIT
+[PASS] Wind-only
+[PASS] CONFIDENCE
+[PASS] ROBUST HOLD
+[PASS] 10k simulation
+[PASS] Round geometry
+[PASS] Diamond geometry
+[PASS] Rectangle geometry
+[PASS] 0.1 mil optimization
+[PASS] 95% robust plateau
+[PASS] One decimal hold
+[PASS] PWA manifest
+[PASS] Service worker
+[PASS] 30cm@500m=.60mil
+[PASS] 0.5 MOA=.145mil
+[PASS] Round corner outside
