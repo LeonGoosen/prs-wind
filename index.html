@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.2.4 SHOOT Runtime Fix</title>
+<title>WIND SIGHT PRS by ZealTech — v3.5.0 Calypso Live Beta</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -190,13 +190,38 @@ input[type="date"]::-webkit-date-and-time-value{text-align:center}
 .shootQuickGrid .k{font-size:10px;color:#8fa4b7;font-weight:900}
 .shootQuickGrid .v{font-size:17px;font-weight:1000;margin-top:2px}
 @media(max-width:380px){.shootQuickGrid{grid-template-columns:1fr}.shootHold{font-size:38px}}
+
+.wsMetricGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.wsMetric{border:1px solid #243b50;border-radius:11px;padding:9px 10px;background:#08131f}
+.wsMetric .k{font-size:10px;color:#8fa4b7;font-weight:900;letter-spacing:.04em}
+.wsMetric .v{font-size:19px;font-weight:1000;margin-top:2px}
+.wsHoldBand{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+.wsHoldBand>div{border:1px solid #243b50;border-radius:11px;padding:8px 6px;text-align:center;background:#091722}
+.wsHoldBand .rec{border:2px solid #16a9d1;background:#0b2835}
+.wsHoldBand span{display:block;font-size:10px;color:#8fa4b7;font-weight:900}
+.wsHoldBand strong{display:block;font-size:17px;margin-top:2px}
+.confHigh{color:#74d59b}.confMed{color:#f1c36b}.confLow{color:#ff8d8d}
+@media(max-width:390px){.wsMetricGrid{grid-template-columns:1fr 1fr}.wsMetric .v{font-size:17px}}
+html,body{touch-action:manipulation}
+
+.deviceStrip{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid #29435a;border-radius:13px;padding:9px 11px;background:#08131f;margin-top:9px}
+.deviceState{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:1000}
+.deviceDot{width:10px;height:10px;border-radius:50%;display:inline-block;background:#7a8792;box-shadow:0 0 0 3px rgba(122,135,146,.12)}
+.deviceDot.connected{background:#45d483;box-shadow:0 0 0 3px rgba(69,212,131,.16)}
+.deviceDot.connecting{background:#f1c36b;box-shadow:0 0 0 3px rgba(241,195,107,.16)}
+.deviceDot.error{background:#f46d77;box-shadow:0 0 0 3px rgba(244,109,119,.16)}
+.calypsoGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:8px}
+.calypsoMetric{border:1px solid #243b50;border-radius:10px;padding:8px;background:#091722;text-align:center}
+.calypsoMetric .k{font-size:9px;color:#8fa4b7;font-weight:900}
+.calypsoMetric .v{font-size:16px;font-weight:1000;margin-top:2px}
+@media(max-width:390px){.calypsoGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.2.4</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.5.0</small></div></div>
   <div class="save" id="saveState">Saved</div>
 </div>
 <nav id="nav"></nav>
@@ -308,6 +333,150 @@ function importData(e){
 function navItems(){return [["home","HOME"],["matches","MATCHES"],["rifles","PROFILES"],["reports","REPORTS"]]}
 function renderNav(){nav.innerHTML="";navItems().forEach(([k,l])=>{let b=document.createElement("button");b.className="navbtn"+(st.screen===k?" active":"");b.textContent=l;b.onclick=()=>{saveCurrent();st.screen=k;st.step=0;render()};nav.appendChild(b)})}
 function setBottom(show=true,nextLabel="NEXT →",nextVisible=true){bottom.style.display=show?"block":"none";nextBtn.textContent=nextLabel;nextBtn.style.visibility=nextVisible?"visible":"hidden"}
+
+const CALYPSO={
+ SERVICE_ENV:"environmental_sensing",
+ CHAR_SPEED:"apparent_wind_speed",
+ CHAR_DIR:"apparent_wind_direction",
+ SERVICE_BATT:"battery_service",
+ CHAR_BATT:"battery_level",
+ SERVICE_INFO:"device_information",
+ CHAR_MODEL:"model_number_string",
+ CHAR_FW:"firmware_revision_string",
+ SERVICE_DATA:"heart_rate",
+ CHAR_DATA:"heart_rate_control_point",
+ STATUS_UUID:"0000a001-0000-1000-8000-00805f9b34fb"
+};
+const calypsoRuntime={device:null,server:null,status:"idle",lastError:"",speedChar:null,dirChar:null,battChar:null,samples:[],model:"",firmware:"",battery:null,lastSeen:null,connecting:false};
+function ensureCalypsoSettings(){
+ st.data.settings=st.data.settings||{};
+ st.data.settings.calypso=st.data.settings.calypso||{enabled:true,paired:false,name:"",directionOffsetDeg:0,sampleWindowSec:30};
+ return st.data.settings.calypso;
+}
+function calypsoSupported(){return !!navigator.bluetooth}
+function calypsoStatusText(){
+ if(!calypsoSupported())return "CALYPSO • NATIVE BLE REQUIRED";
+ if(calypsoRuntime.status==="connected")return `CALYPSO • CONNECTED${calypsoRuntime.battery!=null?` • ${calypsoRuntime.battery}%`:""}`;
+ if(calypsoRuntime.status==="connecting")return "CALYPSO • CONNECTING…";
+ if(calypsoRuntime.status==="error")return "CALYPSO • CONNECTION ERROR";
+ return "CALYPSO • DISCONNECTED";
+}
+function calypsoDotClass(){
+ return calypsoRuntime.status==="connected"?"connected":calypsoRuntime.status==="connecting"?"connecting":calypsoRuntime.status==="error"?"error":"";
+}
+function decodeU16LE(dv){return dv.getUint16(0,true)}
+function calypsoMpsToMph(v){return v*2.2369362921}
+function circularMeanDeg(vals){
+ if(!vals.length)return null;let x=0,y=0;
+ vals.forEach(v=>{const a=v*Math.PI/180;x+=Math.cos(a);y+=Math.sin(a)});
+ return norm(Math.atan2(y,x)*180/Math.PI);
+}
+function calypsoStats(){
+ const cfg=ensureCalypsoSettings(),cut=Date.now()-(n(cfg.sampleWindowSec)||30)*1000;
+ const s=calypsoRuntime.samples.filter(x=>x.t>=cut);
+ if(!s.length)return null;
+ const speeds=s.map(x=>x.mph),dirs=s.map(x=>x.dir);
+ return {min:Math.min(...speeds),avg:speeds.reduce((a,b)=>a+b,0)/speeds.length,max:Math.max(...speeds),dir:circularMeanDeg(dirs),count:s.length,last:s[s.length-1]};
+}
+function applyCalypsoToStage(){
+ const s=getStage();if(!s)return;
+ const stx=calypsoStats();if(!stx)return;
+ s.wind=s.wind||{};
+ s.wind.min=String(Math.round(stx.min));
+ s.wind.avg=String(Math.round(stx.avg));
+ s.wind.max=String(Math.round(stx.max));
+ s.wind.now=String(Math.round(stx.last.mph));
+ s.wind.avgDir=String(Math.round(stx.dir));
+ s.wind.nowDir=String(Math.round(stx.last.dir));
+ s.wind.source="CALYPSO LIVE";
+ s.wind.calypsoSampleCount=stx.count;
+ s.wind.calypsoLastSeen=iso();
+ autosave();
+}
+function onCalypsoSpeed(ev){
+ const raw=decodeU16LE(ev.target.value)/100;
+ calypsoRuntime._speedMps=raw;calypsoRuntime.lastSeen=Date.now();pushCalypsoSample();
+}
+function onCalypsoDir(ev){
+ const raw=decodeU16LE(ev.target.value)/100;
+ const cfg=ensureCalypsoSettings();
+ calypsoRuntime._dirRaw=raw;
+ calypsoRuntime._dir=norm(raw+(n(cfg.directionOffsetDeg)||0));
+ calypsoRuntime.lastSeen=Date.now();pushCalypsoSample();
+}
+function onCalypsoBatt(ev){calypsoRuntime.battery=ev.target.value.getUint8(0);refreshCalypsoStrip()}
+function pushCalypsoSample(){
+ if(calypsoRuntime._speedMps==null||calypsoRuntime._dir==null)return;
+ const rec={t:Date.now(),mps:calypsoRuntime._speedMps,mph:calypsoMpsToMph(calypsoRuntime._speedMps),rawDir:calypsoRuntime._dirRaw,dir:calypsoRuntime._dir};
+ const last=calypsoRuntime.samples[calypsoRuntime.samples.length-1];
+ if(last&&rec.t-last.t<100) return;
+ calypsoRuntime.samples.push(rec);
+ const keep=Date.now()-120000;calypsoRuntime.samples=calypsoRuntime.samples.filter(x=>x.t>=keep);
+ applyCalypsoToStage();refreshCalypsoStrip();
+}
+async function readTextChar(service,charName){
+ try{const c=await service.getCharacteristic(charName),v=await c.readValue();return new TextDecoder().decode(v)}catch(e){return ""}
+}
+async function connectCalypsoDevice(device,manual=false){
+ if(!device||calypsoRuntime.connecting)return false;
+ calypsoRuntime.connecting=true;calypsoRuntime.status="connecting";refreshCalypsoStrip();
+ try{
+   calypsoRuntime.device=device;
+   device.addEventListener("gattserverdisconnected",()=>{calypsoRuntime.status="idle";calypsoRuntime.server=null;refreshCalypsoStrip()},{once:true});
+   const server=await device.gatt.connect();calypsoRuntime.server=server;
+   try{
+     const env=await server.getPrimaryService(CALYPSO.SERVICE_ENV);
+     calypsoRuntime.speedChar=await env.getCharacteristic(CALYPSO.CHAR_SPEED);
+     calypsoRuntime.dirChar=await env.getCharacteristic(CALYPSO.CHAR_DIR);
+     await calypsoRuntime.speedChar.startNotifications();calypsoRuntime.speedChar.addEventListener("characteristicvaluechanged",onCalypsoSpeed);
+     await calypsoRuntime.dirChar.startNotifications();calypsoRuntime.dirChar.addEventListener("characteristicvaluechanged",onCalypsoDir);
+     const sv=await calypsoRuntime.speedChar.readValue();onCalypsoSpeed({target:{value:sv}});
+     const dv=await calypsoRuntime.dirChar.readValue();onCalypsoDir({target:{value:dv}});
+   }catch(e){throw new Error("Wind characteristics unavailable: "+e.message)}
+   try{
+     const b=await server.getPrimaryService(CALYPSO.SERVICE_BATT);calypsoRuntime.battChar=await b.getCharacteristic(CALYPSO.CHAR_BATT);
+     const bv=await calypsoRuntime.battChar.readValue();calypsoRuntime.battery=bv.getUint8(0);
+     await calypsoRuntime.battChar.startNotifications();calypsoRuntime.battChar.addEventListener("characteristicvaluechanged",onCalypsoBatt);
+   }catch(e){}
+   try{
+     const inf=await server.getPrimaryService(CALYPSO.SERVICE_INFO);
+     calypsoRuntime.model=await readTextChar(inf,CALYPSO.CHAR_MODEL);
+     calypsoRuntime.firmware=await readTextChar(inf,CALYPSO.CHAR_FW);
+   }catch(e){}
+   calypsoRuntime.status="connected";calypsoRuntime.lastError="";
+   const cfg=ensureCalypsoSettings();cfg.paired=true;cfg.name=device.name||cfg.name||"Calypso";writeLocalFast();refreshCalypsoStrip();
+   return true;
+ }catch(e){
+   console.error("Calypso connect",e);calypsoRuntime.status="error";calypsoRuntime.lastError=e.message||String(e);refreshCalypsoStrip();return false;
+ }finally{calypsoRuntime.connecting=false}
+}
+async function pairCalypso(){
+ if(!calypsoSupported()){alert("This browser does not provide Web Bluetooth. iPhone Safari/Home Screen requires the future native WIND SIGHT BLE shell.");return}
+ try{
+   const dev=await navigator.bluetooth.requestDevice({filters:[{namePrefix:"ULTRASONIC"}],optionalServices:[CALYPSO.SERVICE_ENV,CALYPSO.SERVICE_BATT,CALYPSO.SERVICE_INFO,CALYPSO.SERVICE_DATA]});
+   await connectCalypsoDevice(dev,true);
+ }catch(e){if(e.name!=="NotFoundError"){calypsoRuntime.status="error";calypsoRuntime.lastError=e.message;refreshCalypsoStrip()}}
+}
+async function autoConnectCalypso(){
+ const cfg=ensureCalypsoSettings();if(!cfg.enabled||calypsoRuntime.status==="connected"||calypsoRuntime.connecting||!calypsoSupported())return;
+ try{
+   if(navigator.bluetooth.getDevices){
+     const ds=await navigator.bluetooth.getDevices(),dev=ds.find(d=>d.name?.startsWith("ULTRASONIC"))||ds[0];
+     if(dev){await connectCalypsoDevice(dev);return}
+   }
+   if(calypsoRuntime.device)await connectCalypsoDevice(calypsoRuntime.device);
+ }catch(e){}
+}
+function calypsoStripHTML(){
+ const stx=calypsoStats(),cfg=ensureCalypsoSettings();
+ return `<div class="deviceStrip" id="calypsoStrip"><div><div class="deviceState"><span class="deviceDot ${calypsoDotClass()}"></span><span>${esc(calypsoStatusText())}</span></div>${calypsoRuntime.status==="connected"?`<div class="calypsoGrid"><div class="calypsoMetric"><div class="k">NOW</div><div class="v">${stx?Math.round(stx.last.mph):"—"} mph</div></div><div class="calypsoMetric"><div class="k">AVG</div><div class="v">${stx?Math.round(stx.avg):"—"} mph</div></div><div class="calypsoMetric"><div class="k">DIR</div><div class="v">${stx?Math.round(stx.dir):"—"}°</div></div><div class="calypsoMetric"><div class="k">MIN/MAX</div><div class="v">${stx?`${Math.round(stx.min)}/${Math.round(stx.max)}`:"—"}</div></div><div class="calypsoMetric"><div class="k">BATTERY</div><div class="v">${calypsoRuntime.battery??"—"}%</div></div><div class="calypsoMetric"><div class="k">SAMPLES</div><div class="v">${stx?.count||0}</div></div></div><div class="fastHint">${esc(calypsoRuntime.model||"Calypso")} ${calypsoRuntime.firmware?`• FW ${esc(calypsoRuntime.firmware)}`:""} • ${cfg.sampleWindowSec}s rolling window</div>`:""}</div><button class="btn secondary small" id="calypsoPairBtn">${calypsoRuntime.status==="connected"?"RECONNECT":"PAIR"}</button></div>`;
+}
+function refreshCalypsoStrip(){
+ const el=document.getElementById("calypsoStrip");if(!el)return;
+ const temp=document.createElement("div");temp.innerHTML=calypsoStripHTML();el.replaceWith(temp.firstElementChild);
+ const b=document.getElementById("calypsoPairBtn");if(b)b.onclick=pairCalypso;
+}
+
 function goTop(){try{window.scrollTo({top:0,left:0,behavior:"auto"})}catch(e){window.scrollTo(0,0)}document.documentElement.scrollTop=0;document.body.scrollTop=0;if(main)main.scrollTop=0}
 function render(){goTop();renderNav();main.innerHTML="";({home,rifles,rifleWizard,matches,matchWizard,matchDashboard,liveStage,reports}[st.screen]||home)();goTop();requestAnimationFrame(goTop);setTimeout(goTop,30)}
 function saveCurrent(){try{if(st.screen==="liveStage")captureLive()}catch(e){}autosave()}
@@ -341,9 +510,9 @@ function deleteCombo(rid,aid){
 }
 function rifles(){
  setBottom(false);const combos=profileCombos();
- main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Rifle + ammo combos</div><h2>Profiles</h2></div><button class="btn" id="addCombo">+ NEW COMBO</button></div>
+ main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Rifle + ammo combos</div><h2>Profiles</h2></div><button class="btn" id="addCombo">+ NEW COMBO</button></div>${calypsoStripHTML()}
  ${combos.length?combos.map(({r,a,incomplete})=>`<div class="comboCard" data-r="${r.id}" data-a="${a?.id||""}"><div class="comboTitle">${esc(r.name)}${a?` + ${esc(a.name)}`:" • SETUP INCOMPLETE"}</div><div class="comboMeta">${esc(r.cartridge||"")}${a?` • ${esc(a.bullet||"")} • ${esc(a.mv||"—")} ${esc(a.mvUnit||"fps")} • ${esc(a.bcType||"G7")} ${esc(a.bcValue||a.bc||"—")}<br>${a.currentCalibrationVersion?`Calibration v${a.currentCalibrationVersion} ✓`:`Calibration incomplete`}`:` • Add ammunition to complete this combo`}</div><div class="actions"><button class="btn secondary small editCombo">RIFLE / AMMO</button>${a?`<button class="btn outline small editWindSpeed">WIND SPEED</button><button class="btn outline small editWindAngle">WIND ANGLE</button><button class="btn outline small editTargetDof">TARGET DOF</button>`:""}<button class="btn danger small deleteCombo">DELETE PROFILE</button></div></div>`).join(""):`<div class="note">No rifle + ammo combos yet.</div>`}</div>`;
- addCombo.onclick=()=>{st.screen="rifleWizard";st.step=0;st.selectedRifle=null;st.selectedAmmo=null;render()};
+ addCombo.onclick=()=>{st.screen="rifleWizard";st.step=0;st.selectedRifle=null;st.selectedAmmo=null;render()};const cpb=document.getElementById("calypsoPairBtn");if(cpb)cpb.onclick=pairCalypso;
  document.querySelectorAll(".comboCard").forEach(el=>{
    const openProfileStep=(step)=>{st.selectedRifle=el.dataset.r;st.selectedAmmo=(el.dataset.a&&el.dataset.a!=="undefined")?el.dataset.a:null;st.step=step;st.screen="rifleWizard";render()};
    el.querySelector(".editCombo").onclick=()=>openProfileStep(0);
@@ -363,7 +532,7 @@ function normalizeProfileData(r){
  r.zeroM=r.zeroM||"100";r.sightHeight=r.sightHeight||"";r.sightHeightUnit=r.sightHeightUnit||"cm";
  r.kestrelModel=r.kestrelModel||"Kestrel / Applied Ballistics";r.notes=r.notes||"";r.ammo=r.ammo||[];
  r.ammo.forEach(a=>{
-   a.name=a.name||"";a.bullet=a.bullet||"";a.weightGr=a.weightGr||"";a.mv=a.mv||"";a.mvUnit=a.mvUnit||"fps";
+   a.name=a.name||"";a.bullet=a.bullet||"";a.weightGr=a.weightGr||"";a.mv=a.mv||"";a.mvUnit=a.mvUnit||"fps";a.mvSd=a.mvSd||"";a.precision=a.precision||"";a.precisionUnit=a.precisionUnit||"MOA";a.hPrecision=a.hPrecision||"";a.vPrecision=a.vPrecision||"";
    a.bcType=a.bcType||"G7";a.bcValue=a.bcValue||a.bc||"";a.bc=a.bcValue;a.lot=a.lot||"";a.notes=a.notes||"";
    a.currentCalibrationVersion=a.currentCalibrationVersion||0;a.calibrationVersions=a.calibrationVersions||[];
    loadAmmoWork(a);
@@ -448,7 +617,7 @@ function rifleWizard(){
  let a=null;
  if(st.step>=1 || st.selectedAmmo){
    a=st.selectedAmmo?r?.ammo.find(x=>x.id===st.selectedAmmo):(st._ad||loadDraft("ammo")||(st._ad={
-     id:uid("a"),name:"",bullet:"",weightGr:"",mv:"",mvUnit:"fps",bcType:"G7",bcValue:"",bc:"",lot:"",notes:"",currentCalibrationVersion:0,calibrationVersions:[],_work:{A:[],B:[],D:[]}
+     id:uid("a"),name:"",bullet:"",weightGr:"",mv:"",mvUnit:"fps",mvSd:"",precision:"",precisionUnit:"MOA",hPrecision:"",vPrecision:"",bcType:"G7",bcValue:"",bc:"",lot:"",notes:"",currentCalibrationVersion:0,calibrationVersions:[],_work:{A:[],B:[],D:[]}
    }));
    if(!a && r?.ammo?.length){a=r.ammo[0];st.selectedAmmo=a.id;}
    loadAmmoWork(a);
@@ -477,11 +646,18 @@ function rifleWizard(){
      ${f("Bullet / model","aBullet",a.bullet)}
      ${f("Bullet weight (gr)","aWeight",a.weightGr,"decimal")}
      <label>Muzzle velocity<div style="display:grid;grid-template-columns:1fr 95px;gap:8px;margin-top:6px"><input id="aMv" type="text" inputmode="decimal" value="${esc(a.mv||"")}"><select id="aMvUnit"><option ${a.mvUnit==="m/s"?"":"selected"}>fps</option><option ${a.mvUnit==="m/s"?"selected":""}>m/s</option></select></div></label>
+     ${f("MV SD","aMvSd",a.mvSd,"decimal")}
+     <label>Rifle / ammo precision<div style="display:grid;grid-template-columns:1fr 95px;gap:8px;margin-top:6px"><input id="aPrecision" type="text" inputmode="decimal" value="${esc(a.precision||"")}" placeholder="0.5"><select id="aPrecisionUnit"><option ${a.precisionUnit==="MIL"?"":"selected"}>MOA</option><option ${a.precisionUnit==="MIL"?"selected":""}>MIL</option></select></div></label>
      <label>BC model<select id="aBcType"><option ${a.bcType==="G1"?"":"selected"}>G7</option><option ${a.bcType==="G1"?"selected":""}>G1</option><option ${a.bcType==="Custom Drag Model"?"selected":""}>Custom Drag Model</option></select></label>
-     ${f("BC value / CDM reference","aBc",a.bcValue||a.bc)}<div class="dimensionNote">For G1/G7 enter a value between 0 and 1, e.g. 0.290.</div>
+     ${f("BC value / CDM reference","aBc",a.bcValue||a.bc)}
      ${f("Lot / batch","aLot",a.lot)}
      ${ta("Ammo notes","aNotes",a.notes)}
-   </div><div class="note">This ammunition stays paired with this rifle as one operational profile.</div>`;
+   </div>
+   <details class="fastSection"><summary>ADVANCED DISPERSION</summary>
+     <div class="small">Optional. If blank, WIND SIGHT uses the single precision value above.</div>
+     <div class="grid two">${f("Horizontal precision","aHPrecision",a.hPrecision,"decimal")}${f("Vertical precision","aVPrecision",a.vPrecision,"decimal")}</div>
+   </details>
+   <div class="note">MV SD and precision are used only when supplied. WIND SIGHT does not invent them.</div>`;
  }else if(st.step===2){
    rw.innerHTML=calTableA(a);
  }else if(st.step===3){
@@ -536,7 +712,7 @@ function saveRifleWizard(r,a){
    r.zeroM=v("rZero");r.sightHeight=v("rSight");r.sightHeightUnit=v("rSightUnit")||"cm";r.kestrelModel=v("rKestrel")||"Kestrel / Applied Ballistics";r.notes=v("rNotes");
  }
  if(st.step===1&&a){
-   a.name=v("aName");a.bullet=v("aBullet");a.weightGr=v("aWeight");a.mv=v("aMv");a.mvUnit=v("aMvUnit")||"fps";a.bcType=v("aBcType")||"G7";a.bcValue=v("aBc");a.bc=a.bcValue;a.lot=v("aLot");a.notes=v("aNotes");
+   a.name=v("aName");a.bullet=v("aBullet");a.weightGr=v("aWeight");a.mv=v("aMv");a.mvUnit=v("aMvUnit")||"fps";a.mvSd=v("aMvSd");a.precision=v("aPrecision");a.precisionUnit=v("aPrecisionUnit")||"MOA";a.hPrecision=v("aHPrecision");a.vPrecision=v("aVPrecision");a.bcType=v("aBcType")||"G7";a.bcValue=v("aBc");a.bc=a.bcValue;a.lot=v("aLot");a.notes=v("aNotes");
  }
  if(st.step===2&&a){
    loadAmmoWork(a);
@@ -753,12 +929,12 @@ function bindMatchCards(){
    el.querySelector(".permanentDelete")?.addEventListener("click",()=>permanentlyDeleteMatchById(id));
  });
 }
-function newStage(nm){return {id:uid("s"),name:nm,targets:[{id:uid("t"),label:"T1",distanceM:"",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"}],wind:{min:"",avg:"",max:"",now:"",avgDir:"",nowDir:"",window:"10 min"},points:[{id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[]}],targetObs:[],targetTerrain:"Open / normal",intel:[],score:"",pointsAvailable:"",impacts:"",shots:"",preNotes:"",postNotes:"",createdAt:iso()}}
+function newStage(nm){return {id:uid("s"),name:nm,targets:[{id:uid("t"),label:"T1",distanceM:"",rangeQuality:"Match book",rangeUncM:"0",targetSizeUncPct:"0",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"}],wind:{min:"",avg:"",max:"",now:"",avgDir:"",nowDir:"",window:"10 min"},points:[{id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[]}],targetObs:[],targetTerrain:"Open / normal",intel:[],score:"",pointsAvailable:"",impacts:"",shots:"",preNotes:"",postNotes:"",createdAt:iso()}}
 function matchWizard(){
- const m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):(st._md||loadDraft("match")||(st._md={id:uid("m"),name:"",date:new Date().toISOString().slice(0,10),venue:"",rifleId:"",ammoId:"",rifleSnapshot:null,ammoSnapshot:null,calibrationVersion:null,stages:[],createdAt:iso()}));
+ const m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):(st._md||loadDraft("match")||(st._md={id:uid("m"),name:"",date:new Date().toISOString().slice(0,10),venue:"",rifleId:"",ammoId:"",rifleSnapshot:null,ammoSnapshot:null,calibrationVersion:null,envTempUncC:"0",envPressureUncHpa:"0",envDaUncM:"0",ajResidualMil:"0",stages:[],createdAt:iso()}));
  setBottom(true,st.step===3?"DONE":"NEXT →");
  main.innerHTML=`<div class="panel"><div class="kicker">Competition wizard</div><h2>Match Setup</h2><div class="stepbar">${["RIFLE + AMMO","EVENT","STAGES","REVIEW"].map((x,i)=>`<div class="step ${st.step===i?"active":""}">${x}</div>`).join("")}</div><div id="mw"></div></div>`;
- if(st.step===1)mw.innerHTML=`<div class="grid two">${f("Event name","mName",m.name)}${f("Date","mDate",m.date,"date")}${f("Venue / range","mVenue",m.venue)}</div>`;
+ if(st.step===1)mw.innerHTML=`<div class="grid two">${f("Event name","mName",m.name)}${f("Date","mDate",m.date,"date")}${f("Venue / range","mVenue",m.venue)}</div><details class="fastSection"><summary>ADVANCED UNCERTAINTY</summary><div class="grid two">${f("Temperature uncertainty ±°C","mTempUnc",m.envTempUncC||"0","decimal")}${f("Pressure uncertainty ±hPa","mPressUnc",m.envPressureUncHpa||"0","decimal")}${f("Density altitude uncertainty ±m","mDaUnc",m.envDaUncM||"0","decimal")}${f("Residual aerodynamic-jump uncertainty mil","mAjUnc",m.ajResidualMil||"0","decimal")}</div><div class="small">Defaults are zero. Use residual uncertainty only where your ballistic solver does not already account for it.</div></details>`;
  if(st.step===0){
    const readyRifles=st.data.rifles.filter(r=>(r.ammo||[]).some(a=>a.name&&a.bullet&&n(a.mv)>0&&(a.bcType||a.bc)));
    if(!readyRifles.length){mw.innerHTML=`<div class="bad">Create a complete rifle + ammunition profile before creating a match. Wind calibration is optional at this stage.</div>`;nextBtn.style.visibility="hidden";}
@@ -784,7 +960,7 @@ function fillAmmo(m){
  mAmmo.onchange=()=>fillAmmo(m);
 }
 function saveMatch(m){
- if(st.step===1){m.name=v("mName");m.date=v("mDate");m.venue=v("mVenue")}
+ if(st.step===1){m.name=v("mName");m.date=v("mDate");m.venue=v("mVenue");m.envTempUncC=v("mTempUnc")||"0";m.envPressureUncHpa=v("mPressUnc")||"0";m.envDaUncM=v("mDaUnc")||"0";m.ajResidualMil=v("mAjUnc")||"0"}
  if(st.step===0){
    m.rifleId=v("mRifle");m.ammoId=v("mAmmo");
    const rr=st.data.rifles.find(x=>x.id===m.rifleId), aa=rr?.ammo.find(x=>x.id===m.ammoId);
@@ -797,7 +973,7 @@ function saveMatch(m){
      s.name=v("sn_"+si)||s.name;
      s.targets.forEach((t,ti)=>{
        t.label=v("tl_"+si+"_"+ti)||t.label;
-       t.distanceM=v("td_"+si+"_"+ti);
+       t.distanceM=v("td_"+si+"_"+ti);t.rangeQuality=v("trq_"+si+"_"+ti)||"Match book";t.rangeUncM=v("tru_"+si+"_"+ti)||"0";t.targetSizeUncPct=v("tsu_"+si+"_"+ti)||"0";
        t.shape=v("ts_"+si+"_"+ti);
        t.widthCm=v("tw_"+si+"_"+ti);
        t.heightCm=needsHeight(t.shape)?v("th_"+si+"_"+ti):t.widthCm;
@@ -824,12 +1000,12 @@ function syncShapeDims(si,ti){
  if(!needsHeight(sh)){if(w&&h)h.value=w.value; if(hw)hw.classList.add("hidden")}else if(hw)hw.classList.remove("hidden");
 }
 
-function renderStageSetup(m){stageSetup.innerHTML=m.stages.map((s,si)=>`<details class="stageBuilder" ${si===m.stages.length-1?"open":""}><summary>STAGE ${si+1}: ${esc(s.name||("Stage "+(si+1)))} <span class="summaryPill">${s.targets.length} target${s.targets.length===1?"":"s"}</span><div class="small" style="margin-top:5px">${s.targets.map(tt=>`${esc(tt.label)} ${esc(tt.distanceM||"—")}m • ${esc(tt.shape||"")} • ${esc(targetSizeText(tt))}`).join("<br>")}</div></summary><div class="managementActions"><button class="btn danger small" onclick="removeStageSetup(${si})">DELETE STAGE</button></div>${f("Stage name","sn_"+si,s.name)}${s.targets.map((tr,ti)=>`<div class="targetCard"><div class="targetHeader"><strong>TARGET ${ti+1}</strong>${s.targets.length>1?`<button class="btn danger small" onclick="removePreTarget(${si},${ti})">REMOVE</button>`:""}</div><div class="grid two">${f("Target label","tl_"+si+"_"+ti,tr.label)}${f("Distance (m)","td_"+si+"_"+ti,tr.distanceM,"numeric")}<label>Shape<select id="ts_${si}_${ti}" onchange="syncShapeDims(${si},${ti})">${["Round","Square","Rectangle","Diamond","IPSC / Silhouette","Custom"].map(x=>`<option ${x===tr.shape?"selected":""}>${x}</option>`).join("")}</select></label>${f("Width / diameter cm","tw_"+si+"_"+ti,tr.widthCm,"decimal")}<div id="heightWrap_${si}_${ti}" class="${needsHeight(tr.shape)?"":"hidden"}">${f("Height cm","th_"+si+"_"+ti,tr.heightCm||tr.widthCm,"decimal")}</div></div></div>`).join("")}<button class="btn secondary small" onclick="addPreTarget(${si})">+ ADD TARGET TO STAGE ${si+1}</button></details>`).join("");m.stages.forEach((s,si)=>s.targets.forEach((tr,ti)=>syncShapeDims(si,ti)))}
+function renderStageSetup(m){stageSetup.innerHTML=m.stages.map((s,si)=>`<details class="stageBuilder" ${si===m.stages.length-1?"open":""}><summary>STAGE ${si+1}: ${esc(s.name||("Stage "+(si+1)))} <span class="summaryPill">${s.targets.length} target${s.targets.length===1?"":"s"}</span><div class="small" style="margin-top:5px">${s.targets.map(tt=>`${esc(tt.label)} ${esc(tt.distanceM||"—")}m • ${esc(tt.shape||"")} • ${esc(targetSizeText(tt))}`).join("<br>")}</div></summary><div class="managementActions"><button class="btn danger small" onclick="removeStageSetup(${si})">DELETE STAGE</button></div>${f("Stage name","sn_"+si,s.name)}${s.targets.map((tr,ti)=>`<div class="targetCard"><div class="targetHeader"><strong>TARGET ${ti+1}</strong>${s.targets.length>1?`<button class="btn danger small" onclick="removePreTarget(${si},${ti})">REMOVE</button>`:""}</div><div class="grid two">${f("Target label","tl_"+si+"_"+ti,tr.label)}${f("Distance (m)","td_"+si+"_"+ti,tr.distanceM,"numeric")}<label>Range quality<select id="trq_${si}_${ti}">${["Match book","LRF / confirmed","Estimated"].map(x=>`<option ${x===(tr.rangeQuality||"Match book")?"selected":""}>${x}</option>`).join("")}</select></label>${f("Range uncertainty ±m","tru_"+si+"_"+ti,tr.rangeUncM??"0","decimal")}${f("Target-size uncertainty %","tsu_"+si+"_"+ti,tr.targetSizeUncPct??"0","decimal")}<label>Shape<select id="ts_${si}_${ti}" onchange="syncShapeDims(${si},${ti})">${["Round","Square","Rectangle","Diamond","IPSC / Silhouette","Custom"].map(x=>`<option ${x===tr.shape?"selected":""}>${x}</option>`).join("")}</select></label>${f("Width / diameter cm","tw_"+si+"_"+ti,tr.widthCm,"decimal")}<div id="heightWrap_${si}_${ti}" class="${needsHeight(tr.shape)?"":"hidden"}">${f("Height cm","th_"+si+"_"+ti,tr.heightCm||tr.widthCm,"decimal")}</div></div></div>`).join("")}<button class="btn secondary small" onclick="addPreTarget(${si})">+ ADD TARGET TO STAGE ${si+1}</button></details>`).join("");m.stages.forEach((s,si)=>s.targets.forEach((tr,ti)=>syncShapeDims(si,ti)))}
 
 
 window.removeStageSetup=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(!confirm("Delete this stage and all of its target setup data?"))return;m.stages.splice(si,1);renderStageSetup(m);bindAuto(()=>saveMatch(m))}
 window.removePreTarget=(si,ti)=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(m.stages[si].targets.length<=1)return;if(!confirm("Remove this target?"))return;m.stages[si].targets.splice(ti,1);m.stages[si].targets.forEach((t,i)=>{if(!t.label||/^T\d+$/.test(t.label))t.label="T"+(i+1)});renderStageSetup(m);bindAuto(()=>saveMatch(m))}
-window.addPreTarget=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(m.stages[si].targets.length>=MAX_TARGETS){alert(`Easy Mode supports up to ${MAX_TARGETS} targets per stage.`);return;}m.stages[si].targets.push({id:uid("t"),label:"T"+(m.stages[si].targets.length+1),distanceM:"",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"});renderStageSetup(m);bindAuto(()=>saveMatch(m))}
+window.addPreTarget=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(m.stages[si].targets.length>=MAX_TARGETS){alert(`Easy Mode supports up to ${MAX_TARGETS} targets per stage.`);return;}m.stages[si].targets.push({id:uid("t"),label:"T"+(m.stages[si].targets.length+1),distanceM:"",rangeQuality:"Match book",rangeUncM:"0",targetSizeUncPct:"0",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"});renderStageSetup(m);bindAuto(()=>saveMatch(m))}
 
 const behavior={
  "Long grass":[["Rattles only",5,5,"speed"],["Starts bending; direction visible",7,8,"speed+direction"],["Bent over / picked up straight",9,11,"speed+direction"],["Bent + oscillating up/down",12,13,"speed+direction"],["Cannot determine",null,null,"none"]],
@@ -859,6 +1035,250 @@ function liveValidationFast(s,step){
  if(step===4){const fz=fuse(s);if(!fz.valid)return fz.reason;if(s.targets.some(tt=>!opt(tt,fz)&&!sideFlipForTarget(tt,fz)))return "Complete target dimensions and solver holds before continuing."}
  return null;
 }
+
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+function lerp(a,b,u){return a+(b-a)*u}
+function gaussianPdf(x,mu,sigma){sigma=Math.max(.0001,sigma);const z=(x-mu)/sigma;return Math.exp(-.5*z*z)/(sigma*Math.sqrt(2*Math.PI))}
+function circularSigmaDeg(q){
+ if(q==="Clear")return 7;
+ if(q==="Approximate")return 20;
+ return 55;
+}
+function sourceReliability(obs,zone){
+ let r=.55;
+ if(obs?.quality==="Clear")r=.90;
+ else if(obs?.quality==="Approximate")r=.65;
+ else r=.20;
+ if(zone==="target")r*=1.00;
+ else if(zone==="point")r*=.90;
+ return clamp(r,.05,1);
+}
+function timeDecayFactor(ts,halfLifeSec=180){
+ if(!ts)return 1;
+ const age=Math.max(0,(Date.now()-new Date(ts).getTime())/1000);
+ return Math.pow(.5,age/halfLifeSec);
+}
+function trajectoryZoneWeights(tt){
+ // Rifle/ammo-specific calibration is not yet sufficient to derive a true sensitivity kernel.
+ // Use a normalized time-of-flight proxy from target distance as a transparent interim approximation.
+ const d=Math.max(1,n(tt.distanceM)||1);
+ if(d<400)return {shooter:.45,mid:.35,target:.20};
+ if(d<700)return {shooter:.38,mid:.37,target:.25};
+ return {shooter:.32,mid:.38,target:.30};
+}
+function evidenceDirectionSamples(s,tt){
+ const base=[];
+ const add=(dir,weight,sigma,kind,zone)=>{if(n(dir)===null)return;base.push({dir:norm(n(dir)),weight:weight,sigma:sigma,kind,zone})};
+ // Shooter/global wind is WIND FROM directly.
+ add(s.wind?.avgDir,1.0,10,"shooter","shooter");
+ if(String(s.wind?.nowDir||"")!=="")add(s.wind.nowDir,.85,12,"shooter_now","shooter");
+
+ // Visual observations are recorded as MOVING TO and must be converted to WIND FROM.
+ (s.points||[]).forEach((pt,pi)=>(pt.obs||[]).forEach(o=>{
+   if(o.quality==="Unknown"||n(o.dir)===null)return;
+   const wd=norm(n(o.dir)+180);
+   const q=sourceReliability(o,"point")*timeDecayFactor(o.timestamp||o.createdAt,180);
+   add(wd,q,circularSigmaDeg(o.quality),`point_${pi}`,"mid");
+ }));
+ (s.targetObs||[]).forEach(o=>{
+   if(o.quality==="Unknown"||n(o.dir)===null)return;
+   const wd=norm(n(o.dir)+180);
+   const q=sourceReliability(o,"target")*timeDecayFactor(o.timestamp||o.createdAt,150);
+   add(wd,q,circularSigmaDeg(o.quality),`target`,"target");
+ });
+ return base;
+}
+function fuseCircularDirection(s,tt){
+ const ev=evidenceDirectionSamples(s,tt),zw=trajectoryZoneWeights(tt);
+ if(!ev.length)return {dir:n(s.wind?.avgDir)||0,concentration:0,evidence:0,conflict:1};
+ let sx=0,sy=0,wsum=0;
+ ev.forEach(e=>{
+   const zoneW=e.zone==="shooter"?zw.shooter:e.zone==="target"?zw.target:zw.mid;
+   const w=e.weight*zoneW;
+   const a=e.dir*Math.PI/180;
+   sx+=w*Math.cos(a);sy+=w*Math.sin(a);wsum+=w;
+ });
+ const R=Math.sqrt(sx*sx+sy*sy)/Math.max(wsum,.0001);
+ const dir=norm(Math.atan2(sy,sx)*180/Math.PI);
+ return {dir,concentration:R,evidence:ev.length,conflict:1-R};
+}
+function evidenceSpeedStats(s,tt){
+ const vals=[];
+ const add=(v,w,zone)=>{if(n(v)!==null&&n(v)>=0)vals.push({v:n(v),w,zone})};
+ add(s.wind?.min,.6,"shooter");add(s.wind?.avg,1,"shooter");add(s.wind?.max,.6,"shooter");
+ if(String(s.wind?.now||"")!=="")add(s.wind.now,.85,"shooter");
+ // Behavioral observations only act as broad corroboration around current average;
+ // they do not invent a speed absent a calibrated indicator-speed model.
+ const avg=n(s.wind?.avg);
+ if(avg!==null){
+   (s.points||[]).forEach(pt=>(pt.obs||[]).forEach(o=>{
+     if(o.quality==="Unknown")return;
+     const b=n(o.behavior);
+     if(b!==null)add(avg*(.75+.06*clamp(b,0,5)),.18*sourceReliability(o,"point"),"mid");
+   }));
+   (s.targetObs||[]).forEach(o=>{
+     if(o.quality==="Unknown")return;
+     const b=n(o.behavior);
+     if(b!==null)add(avg*(.75+.06*clamp(b,0,5)),.22*sourceReliability(o,"target"),"target");
+   });
+ }
+ const zw=trajectoryZoneWeights(tt);
+ let sw=0,mu=0;
+ vals.forEach(x=>{const z=x.zone==="shooter"?zw.shooter:x.zone==="target"?zw.target:zw.mid;const w=x.w*z;sw+=w;mu+=w*x.v});
+ mu=sw?mu/sw:(avg||0);
+ let vr=0;
+ vals.forEach(x=>{const z=x.zone==="shooter"?zw.shooter:x.zone==="target"?zw.target:zw.mid;const w=x.w*z;vr+=w*(x.v-mu)*(x.v-mu)});
+ let sigma=Math.sqrt(vr/Math.max(sw,.0001));
+ const spread=Math.max(0,(n(s.wind?.max)||mu)-(n(s.wind?.min)||mu));
+ sigma=Math.max(.6,sigma,spread/3);
+ return {mu,sigma,spread,count:vals.length};
+}
+function solverHoldAtWind(tt,speed,s){
+ const lo=n(tt.kMin),hi=n(tt.kMax);
+ if(lo===null||hi===null)return null;
+ const wmin=n(s.wind?.min),wmax=n(s.wind?.max),wavg=n(s.wind?.avg);
+ if(wmin!==null&&wmax!==null&&wmax>wmin){
+   const u=clamp((speed-wmin)/(wmax-wmin),0,1);
+   return lerp(lo,hi,u);
+ }
+ if(wavg&&wavg>0){
+   const mid=(lo+hi)/2;
+   return Math.max(0,mid*(speed/wavg));
+ }
+ return (lo+hi)/2;
+}
+function monteCarloRequiredHolds(s,tt,N=6000){
+ const dirF=fuseCircularDirection(s,tt),spd=evidenceSpeedStats(s,tt),dof=n(tt.dof)||0;
+ const out=[];
+ // Deterministic quasi-random sequence for repeatable UI and UAT.
+ for(let i=1;i<=N;i++){
+   const u1=((i*0.6180339887498949)%1)||.5;
+   const u2=((i*0.7548776662466927)%1)||.5;
+   const u3=((i*0.5698402909980532)%1)||.5;
+   const z=Math.sqrt(-2*Math.log(Math.max(1e-9,u1)))*Math.cos(2*Math.PI*u2);
+   const speed=Math.max(0,spd.mu+z*spd.sigma);
+   const dirSigma=dirF.concentration>.8?8:dirF.concentration>.55?18:35;
+   const zd=Math.sqrt(-2*Math.log(Math.max(1e-9,u2)))*Math.cos(2*Math.PI*u3);
+   const wd=norm(dirF.dir+zd*dirSigma);
+   const rel=sdelta(wd,dof),fv=Math.abs(Math.sin(rel*Math.PI/180));
+   const h=solverHoldAtWind(tt,speed,s);
+   if(h===null)continue;
+   // Solver bracket is already a wind-hold truth layer; direction changes scale full-value contribution.
+   const req=h*fv;
+   out.push((rel>=0?1:-1)*req);
+ }
+ return {samples:out,dir:dirF,spd};
+}
+function probabilityInside(samples,holdSigned,targetWidthMil){
+ if(!samples.length||!(targetWidthMil>0))return 0;
+ const half=targetWidthMil/2;
+ let hit=0;
+ for(const req of samples)if(Math.abs(req-holdSigned)<=half)hit++;
+ return hit/samples.length;
+}
+
+function currentMatchAndAmmo(){
+ const m=st.data.matches.find(x=>x.id===st.selectedMatch),r=m?st.data.rifles.find(x=>x.id===m.rifleId):null,a=r?.ammo?.find(x=>x.id===m?.ammoId);
+ return {m,r,a};
+}
+function moaToMil(x){return x*0.290888}
+function precisionSigmaMil(a,axis){
+ if(!a)return 0;
+ let v=axis==="h"?n(a.hPrecision):n(a.vPrecision);if(v===null)v=n(a.precision);
+ if(!(v>0))return 0;
+ const full=(a.precisionUnit||"MOA").toUpperCase()==="MIL"?v:moaToMil(v);
+ return full/4;
+}
+function rangeSigmaM(tt){
+ const u=n(tt.rangeUncM);if(u>0)return u/2;
+ if(tt.rangeQuality==="LRF / confirmed")return .5;
+ if(tt.rangeQuality==="Estimated")return Math.max(2,(n(tt.distanceM)||0)*.01);
+ return 1;
+}
+function targetScaleSample(tt,z){const p=Math.max(0,n(tt.targetSizeUncPct)||0);return clamp(1+z*(p/100)/2,.8,1.2)}
+function mvVerticalSigmaMil(a,tt){
+ const mv=n(a?.mv),sd=n(a?.mvSd),d=n(tt.distanceM);if(!(mv>0&&sd>0&&d>0))return 0;
+ return (sd/mv)*(d/100)*.55;
+}
+function rangeVerticalSigmaMil(tt){const d=n(tt.distanceM),rs=rangeSigmaM(tt);return d>0?(rs/d)*1000*.08:0}
+function envVerticalSigmaMil(m,tt){
+ const d=Math.max(1,n(tt.distanceM)||1),temp=Math.max(0,n(m?.envTempUncC)||0),press=Math.max(0,n(m?.envPressureUncHpa)||0),da=Math.max(0,n(m?.envDaUncM)||0);
+ return Math.sqrt((temp*.002*(d/500))**2+(press*.0008*(d/500))**2+(da*.000015*(d/500))**2);
+}
+function ajSigmaMil(m){return Math.max(0,n(m?.ajResidualMil)||0)/2}
+function insideTarget2D(tt,x,y,scale){
+ const d=n(tt.distanceM),w=n(tt.widthCm),h=n(tt.heightCm||tt.widthCm);if(!(d>0&&w>0))return false;
+ const wm=(w/100)/d*1000*scale,hm=((h>0?h:w)/100)/d*1000*scale,shape=tt.shape||"Round";
+ if(shape==="Round"){const rx=wm/2,ry=hm/2;return (x*x)/(rx*rx)+(y*y)/(ry*ry)<=1}
+ if(shape==="Diamond")return Math.abs(x)/(wm/2)+Math.abs(y)/(hm/2)<=1;
+ return Math.abs(x)<=wm/2&&Math.abs(y)<=hm/2;
+}
+function simulateImpactSamplesV3(s,tt,N){
+ const {m,a}=currentMatchAndAmmo(),wind=monteCarloRequiredHolds(s,tt,N),out=[];
+ const hs=precisionSigmaMil(a,"h"),vs=precisionSigmaMil(a,"v"),mvs=mvVerticalSigmaMil(a,tt),rs=rangeVerticalSigmaMil(tt),es=envVerticalSigmaMil(m,tt),ajs=ajSigmaMil(m);
+ for(let i=0;i<wind.samples.length;i++){
+   const u1=(((i+11)*.41421356237)%1)||.5,u2=(((i+17)*.73205080757)%1)||.5,u3=(((i+23)*.27182818284)%1)||.5,u4=(((i+31)*.14142135623)%1)||.5;
+   const z1=Math.sqrt(-2*Math.log(Math.max(1e-9,u1)))*Math.cos(2*Math.PI*u2),z2=Math.sqrt(-2*Math.log(Math.max(1e-9,u2)))*Math.cos(2*Math.PI*u3),z3=Math.sqrt(-2*Math.log(Math.max(1e-9,u3)))*Math.cos(2*Math.PI*u4),z4=Math.sqrt(-2*Math.log(Math.max(1e-9,u4)))*Math.sin(2*Math.PI*u1);
+   out.push({requiredWind:wind.samples[i],xDisp:z1*hs,yDisp:z2*vs+z3*Math.sqrt(mvs*mvs+rs*rs+es*es)+z4*ajs,targetScale:targetScaleSample(tt,z4)});
+ }
+ return {samples:out,wind,components:{hs,vs,mvs,rs,es,ajs}};
+}
+function impactProbability2D(sim,tt,hold){
+ if(!sim.samples.length)return 0;let hit=0;
+ for(const x of sim.samples)if(insideTarget2D(tt,hold-x.requiredWind+x.xDisp,x.yDisp,x.targetScale))hit++;
+ return hit/sim.samples.length;
+}
+function optimizeImpactHoldV3(s,tt){
+ const sim=simulateImpactSamplesV3(s,tt,10000);if(!sim.samples.length)return null;
+ const req=sim.samples.map(x=>x.requiredWind),start=Math.floor((Math.min(...req)-.6)*10)/10,end=Math.ceil((Math.max(...req)+.6)*10)/10,c=[];
+ for(let h=start;h<=end+1e-9;h+=.1){const hh=Number(h.toFixed(1));c.push({h:hh,p:impactProbability2D(sim,tt,hh)})}
+ c.sort((a,b)=>b.p-a.p||Math.abs(a.h)-Math.abs(b.h));const best=c[0],rob=c.filter(x=>x.p>=best.p*.95).sort((a,b)=>a.h-b.h),wind=optimizeWindHoldV2(s,tt);
+ let cs=wind?.confidenceScore??.4;const {a}=currentMatchAndAmmo();if(n(a?.mvSd)>0)cs+=.03;if(n(a?.precision)>0||n(a?.hPrecision)>0||n(a?.vPrecision)>0)cs+=.04;cs=clamp(cs,0,1);
+ return {hold:Math.abs(best.h),side:best.h<0?"L":"R",modeledHit:best.p,windHit:wind?.windHit??best.p,confidence:cs>=.72?"HIGH":cs>=.48?"MEDIUM":"LOW",confidenceScore:cs,robustMin:Math.abs(rob[0]?.h??best.h),robustMax:Math.abs(rob[rob.length-1]?.h??best.h),robustSide:best.h<0?"L":"R",components:sim.components};
+}
+
+function optimizeWindHoldV2(s,tt){
+ const dm=targetDimsMil(tt);if(!dm)return null;
+ const mc=monteCarloRequiredHolds(s,tt,6000),samples=mc.samples;
+ if(!samples.length)return null;
+ const minS=Math.min(...samples),maxS=Math.max(...samples);
+ const candidates=[];
+ const start=Math.floor((minS-.5)*10)/10,end=Math.ceil((maxS+.5)*10)/10;
+ for(let h=start;h<=end+1e-9;h+=.1){
+   const hs=Number(h.toFixed(1));
+   candidates.push({h:hs,p:probabilityInside(samples,hs,dm.w)});
+ }
+ candidates.sort((a,b)=>b.p-a.p||Math.abs(a.h)-Math.abs(b.h));
+ const best=candidates[0],thr=best.p*.95;
+ const robust=candidates.filter(x=>x.p>=thr).sort((a,b)=>a.h-b.h);
+ const robustMin=robust[0]?.h,robustMax=robust[robust.length-1]?.h;
+
+ const absSamples=samples.map(Math.abs).sort((a,b)=>a-b);
+ const q=p=>absSamples[Math.min(absSamples.length-1,Math.floor((absSamples.length-1)*p))];
+ const q10=q(.10),q50=q(.50),q90=q(.90);
+
+ const directionAgreement=mc.dir.concentration;
+ const speedRel=mc.spd.mu>0?mc.spd.sigma/mc.spd.mu:1;
+ let confScore=.45*directionAgreement+.30*clamp(1-speedRel,0,1)+.15*clamp(mc.dir.evidence/4,0,1)+.10*(calibrationCompleteForMatch(s)?1:.45);
+ if(s.wind?.source==="CALYPSO LIVE"&&calypsoRuntime.status==="connected"){
+   const cs=calypsoStats();if(cs?.count>=10)confScore+=.06;if(cs?.count>=30)confScore+=.03;
+ }
+ if((s.wind?.terrain||"").includes("Turbulent"))confScore-=.12;
+ confScore=clamp(confScore,0,1);
+ const confidence=confScore>=.72?"HIGH":confScore>=.48?"MEDIUM":"LOW";
+ return {
+   signedHold:best.h,hold:Math.abs(best.h),side:best.h<0?"L":"R",
+   windHit:best.p,confidence,confidenceScore:confScore,
+   robustMin:Math.abs(robustMin??best.h),robustMax:Math.abs(robustMax??best.h),
+   robustSide:(best.h<0?"L":"R"),
+   q10,q50,q90,candidates,model:mc
+ };
+}
+function calibrationCompleteForMatch(s){
+ const m=st.data.matches.find(x=>x.id===st.selectedMatch);
+ return !!m?.calibrationVersion;
+}
+
 function signedCross(angle,dof){return Math.sin(sdelta(angle,dof)*Math.PI/180)}
 function sideFlipForTarget(t,fz){const angles=fz.directionSamples||[fz.dir],signs=[];for(const a of angles){const c=signedCross(a,n(t.dof)||0);if(Math.abs(c)>=0.08)signs.push(Math.sign(c))}return signs.includes(1)&&signs.includes(-1)}
 function angleSensitivity(t,fz){const v=Math.abs(Math.sin(sdelta(fz.dir,n(t.dof)||0)*Math.PI/180));return v<0.5?"SENSITIVE":v<0.87?"MODERATE":"ROBUST"}
@@ -893,7 +1313,7 @@ function liveStage(){
  if(!s.liveStartedAt)s.liveStartedAt=iso();startStageTimer(s);
  const STEPS=["DOF","WIND","DOWNRANGE","BALLISTICS","SHOOT","POST"];
  setBottom(true,st.liveStep===STEPS.length-1?"BACK TO MATCH":"NEXT →");
- main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Live stage • ${esc(m.name)}</div><h2>${esc(s.name)}</h2></div><div class="stageTimer" id="stageTimer">${stageTimerText(s)}</div></div>
+ main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Live stage • ${esc(m.name)}</div><h2>${esc(s.name)}</h2></div><div class="stageTimer" id="stageTimer">${stageTimerText(s)}</div></div>${calypsoStripHTML()}
  <div class="stepbar liveStepsWrap" id="liveSteps">${STEPS.map((x,i)=>`<div class="step ${st.liveStep===i?"active":""}">${x}</div>`).join("")}</div><div id="live"></div><div class="matchSaveExit"><button class="btn outline" id="liveSaveExit">SAVE & EXIT MATCH</button></div></div>`;
  if(st.liveStep===0)renderDOF(s);
  if(st.liveStep===1)renderWind(s);
@@ -901,6 +1321,7 @@ function liveStage(){
  if(st.liveStep===3)renderKestrel(s);
  if(st.liveStep===4)renderShoot(s);
  if(st.liveStep===5)renderPost(s);
+ const cpb=document.getElementById("calypsoPairBtn");if(cpb)cpb.onclick=pairCalypso;autoConnectCalypso();
  setTimeout(()=>document.querySelector("#liveSteps .active")?.scrollIntoView({behavior:"auto",inline:"center",block:"nearest"}),0);
  clearInterval(window.__stageTimerInterval);window.__stageTimerInterval=setInterval(()=>{const el=document.getElementById("stageTimer");if(el)el.textContent=stageTimerText(s);else clearInterval(window.__stageTimerInterval)},1000);
  liveSaveExit.onclick=()=>{captureLive();writeNow();st.selectedStage=null;st.selectedMatch=null;st.screen="matches";render()};
@@ -1106,49 +1527,46 @@ function renderShoot(s){
  try{
    const fz=fuse(s);
    if(!fz.valid){live.innerHTML=`<div class="bad">${fz.reason}</div><div class="note">Go back to WIND / BALLISTICS and complete required values.</div>`;return}
-   const results=s.targets.map(tt=>({tt,r:opt(tt,fz),z:tWind(tt,fz),flip:sideFlipForTarget(tt,fz)}));
-   live.innerHTML=`<div class="cardhead"><div><h3>SHOOT</h3><div class="small">Immediate stage holds</div></div><span class="tag live">${fz.quality}</span></div>
-   ${results.map(({tt,r,z,flip})=>shootResultHTML(tt,r,z,flip,fz)).join("")}
-   <div class="card"><h3>Stage Card</h3><div class="stagecard">${results.map(({tt,r,z,flip})=>stageLineFast(tt,r,z,flip)).join("")}</div></div>`;
+   const rows=s.targets.map(tt=>({tt,sol:optimizeImpactHoldV3(s,tt),fallback:opt(tt,fz),z:tWind(tt,fz),flip:sideFlipForTarget(tt,fz)}));
+   live.innerHTML=`<div class="cardhead"><div><h3>SHOOT</h3><div class="small">Probabilistic Impact Engine</div></div><span class="tag live">${fz.quality}</span></div>
+   ${rows.map(x=>shootResultV2(x.tt,x.sol,x.fallback,x.z,x.flip)).join("")}
+   <div class="card"><h3>Stage Card</h3><div class="stagecard">${rows.map(x=>stageLineV2(x.tt,x.sol,x.fallback,x.z,x.flip)).join("")}</div></div>`;
  }catch(e){
-   console.error("SHOOT render error",e);
-   live.innerHTML=`<div class="shootError"><strong>SHOOT could not render.</strong><br>${esc(e?.message||"Unknown rendering error")}<br><span class="small">Your stage data remains saved. Go back one step and reopen SHOOT.</span></div>`;
+   console.error("SHOOT v2 render error",e);
+   live.innerHTML=`<div class="shootError"><strong>SHOOT could not render.</strong><br>${esc(e?.message||"Unknown rendering error")}<br><span class="small">Stage data remains saved.</span></div>`;
  }
 }
-function shootResultHTML(tt,r,z,flip,fz){
+function shootResultV2(tt,sol,fallback,z,flip){
  if(flip)return `<div class="warn"><strong>${esc(tt.label)} • SIDE FLIP RISK</strong><br>Re-check wind direction before shooting.</div>`;
- if(!r)return `<div class="note">${esc(tt.label)}: solver MIN/MAX holds and target width required.</div>`;
- const dims=targetDimsMil(tt),tip=windSightAimTip(tt,r,z),score=windSightImpactScore(r),side=z.rel>=0?"R":"L",miss=suggestedMissCorrection(tt);
+ if(!fallback)return `<div class="note">${esc(tt.label)}: solver MIN/MAX holds and target width required.</div>`;
+ if(!sol){
+   const side=z.rel>=0?"R":"L";
+   return `<div class="shootCompact"><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootHold">${hold1(fallback.bh)} ${side}<small>WIND SIGHT HOLD • FALLBACK</small></div></div>`;
+ }
+ const dims=targetDimsMil(tt),miss=suggestedMissCorrection(tt),confClass=sol.confidence==="HIGH"?"confHigh":sol.confidence==="MEDIUM"?"confMed":"confLow";
+ const lo=Math.min(n(tt.kMin)||0,n(tt.kMax)||0),hi=Math.max(n(tt.kMin)||0,n(tt.kMax)||0);
  return `<div class="shootCompact">
-   <div class="shootTop"><div><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootMeta">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div></div><span class="tag done">SHOOT</span></div>
-   <div class="shootHold">${hold1(r.bh)} ${side}<small>WIND SIGHT HOLD</small></div>
-   <div class="shootTriplet">
-     <div><span>MIN</span><strong>${hold1(r.lo)} ${side}</strong></div>
-     <div><span>WIND SIGHT</span><strong>${hold1(r.bh)} ${side}</strong></div>
-     <div><span>MAX</span><strong>${hold1(r.hi)} ${side}</strong></div>
+   <div class="shootTop"><div><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootMeta">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div></div><span class="tag done">V2</span></div>
+   <div class="shootHold">${hold1(sol.hold)} ${sol.side}<small>WIND SIGHT HOLD</small></div>
+   <div class="wsHoldBand">
+     <div><span>MIN</span><strong>${hold1(lo)} ${sol.side}</strong></div>
+     <div class="rec"><span>WIND SIGHT</span><strong>${hold1(sol.hold)} ${sol.side}</strong></div>
+     <div><span>MAX</span><strong>${hold1(hi)} ${sol.side}</strong></div>
    </div>
-   <div class="shootQuickGrid">
-     <div><div class="k">WIND SIGHT SHOT INDEX</div><div class="v">${score}/100</div></div>
-     <div><div class="k">AIM</div><div class="v">${tip?esc(tip.label):"CENTER"}</div></div>
-     <div><div class="k">SAFE HOLD</div><div class="v">${r.safe?`${hold1(r.sl)}–${hold1(r.sh)} ${side}`:"NONE"}</div></div>
-     <div><div class="k">MISS CORRECTION</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div><div class="fastHint">${dims?`${dims.w.toFixed(1)} mil target width`:""}</div></div>
+   <div class="wsMetricGrid">
+     <div class="wsMetric"><div class="k">MODELED HIT</div><div class="v">${Math.round(sol.modeledHit*100)}%</div><div class="fastHint">Wind-only ${Math.round(sol.windHit*100)}%</div></div>
+     <div class="wsMetric"><div class="k">CONFIDENCE</div><div class="v ${confClass}">${sol.confidence}</div></div>
+     <div class="wsMetric"><div class="k">ROBUST HOLD</div><div class="v">${hold1(sol.robustMin)}–${hold1(sol.robustMax)} ${sol.robustSide}</div></div>
+     <div class="wsMetric"><div class="k">MISS CORRECTION</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div>${dims?`<div class="fastHint">${dims.w.toFixed(1)} mil target width</div>`:""}</div>
    </div>
  </div>`;
 }
-function stageLineFast(tt,r,z,flip){
- if(!r)return `<div class="stageLine"><strong>${esc(tt.label)}</strong><div class="hold">—</div><div class="meta">Solver holds required</div></div>`;
- const side=z.rel>=0?"R":"L",score=windSightImpactScore(r),miss=suggestedMissCorrection(tt);
- return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m • ${esc(targetSizeText(tt))}</strong><div class="hold">${flip?"SIDE FLIP":`${hold1(r.bh)} ${side}`}</div><div class="meta">${!flip?`MIN ${hold1(r.lo)} • MAX ${hold1(r.hi)} • Shot Index ${score}/100${miss!==null?` • Miss corr ${hold1(miss)}`:""}`:"Recheck wind side"}</div></div>`;
+function stageLineV2(tt,sol,fallback,z,flip){
+ if(flip)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><div class="hold">SIDE FLIP</div><div class="meta">Recheck wind side</div></div>`;
+ if(sol)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m • ${esc(targetSizeText(tt))}</strong><div class="hold">${hold1(sol.hold)} ${sol.side}</div><div class="meta">Modeled Hit ${Math.round(sol.modeledHit*100)}% • ${sol.confidence} • Robust ${hold1(sol.robustMin)}–${hold1(sol.robustMax)} ${sol.robustSide}</div></div>`;
+ if(fallback){const side=z.rel>=0?"R":"L";return `<div class="stageLine"><strong>${esc(tt.label)}</strong><div class="hold">${hold1(fallback.bh)} ${side}</div><div class="meta">Fallback model</div></div>`}
+ return `<div class="stageLine"><strong>${esc(tt.label)}</strong><div class="hold">—</div><div class="meta">Solver holds required</div></div>`;
 }
-
-function suggestedMissCorrection(tt){
- const dm=targetDimsMil(tt);
- if(!dm||!(dm.w>0))return null;
- // Practical correction guide: 75% of horizontal angular target width,
- // displayed to nearest 0.1 mil. Example: 0.4 mil target => 0.3 mil.
- return Number((dm.w*0.75).toFixed(1));
-}
-
 function targetDimsMil(tt){
  const d=n(tt.distanceM),w=n(tt.widthCm),h=n(tt.heightCm||tt.widthCm);
  if(!(d>0&&w>0))return null;
@@ -1177,7 +1595,7 @@ function whyOptimalHold(tt,r,fz){
 function widthMil(t){let d=n(t.distanceM),w=n(t.widthCm);return d&&w?((w/100)/d)*1000:null}
 function triCDF(x,a,m,b){if(x<=a)return 0;if(x>=b)return 1;if(b<=a)return x>=b?1:0;if(m<=a+1e-9)return 1-Math.pow((b-x)/(b-a),2);if(m>=b-1e-9)return Math.pow((x-a)/(b-a),2);return x<=m?Math.pow(x-a,2)/((b-a)*(m-a)):1-Math.pow(b-x,2)/((b-a)*(b-m))}
 function opt(t,f){let lo=n(t.kMin),hi=n(t.kMax),w=widthMil(t);if(lo===null||hi===null||hi<lo||!w)return null;let z=tWind(t,f),den=z.high-z.low,mode=den>1e-9?lo+(z.best-z.low)/den*(hi-lo):(lo+hi)/2;mode=Math.max(lo,Math.min(hi,mode));let bh=lo,bp=-1;for(let h=lo-w/2;h<=hi+w/2;h+=.001){let p=triCDF(h+w/2,lo,mode,hi)-triCDF(h-w/2,lo,mode,hi);if(p>bp){bp=p;bh=h}}let sl=hi-w/2,sh=lo+w/2;return {lo,hi,w,mode,bh,bp:Math.max(0,Math.min(1,bp)),safe:sl<=sh,sl,sh}}
-function shootHTML(t,f){if(sideFlipForTarget(t,f))return `<div class="card critical"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag live">SIDE FLIP</span></div><div class="warn">Wind evidence crosses the bore line. Easy Mode will not issue a single-side optimal hold or Shot Index. Recheck current direction and use the Solver bracket deliberately.</div></div>`;let r=opt(t,f);if(!r)return `<div class="note">${esc(t.label)}: enter valid solver MIN/MAX holds and target width.</div>`;let ints=getStage().intel.filter(x=>x.target===t.label&&x.hold!=="").map(x=>n(x.hold)).filter(x=>x!==null),iw=ints.length&&(Math.max(...ints)<r.lo||Math.min(...ints)>r.hi);return `<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag done">WIND SIGHT SHOT INDEX</span></div><div class="hero"><div class="small">OPTIMAL WIND HOLD</div><div class="big">${r.bh.toFixed(1)} ${tWind(t,f).rel>=0?"R":"L"}</div><div class="unit">mil</div></div><div class="listrow"><span>Solver bracket</span><strong>${r.lo.toFixed(1)}–${r.hi.toFixed(1)}</strong></div><div class="listrow"><span>WIND SIGHT SHOT INDEX</span><strong>${(r.bp*100).toFixed(0)}%</strong></div><div class="listrow"><span>Safe hold window</span><strong>${r.safe?r.sl.toFixed(1)+"–"+r.sh.toFixed(1):"NONE"}</strong></div>${ints.length?`<div class="${iw?"warn":"note"}">Shooter Intel: ${ints.map(x=>x.toFixed(1)).join(" / ")}${iw?" • outside model bracket":""}</div>`:""}<div class="small" style="margin-top:8px">Shape stored: ${esc(t.shape)}. WIND SIGHT Shot Index is horizontal-wind-only; full 2D shape dispersion remains Advanced Mode.</div></div>`}
+function shootHTML(t,f){if(sideFlipForTarget(t,f))return `<div class="card critical"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag live">SIDE FLIP</span></div><div class="warn">Wind evidence crosses the bore line. Easy Mode will not issue a single-side optimal hold or Shot Index. Recheck current direction and use the Solver bracket deliberately.</div></div>`;let r=opt(t,f);if(!r)return `<div class="note">${esc(t.label)}: enter valid solver MIN/MAX holds and target width.</div>`;let ints=getStage().intel.filter(x=>x.target===t.label&&x.hold!=="").map(x=>n(x.hold)).filter(x=>x!==null),iw=ints.length&&(Math.max(...ints)<r.lo||Math.min(...ints)>r.hi);return `<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag done">WIND HIT</span></div><div class="hero"><div class="small">OPTIMAL WIND HOLD</div><div class="big">${r.bh.toFixed(1)} ${tWind(t,f).rel>=0?"R":"L"}</div><div class="unit">mil</div></div><div class="listrow"><span>Solver bracket</span><strong>${r.lo.toFixed(1)}–${r.hi.toFixed(1)}</strong></div><div class="listrow"><span>WIND HIT</span><strong>${(r.bp*100).toFixed(0)}%</strong></div><div class="listrow"><span>Safe hold window</span><strong>${r.safe?r.sl.toFixed(1)+"–"+r.sh.toFixed(1):"NONE"}</strong></div>${ints.length?`<div class="${iw?"warn":"note"}">Shooter Intel: ${ints.map(x=>x.toFixed(1)).join(" / ")}${iw?" • outside model bracket":""}</div>`:""}<div class="small" style="margin-top:8px">Shape stored: ${esc(t.shape)}. WIND SIGHT Shot Index is horizontal-wind-only; full 2D shape dispersion remains Advanced Mode.</div></div>`}
 function stageLine(t,f){if(sideFlipForTarget(t,f))return `<div class="stageLine"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><div class="hold">FLIP</div><div class="meta">Recheck wind side / Kestrel</div></div>`;let r=opt(t,f);return `<div class="stageLine"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><div class="hold">${r?r.bh.toFixed(1)+" "+(tWind(t,f).rel>=0?"R":"L"):"—"}</div><div class="meta">${r?`Bracket ${r.lo.toFixed(1)}–${r.hi.toFixed(1)} • Shot Index ${(r.bp*100).toFixed(0)}%`:"Solver holds required"}</div></div>`}
 
 function matchLearningStats(currentStage){
@@ -1212,7 +1630,7 @@ function renderPost(s){
  bindAuto(captureLive);
  inferBtn.onclick=()=>{captureLive();renderPost(s)};
  completeStage.textContent=s.correctionMode?"SAVE CORRECTION":"MARK STAGE COMPLETE";
- completeStage.onclick=()=>{captureLive();if(!validPost(s))return;if(!s.preShootSnapshot){alert("Pre-shoot snapshot missing. Return to FIRE before completing this stage.");return;}const wasCorrection=!!s.completedAt;if(!s.completedAt)s.completedAt=iso();else s.correctedAt=iso();s.correctionMode=false;s.postStageSnapshot={createdAt:iso(),data:JSON.parse(JSON.stringify(s))};const mm=st.data.matches.find(x=>x.id===st.selectedMatch);if(wasCorrection&&mm?.completedAt){mm.revisionHistory=mm.revisionHistory||[];if(mm.finalSnapshot)mm.revisionHistory.push({createdAt:iso(),snapshot:mm.finalSnapshot});mm.correctedAt=iso();const copy=JSON.parse(JSON.stringify(mm));delete copy.finalSnapshot;mm.finalSnapshot=copy;}writeNow();st.screen="matchDashboard";render()};
+ completeStage.onclick=()=>{captureLive();if(!validPost(s))return;if(!s.preShootSnapshot){alert("Pre-shoot snapshot missing. Return to FIRE before completing this stage.");return;}const wasCorrection=!!s.completedAt;if(!s.completedAt)s.completedAt=iso();else s.correctedAt=iso();s.correctionMode=false;s.calypsoTelemetry=calypsoRuntime.samples.slice(-500).map(x=>({t:x.t,mph:+x.mph.toFixed(2),dir:+x.dir.toFixed(1),rawDir:+x.rawDir.toFixed(1)}));s.postStageSnapshot={createdAt:iso(),data:JSON.parse(JSON.stringify(s))};const mm=st.data.matches.find(x=>x.id===st.selectedMatch);if(wasCorrection&&mm?.completedAt){mm.revisionHistory=mm.revisionHistory||[];if(mm.finalSnapshot)mm.revisionHistory.push({createdAt:iso(),snapshot:mm.finalSnapshot});mm.correctedAt=iso();const copy=JSON.parse(JSON.stringify(mm));delete copy.finalSnapshot;mm.finalSnapshot=copy;}writeNow();st.screen="matchDashboard";render()};
 }
 function validPost(s){
  let sc=n(s.score),pa=n(s.pointsAvailable),msg=[];
