@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.7.0 Accuracy Core + Calypso Instrument</title>
+<title>WIND SIGHT PRS by ZealTech — v3.8.1 Shoot UI Cleanup</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -202,6 +202,9 @@ input[type="date"]::-webkit-date-and-time-value{text-align:center}
 .wsHoldBand strong{display:block;font-size:17px;margin-top:2px}
 .confHigh{color:#74d59b}.confMed{color:#f1c36b}.confLow{color:#ff8d8d}
 @media(max-width:390px){.wsMetricGrid{grid-template-columns:1fr 1fr}.wsMetric .v{font-size:17px}}
+.liveSensorStrip{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #223a50;border-radius:12px;padding:9px 11px;background:#07131f;margin-top:8px;margin-bottom:10px}
+.liveSensorLeft{display:flex;align-items:center;gap:8px;min-width:0}.liveSensorName{font-size:11px;font-weight:1000;color:#aebdcc;white-space:nowrap}.liveSensorData{font-size:13px;font-weight:1000;color:#fff;white-space:nowrap}.liveSensorHint{font-size:10px;color:#7f93a7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.liveSensorLock{flex:0 0 auto;padding:8px 10px!important;min-height:36px!important;font-size:10px!important}.impactSecondary{font-size:10px;color:#71869a;margin-top:4px}.shootCompact{padding:13px}.shootHold{margin:11px 0 7px}.wsMetric.primaryMetric{border-color:#31536c;background:#091b29}.wsMetric.primaryMetric .v{font-size:24px}.shootTop .tag{opacity:.72}
+@media(max-width:390px){.liveSensorHint{display:none}.liveSensorData{font-size:12px}.liveSensorName{font-size:10px}.liveSensorStrip{gap:6px;padding:8px 9px}}
 html,body{touch-action:manipulation}
 
 .deviceStrip{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid #29435a;border-radius:13px;padding:9px 11px;background:#08131f;margin-top:9px}
@@ -257,7 +260,7 @@ html,body{touch-action:manipulation}
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.7.0</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.8.1</small></div></div>
   <div class="save" id="saveState">Saved</div>
 </div>
 <nav id="nav"></nav>
@@ -373,19 +376,16 @@ function renderNav(){nav.innerHTML="";navItems().forEach(([k,l])=>{let b=documen
 function setBottom(show=true,nextLabel="NEXT →",nextVisible=true){bottom.style.display=show?"block":"none";nextBtn.textContent=nextLabel;nextBtn.style.visibility=nextVisible?"visible":"hidden"}
 
 const CALYPSO={
- SERVICE_ENV:"environmental_sensing",
- CHAR_SPEED:"apparent_wind_speed",
- CHAR_DIR:"apparent_wind_direction",
+ // Calypso CUPS 4.0 legacy/open BLE UUIDs published by Calypso.
+ LEGACY_SERVICE:"0000180d-1212-efde-1523-785feabcd123",
+ LEGACY_CHAR:"00002a39-1212-efde-1523-785feabcd123",
  SERVICE_BATT:"battery_service",
  CHAR_BATT:"battery_level",
  SERVICE_INFO:"device_information",
  CHAR_MODEL:"model_number_string",
- CHAR_FW:"firmware_revision_string",
- SERVICE_DATA:"heart_rate",
- CHAR_DATA:"heart_rate_control_point",
- STATUS_UUID:"0000a001-0000-1000-8000-00805f9b34fb"
+ CHAR_FW:"firmware_revision_string"
 };
-const calypsoRuntime={device:null,server:null,status:"idle",lastError:"",speedChar:null,dirChar:null,battChar:null,samples:[],model:"",firmware:"",battery:null,lastSeen:null,connecting:false,stageSessionId:null,stageSessionStart:0,lastPredictionAt:0,predictionTimer:null,lastUiAt:0,persistTimer:null,pendingTelemetry:[],lastStateKey:"",protocolVariant:"ENV",recordStandalone:false};
+const calypsoRuntime={device:null,server:null,status:"idle",lastError:"",speedChar:null,dirChar:null,battChar:null,samples:[],model:"",firmware:"",battery:null,batteryMv:null,lastSeen:null,connecting:false,stageSessionId:null,stageSessionStart:0,lastPredictionAt:0,predictionTimer:null,lastUiAt:0,persistTimer:null,pendingTelemetry:[],lastStateKey:"",protocolVariant:"NONE",recordStandalone:false,nativeListenerBound:false};
 function ensureCalypsoSettings(){
  st.data.settings=st.data.settings||{};
  st.data.settings.calypso=st.data.settings.calypso||{enabled:true,paired:false,name:"",directionOffsetDeg:0,referenceConfigured:false,referenceBearingDeg:0,protocolVerified:false,sampleWindowSec:30,predictionHz:1,deviceId:"",standaloneWindowSec:120};
@@ -425,7 +425,11 @@ function scheduleLivePrediction(){
  calypsoRuntime.predictionTimer=setTimeout(()=>{calypsoRuntime.predictionTimer=null;calypsoRuntime.lastPredictionAt=Date.now();const s=getStage();if(s)renderLiveCommand(s);if(st.screen==="calypso")renderCalypsoLivePanel()},wait);
 }
 
-function calypsoSupported(){return !!navigator.bluetooth}
+function nativeCalypsoBridge(){
+ try{return window.Capacitor?.Plugins?.WindSightBLE||window.WindSightBLE||null}catch(e){return null}
+}
+function calypsoSupported(){return !!nativeCalypsoBridge()||!!navigator.bluetooth}
+function calypsoTransport(){return nativeCalypsoBridge()?"NATIVE BLE":navigator.bluetooth?"WEB BLE":"UNAVAILABLE"}
 function calypsoStatusText(){
  if(!calypsoSupported())return "CALYPSO • NATIVE BLE REQUIRED";
  if(calypsoRuntime.status==="connected")return `CALYPSO • CONNECTED${calypsoRuntime.battery!=null?` • ${calypsoRuntime.battery}%`:""}`;
@@ -510,8 +514,15 @@ function decisionHysteresis(prev,next){if(!prev)return next;if(prev.locked)retur
 function liveCommandSolutions(s){const N=s.targets.length>4?500:s.targets.length>2?750:1000;return s.targets.map(tt=>{const sol=optimizeImpactHoldV4(s,tt,N),z=targetDirectionState(s,tt);if(!sol)return {tt,sol:null,z};const prev=s.liveDecision?.[tt.id],final=decisionHysteresis(prev,{...sol,locked:false});s.liveDecision=s.liveDecision||{};s.liveDecision[tt.id]=final;return {tt,sol:final,z}})}
 function lockStageCall(){const s=getStage();if(!s)return;const sols=liveCommandSolutions(s);s.lockedCall={at:iso(),targets:{}};sols.forEach(({tt,sol})=>{if(sol)s.lockedCall.targets[tt.id]={hold:sol.hold,side:sol.side,modeledHit:sol.modeledHit,confidence:sol.confidence,robustMin:sol.robustMin,robustMax:sol.robustMax,sideAmbiguous:sol.sideAmbiguous,sideMinorProb:sol.sideMinorProb}});autosave();renderLiveCommand(s)}
 function unlockStageCall(){const s=getStage();if(!s)return;s.lockedCall=null;autosave();renderLiveCommand(s)}
-function renderLiveCommand(s){const host=document.getElementById("liveCommandHost");if(!host)return;const est=calypsoStateEstimate(),sols=liveCommandSolutions(s),locked=!!s.lockedCall,trendClass=est?.trend==="BUILDING"?"liveTrendUp":est?.trend==="DROPPING"?"liveTrendDown":"liveTrendStable",arrow=est?.trend==="BUILDING"?"↑":est?.trend==="DROPPING"?"↓":"→";host.innerHTML=`<div class="liveCommand ${locked?"lockedCall":""}"><div class="liveCommandHead"><div><div class="deviceState"><span class="deviceDot ${calypsoDotClass()}"></span><span>${esc(calypsoStatusText())}</span>${locked?`<span class="lockBadge">LOCKED</span>`:""}</div>${est?`<div class="liveBig">${Math.round(est.now.mph)} mph${est.now.dir!==null?` • ${Math.round(est.now.dir)}°`:""}</div><div class="liveSub"><span class="${trendClass}">${est.trend} ${arrow}</span> • ${est.regime}${est.dirState!=="STABLE"?` • ${est.dirState}`:""} • TI ${(est.ti*100).toFixed(0)}%</div>`:`<div class="liveSub">Waiting for Calypso samples…</div>`}</div><button class="btn ${locked?"secondary":"outline"} small" id="lockStageCallBtn">${locked?"UNLOCK":"LOCK STAGE CALL"}</button></div><div class="liveTargets">${sols.map(({tt,sol,z})=>{const use=locked?s.lockedCall.targets[tt.id]:null,ss=use||sol;if(!ss)return `<div class="liveTargetRow"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><div class="liveMeta">Awaiting solver/target data</div></div>`;return `<div class="liveTargetRow"><div class="liveTargetTop"><div><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><div class="liveMeta">DOF ${Math.round(n(tt.dof)||0)}° • Fused WD ${Math.round(z.targetWD)}°</div></div><div class="liveHold">${ss.sideAmbiguous?"SIDE?":hold1(ss.hold)+" "+ss.side}</div></div><div class="liveMeta">Modeled Hit ${Math.round((ss.modeledHit||0)*100)}% • ${ss.confidence} • ${ss.sideAmbiguous?`L/R ambiguity ${Math.round((ss.sideMinorProb||0)*100)}%`:`Robust ${hold1(ss.robustMin)}–${hold1(ss.robustMax)} ${ss.side}`}</div></div>`}).join("")}</div></div>`;const b=document.getElementById("lockStageCallBtn");if(b)b.onclick=locked?unlockStageCall:lockStageCall}
-
+function renderLiveCommand(s){
+ const host=document.getElementById("liveCommandHost");if(!host)return;
+ const est=calypsoStateEstimate(),locked=!!s.lockedCall;
+ const status=calypsoRuntime.status==="connected"?"LIVE":calypsoRuntime.status==="connecting"?"CONNECTING":"OFFLINE";
+ const data=est?`${Math.round(est.now.mph)} mph${est.now.dir!==null?` • ${Math.round(est.now.dir)}°`:""}`:"No live samples";
+ const hint=calypsoRuntime.status==="connected"?(est?`${est.trend} • 10s ${(est.stats10.mean??est.speed).toFixed(1)} • 30s ${(est.stats30.mean??est.speed).toFixed(1)} mph`:`Waiting for samples…`):"Manage sensor from CALYPSO";
+ host.innerHTML=`<div class="liveSensorStrip"><div class="liveSensorLeft"><span class="deviceDot ${calypsoDotClass()}"></span><div><div><span class="liveSensorName">CALYPSO ${status}</span> <span class="liveSensorData">${esc(data)}</span>${locked?` <span class="lockBadge">LOCKED</span>`:""}</div><div class="liveSensorHint">${esc(hint)}</div></div></div><button class="btn ${locked?"secondary":"outline"} small liveSensorLock" id="lockStageCallBtn">${locked?"UNLOCK":"LOCK CALL"}</button></div>`;
+ const b=document.getElementById("lockStageCallBtn");if(b)b.onclick=locked?unlockStageCall:lockStageCall;
+}
 function calypsoStats(){
  const cfg=ensureCalypsoSettings(),cut=Date.now()-(n(cfg.sampleWindowSec)||30)*1000;
  const s=calypsoRuntime.samples.filter(x=>x.t>=cut);
@@ -532,29 +543,31 @@ function applyCalypsoToStage(){
  s.wind.source="CALYPSO LIVE";s.wind.calypsoSampleCount=stx.count;s.wind.calypsoLastSeen=iso();
  // High-rate telemetry persistence is batched separately; do not serialize the app on every sample.
 }
-function onCalypsoSpeed(ev){
- const raw=decodeU16LE(ev.target.value)/100;
- calypsoRuntime._speedMps=raw;calypsoRuntime.lastSeen=Date.now();pushCalypsoSample();
-}
-function onCalypsoDir(ev){
- const raw=decodeU16LE(ev.target.value)/100;
+function ingestCalypsoReading(speedMps,rawDir,batteryMv=null,meta={}){
+ const sp=n(speedMps),rd=n(rawDir);if(sp===null||sp<0||sp>100)return;
  const cfg=ensureCalypsoSettings();
- calypsoRuntime._dirRaw=raw;
- calypsoRuntime._dir=cfg.referenceConfigured?norm(raw+(n(cfg.referenceBearingDeg)||0)+(n(cfg.directionOffsetDeg)||0)):null;
+ calypsoRuntime._speedMps=sp;calypsoRuntime._dirRaw=rd;
+ calypsoRuntime._dir=rd===null?null:(cfg.referenceConfigured?norm(rd+(n(cfg.referenceBearingDeg)||0)+(n(cfg.directionOffsetDeg)||0)):null);
+ if(n(batteryMv)!==null)calypsoRuntime.batteryMv=n(batteryMv);
+ if(meta.deviceName)calypsoRuntime.model=meta.deviceName;if(meta.firmware)calypsoRuntime.firmware=meta.firmware;
  calypsoRuntime.lastSeen=Date.now();pushCalypsoSample();
 }
+function decodeCalypsoLegacyPacket(dv){
+ if(!dv||dv.byteLength<6)throw new Error("Calypso legacy packet shorter than 6 bytes");
+ // Public CUPS 4.0 layout: u16LE speed (m/s ×100), u16LE direction (degrees), u16LE battery (mV), optional check word.
+ return {speedMps:dv.getUint16(0,true)/100,directionDeg:dv.getUint16(2,true),batteryMv:dv.getUint16(4,true)};
+}
+function onCalypsoLegacy(ev){try{const x=decodeCalypsoLegacyPacket(ev.target.value);ingestCalypsoReading(x.speedMps,x.directionDeg,x.batteryMv)}catch(e){calypsoRuntime.lastError=e.message||String(e)}}
 function onCalypsoBatt(ev){calypsoRuntime.battery=ev.target.value.getUint8(0);refreshCalypsoStrip()}
-function pushCalypsoSample(){
- if(calypsoRuntime._speedMps==null)return;
- const s=getStage();if(s)startCalypsoStageSession(s);
- const matchId=st.selectedMatch||null,stageId=s?.id||null;
- const rec={matchId,stageId,t:Date.now(),mps:calypsoRuntime._speedMps,mph:calypsoMpsToMph(calypsoRuntime._speedMps),rawDir:calypsoRuntime._dirRaw,dir:calypsoRuntime._dir};
- const last=calypsoRuntime.samples[calypsoRuntime.samples.length-1];if(last&&rec.t-last.t<100)return;
- calypsoRuntime.samples.push(rec);
- // Standalone screen keeps only a memory window; stage telemetry is persisted separately.
- const memCut=Date.now()-15*60*1000;calypsoRuntime.samples=calypsoRuntime.samples.filter(x=>x.t>=memCut);
- if(stageId){calypsoRuntime.pendingTelemetry.push(rec);scheduleTelemetryFlush()}
- applyCalypsoToStage();refreshCalypsoStrip();if(st.screen==="calypso")renderCalypsoLivePanel();scheduleLivePrediction();
+function onNativeCalypsoSample(ev){
+ const d=ev?.detail||ev||{};ingestCalypsoReading(d.speedMps,d.directionDeg,d.batteryMv,{deviceName:d.deviceName,firmware:d.firmware});
+ if(n(d.batteryPercent)!==null)calypsoRuntime.battery=n(d.batteryPercent);
+ calypsoRuntime.status="connected";calypsoRuntime.protocolVariant=d.protocol||"CALYPSO_NATIVE";refreshCalypsoStrip();
+}
+function onNativeCalypsoState(ev){const d=ev?.detail||ev||{};if(d.status)calypsoRuntime.status=d.status;if(d.error)calypsoRuntime.lastError=d.error;if(d.deviceName)calypsoRuntime.model=d.deviceName;refreshCalypsoStrip()}
+async function bindNativeCalypsoEvents(){
+ const b=nativeCalypsoBridge();if(!b||calypsoRuntime.nativeListenerBound)return;calypsoRuntime.nativeListenerBound=true;
+ try{await b.addListener("calypsoSample",onNativeCalypsoSample);await b.addListener("calypsoState",onNativeCalypsoState)}catch(e){calypsoRuntime.nativeListenerBound=false}
 }
 async function readTextChar(service,charName){
  try{const c=await service.getCharacteristic(charName),v=await c.readValue();return new TextDecoder().decode(v)}catch(e){return ""}
@@ -565,51 +578,44 @@ async function connectCalypsoDevice(device,manual=false){
  try{
    calypsoRuntime.device=device;
    device.addEventListener("gattserverdisconnected",()=>{calypsoRuntime.status="idle";calypsoRuntime.server=null;refreshCalypsoStrip()},{once:true});
-   const server=await device.gatt.connect();calypsoRuntime.server=server;calypsoRuntime.protocolVariant="ENV";
-   try{
-     const env=await server.getPrimaryService(CALYPSO.SERVICE_ENV);
-     calypsoRuntime.speedChar=await env.getCharacteristic(CALYPSO.CHAR_SPEED);
-     calypsoRuntime.dirChar=await env.getCharacteristic(CALYPSO.CHAR_DIR);
-     await calypsoRuntime.speedChar.startNotifications();calypsoRuntime.speedChar.addEventListener("characteristicvaluechanged",onCalypsoSpeed);
-     await calypsoRuntime.dirChar.startNotifications();calypsoRuntime.dirChar.addEventListener("characteristicvaluechanged",onCalypsoDir);
-     const sv=await calypsoRuntime.speedChar.readValue();onCalypsoSpeed({target:{value:sv}});
-     const dv=await calypsoRuntime.dirChar.readValue();onCalypsoDir({target:{value:dv}});
-   }catch(e){try{await server.getPrimaryService(CALYPSO.SERVICE_DATA);calypsoRuntime.protocolVariant="DATA_SERVICE_UNVERIFIED";throw new Error("Environmental wind characteristics unavailable. Calypso Data Service detected but payload decoding awaits official Developer Manual.")}catch(e2){throw new Error("Wind characteristics unavailable: "+e.message)}}
-   try{
-     const b=await server.getPrimaryService(CALYPSO.SERVICE_BATT);calypsoRuntime.battChar=await b.getCharacteristic(CALYPSO.CHAR_BATT);
-     const bv=await calypsoRuntime.battChar.readValue();calypsoRuntime.battery=bv.getUint8(0);
-     await calypsoRuntime.battChar.startNotifications();calypsoRuntime.battChar.addEventListener("characteristicvaluechanged",onCalypsoBatt);
-   }catch(e){}
-   try{
-     const inf=await server.getPrimaryService(CALYPSO.SERVICE_INFO);
-     calypsoRuntime.model=await readTextChar(inf,CALYPSO.CHAR_MODEL);
-     calypsoRuntime.firmware=await readTextChar(inf,CALYPSO.CHAR_FW);
-   }catch(e){}
+   const server=await device.gatt.connect();calypsoRuntime.server=server;calypsoRuntime.protocolVariant="CALYPSO_CUPS4_LEGACY_WEB";
+   const svc=await server.getPrimaryService(CALYPSO.LEGACY_SERVICE);
+   calypsoRuntime.speedChar=await svc.getCharacteristic(CALYPSO.LEGACY_CHAR);
+   await calypsoRuntime.speedChar.startNotifications();calypsoRuntime.speedChar.addEventListener("characteristicvaluechanged",onCalypsoLegacy);
+   try{const sv=await calypsoRuntime.speedChar.readValue();onCalypsoLegacy({target:{value:sv}})}catch(e){}
    calypsoRuntime.status="connected";calypsoRuntime.lastError="";
-   const cfg=ensureCalypsoSettings();cfg.paired=true;cfg.name=device.name||cfg.name||"Calypso";writeLocalFast();refreshCalypsoStrip();
+   const cfg=ensureCalypsoSettings();cfg.paired=true;cfg.name=device.name||cfg.name||"Calypso";cfg.deviceId=device.id||cfg.deviceId||"";writeLocalFast();refreshCalypsoStrip();
    return true;
  }catch(e){
    console.error("Calypso connect",e);calypsoRuntime.status="error";calypsoRuntime.lastError=e.message||String(e);refreshCalypsoStrip();return false;
  }finally{calypsoRuntime.connecting=false}
 }
 async function pairCalypso(){
- if(!calypsoSupported()){alert("This browser does not provide Web Bluetooth. iPhone Safari/Home Screen requires the native WIND SIGHT BLE shell.");return}
+ const native=nativeCalypsoBridge();
+ if(native){
+   calypsoRuntime.connecting=true;calypsoRuntime.status="connecting";refreshCalypsoStrip();
+   try{await bindNativeCalypsoEvents();const r=await native.pairCalypso();const cfg=ensureCalypsoSettings();cfg.paired=true;cfg.deviceId=r?.deviceId||cfg.deviceId||"";cfg.name=r?.deviceName||cfg.name||"Calypso";calypsoRuntime.model=cfg.name;calypsoRuntime.protocolVariant=r?.protocol||"CALYPSO_NATIVE";calypsoRuntime.status="connected";writeNow()}catch(e){calypsoRuntime.status="error";calypsoRuntime.lastError=e?.message||String(e)}finally{calypsoRuntime.connecting=false;refreshCalypsoStrip()}
+   return;
+ }
+ if(!navigator.bluetooth){alert("This browser does not provide Web Bluetooth. Install/run the native WIND SIGHT iOS/Android shell for Calypso BLE.");return}
  try{
-   const dev=await navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:[CALYPSO.SERVICE_ENV,CALYPSO.SERVICE_BATT,CALYPSO.SERVICE_INFO,CALYPSO.SERVICE_DATA]});
+   const dev=await navigator.bluetooth.requestDevice({filters:[{services:[CALYPSO.LEGACY_SERVICE]}],optionalServices:[CALYPSO.LEGACY_SERVICE]});
    const cfg=ensureCalypsoSettings();cfg.deviceId=dev.id||"";cfg.name=dev.name||cfg.name||"Calypso";writeNow();await connectCalypsoDevice(dev,true);
  }catch(e){if(e.name!=="NotFoundError"){calypsoRuntime.status="error";calypsoRuntime.lastError=e.message;refreshCalypsoStrip()}}
 }
 async function autoConnectCalypso(){
- const cfg=ensureCalypsoSettings();if(!cfg.enabled||calypsoRuntime.status==="connected"||calypsoRuntime.connecting||!calypsoSupported()||!cfg.deviceId)return;
+ const cfg=ensureCalypsoSettings();if(!cfg.enabled||calypsoRuntime.status==="connected"||calypsoRuntime.connecting||!cfg.deviceId)return;
+ const native=nativeCalypsoBridge();if(native){try{await bindNativeCalypsoEvents();calypsoRuntime.status="connecting";refreshCalypsoStrip();const r=await native.reconnectCalypso({deviceId:cfg.deviceId});calypsoRuntime.status=r?.connected===false?"idle":"connected";if(r?.deviceName)calypsoRuntime.model=r.deviceName;refreshCalypsoStrip()}catch(e){calypsoRuntime.status="idle";refreshCalypsoStrip()}return}
+ if(!navigator.bluetooth)return;
  try{if(navigator.bluetooth.getDevices){const ds=await navigator.bluetooth.getDevices(),dev=ds.find(d=>d.id===cfg.deviceId);if(dev){await connectCalypsoDevice(dev);return}}if(calypsoRuntime.device?.id===cfg.deviceId)await connectCalypsoDevice(calypsoRuntime.device)}catch(e){}
 }
 function calypsoStripHTML(){
  const stx=calypsoStats(),cfg=ensureCalypsoSettings();
  const dirReady=!!cfg.referenceConfigured;
  return `<div class="deviceStrip" id="calypsoStrip"><div><div class="deviceState"><span class="deviceDot ${calypsoDotClass()}"></span><span>${esc(calypsoStatusText())}</span></div>
- ${calypsoRuntime.status==="connected"?`<div class="calypsoGrid"><div class="calypsoMetric"><div class="k">NOW</div><div class="v">${stx?Math.round(stx.last.mph):"—"} mph</div></div><div class="calypsoMetric"><div class="k">AVG</div><div class="v">${stx?Math.round(stx.avg):"—"} mph</div></div><div class="calypsoMetric"><div class="k">DIR</div><div class="v">${stx?.dirReferenced?Math.round(stx.dir)+"°":"REF?"}</div></div><div class="calypsoMetric"><div class="k">MIN/MAX</div><div class="v">${stx?`${Math.round(stx.min)}/${Math.round(stx.max)}`:"—"}</div></div><div class="calypsoMetric"><div class="k">BATTERY</div><div class="v">${calypsoRuntime.battery??"—"}%</div></div><div class="calypsoMetric"><div class="k">SAMPLES</div><div class="v">${stx?.count||0}</div></div></div>
+ ${calypsoRuntime.status==="connected"?`<div class="calypsoGrid"><div class="calypsoMetric"><div class="k">NOW</div><div class="v">${stx?Math.round(stx.last.mph):"—"} mph</div></div><div class="calypsoMetric"><div class="k">AVG</div><div class="v">${stx?Math.round(stx.avg):"—"} mph</div></div><div class="calypsoMetric"><div class="k">DIR</div><div class="v">${stx?.dirReferenced?Math.round(stx.dir)+"°":"REF?"}</div></div><div class="calypsoMetric"><div class="k">MIN/MAX</div><div class="v">${stx?`${Math.round(stx.min)}/${Math.round(stx.max)}`:"—"}</div></div><div class="calypsoMetric"><div class="k">BATTERY</div><div class="v">${calypsoRuntime.battery!=null?calypsoRuntime.battery+"%":calypsoRuntime.batteryMv!=null?Math.round(calypsoRuntime.batteryMv)+" mV":"—"}</div></div><div class="calypsoMetric"><div class="k">SAMPLES</div><div class="v">${stx?.count||0}</div></div></div>
  ${!dirReady?`<div class="calypsoWarn">DIRECTION NOT REFERENCED — speed is live; direction is excluded from the model until reference is set.</div>`:""}
- <div class="fastHint">${esc(calypsoRuntime.model||"Calypso")} ${calypsoRuntime.firmware?`• FW ${esc(calypsoRuntime.firmware)}`:""} • ${cfg.sampleWindowSec}s tactical window</div>`:""}</div>
+ <div class="fastHint">${esc(calypsoRuntime.model||"Calypso")} ${calypsoRuntime.firmware?`• FW ${esc(calypsoRuntime.firmware)}`:""} • ${cfg.sampleWindowSec}s tactical window • ${calypsoTransport()} • ${esc(calypsoRuntime.protocolVariant)}</div>`:""}</div>
  <div class="actions"><button class="btn secondary small" id="calypsoPairBtn">${calypsoRuntime.status==="connected"?"RECONNECT":"PAIR"}</button><button class="btn outline small" id="calypsoRefBtn">SET REFERENCE</button></div></div>`;
 }
 
@@ -642,7 +648,7 @@ function bindAuto(cb){main.querySelectorAll("input,select,textarea").forEach(el=
 function hasReadyProfile(){return st.data.rifles.some(r=>(r.ammo||[]).some(a=>a.name&&a.bullet&&n(a.mv)>0&&(a.bcType||a.bc)));}
 function calypsoScreen(){
  setBottom(false);ensureCalypsoSettings();
- main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Standalone instrument</div><h2>CALYPSO LIVE</h2><div class="calLiveOnly">LIVE SENSOR VIEW • NO BALLISTIC CALCULATIONS</div></div><span class="tag ${calypsoRuntime.status==="connected"?"done":"ready"}">${calypsoRuntime.status==="connected"?"CONNECTED":"DEVICE"}</span></div>${calypsoStripHTML()}<div id="calypsoLivePanel"></div></div><div class="panel"><h3>Calypso Settings</h3><div class="grid two">${f("Reference bearing °","calRef",ensureCalypsoSettings().referenceBearingDeg,"numeric")}${f("Direction offset °","calOffset",ensureCalypsoSettings().directionOffsetDeg,"decimal")}<label>Live history<select id="calWindow"><option ${ensureCalypsoSettings().standaloneWindowSec===60?"selected":""} value="60">60 sec</option><option ${ensureCalypsoSettings().standaloneWindowSec===120?"selected":""} value="120">2 min</option><option ${ensureCalypsoSettings().standaloneWindowSec===300?"selected":""} value="300">5 min</option></select></label></div><div class="actions"><button class="btn secondary" id="saveCalSettings">SAVE SETTINGS</button><button class="btn outline" id="clearCalSession">CLEAR LIVE HISTORY</button></div><div class="note">This screen is deliberately isolated from WIND SIGHT calculations. It is for viewing and validating the Calypso sensor only.</div></div>`;
+ main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Standalone instrument</div><h2>CALYPSO LIVE</h2><div class="calLiveOnly">LIVE SENSOR VIEW • NO BALLISTIC CALCULATIONS</div></div><span class="tag ${calypsoRuntime.status==="connected"?"done":"ready"}">${calypsoRuntime.status==="connected"?"CONNECTED":"DEVICE"}</span></div>${calypsoStripHTML()}<div id="calypsoLivePanel"></div></div><div class="panel"><h3>Calypso Settings</h3><div class="grid two">${f("Reference bearing °","calRef",ensureCalypsoSettings().referenceBearingDeg,"numeric")}${f("Direction offset °","calOffset",ensureCalypsoSettings().directionOffsetDeg,"decimal")}<label>Live history<select id="calWindow"><option ${ensureCalypsoSettings().standaloneWindowSec===60?"selected":""} value="60">60 sec</option><option ${ensureCalypsoSettings().standaloneWindowSec===120?"selected":""} value="120">2 min</option><option ${ensureCalypsoSettings().standaloneWindowSec===300?"selected":""} value="300">5 min</option></select></label></div><div class="actions"><button class="btn secondary" id="saveCalSettings">SAVE SETTINGS</button><button class="btn outline" id="clearCalSession">CLEAR LIVE HISTORY</button></div><div class="note">This screen is deliberately isolated from WIND SIGHT calculations. Native iOS/Android BLE is preferred. The included Calypso CUPS 4.0 parser follows Calypso’s published legacy packet layout; verify the exact device firmware/protocol against the current Calypso Developer Manual before production use.</div></div>`;
  bindCalypsoStrip();autoConnectCalypso();renderCalypsoLivePanel();
  saveCalSettings.onclick=()=>{const c=ensureCalypsoSettings(),r=n(v("calRef")),o=n(v("calOffset"));if(r===null||r<0||r>=360){alert("Reference bearing must be 0–359°.");return}c.referenceBearingDeg=norm(r);c.referenceConfigured=true;c.directionOffsetDeg=o||0;c.standaloneWindowSec=n(v("calWindow"))||120;writeNow();renderCalypsoLivePanel();refreshCalypsoStrip()};
  clearCalSession.onclick=()=>{calypsoRuntime.samples=[];renderCalypsoLivePanel()};
@@ -656,7 +662,7 @@ function calypsoSpeedSvg(samples){
 function renderCalypsoLivePanel(){
  const host=document.getElementById("calypsoLivePanel");if(!host)return;const cfg=ensureCalypsoSettings(),sec=n(cfg.standaloneWindowSec)||120,cut=Date.now()-sec*1000,samps=calypsoRuntime.samples.filter(x=>x.t>=cut),est=calypsoStateEstimate(),stats=calypsoStats(),dir=est?.now?.dir;
  const trend=est?.trend||"WAITING",trendClass=trend==="BUILDING"?"liveTrendUp":trend==="DROPPING"?"liveTrendDown":"liveTrendStable";
- host.innerHTML=`<div class="calStandaloneHero"><div class="cardhead"><div class="deviceState"><span class="deviceDot ${calypsoDotClass()}"></span><span>${esc(calypsoStatusText())}</span></div><div class="small">${esc(calypsoRuntime.model||cfg.name||"Calypso")}${calypsoRuntime.firmware?` • FW ${esc(calypsoRuntime.firmware)}`:""}</div></div><div class="calLiveBig">${est?Math.round(est.now.mph):"—"}<span style="font-size:18px"> mph</span></div><div class="calDirBig">${dir!=null?`${Math.round(dir)}° WIND FROM`:"DIRECTION REF REQUIRED"}</div><div class="calCompass"><span class="calCompassLabel calN">N</span><span class="calCompassLabel calE">E</span><span class="calCompassLabel calS">S</span><span class="calCompassLabel calW">W</span><div class="calNeedle" style="transform:rotate(${dir??0}deg);opacity:${dir==null?.18:1}"></div></div><div class="calPremiumGrid"><div class="calPremiumMetric"><div class="k">10 SEC AVG</div><div class="v">${est?.stats10?.mean!=null?est.stats10.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">30 SEC AVG</div><div class="v">${est?.stats30?.mean!=null?est.stats30.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">2 MIN AVG</div><div class="v">${est?.stats120?.mean!=null?est.stats120.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">MIN / MAX</div><div class="v">${stats?`${stats.min.toFixed(1)} / ${stats.max.toFixed(1)}`:"—"}</div></div><div class="calPremiumMetric"><div class="k">VOLATILITY</div><div class="v">${est?`${(est.ti*100).toFixed(0)}%`:"—"}</div></div><div class="calPremiumMetric"><div class="k">TREND</div><div class="v ${trendClass}">${trend}</div></div><div class="calPremiumMetric"><div class="k">DIRECTION STATE</div><div class="v">${est?.dirState||"—"}</div></div><div class="calPremiumMetric"><div class="k">BATTERY</div><div class="v">${calypsoRuntime.battery??"—"}%</div></div><div class="calPremiumMetric"><div class="k">SAMPLES</div><div class="v">${samps.length}</div></div><div class="calPremiumMetric"><div class="k">PROTOCOL</div><div class="v" style="font-size:13px">${esc(calypsoRuntime.protocolVariant||"—")}</div></div></div><h3 style="margin-top:16px">Live Speed History</h3>${calypsoSpeedSvg(samps)}<div class="telemetryNote">Raw live view only. No WIND SIGHT target or ballistic calculations run on this screen.</div></div>`;
+ host.innerHTML=`<div class="calStandaloneHero"><div class="cardhead"><div class="deviceState"><span class="deviceDot ${calypsoDotClass()}"></span><span>${esc(calypsoStatusText())}</span></div><div class="small">${esc(calypsoRuntime.model||cfg.name||"Calypso")}${calypsoRuntime.firmware?` • FW ${esc(calypsoRuntime.firmware)}`:""}</div></div><div class="calLiveBig">${est?Math.round(est.now.mph):"—"}<span style="font-size:18px"> mph</span></div><div class="calDirBig">${dir!=null?`${Math.round(dir)}° WIND FROM`:"DIRECTION REF REQUIRED"}</div><div class="calCompass"><span class="calCompassLabel calN">N</span><span class="calCompassLabel calE">E</span><span class="calCompassLabel calS">S</span><span class="calCompassLabel calW">W</span><div class="calNeedle" style="transform:rotate(${dir??0}deg);opacity:${dir==null?.18:1}"></div></div><div class="calPremiumGrid"><div class="calPremiumMetric"><div class="k">10 SEC AVG</div><div class="v">${est?.stats10?.mean!=null?est.stats10.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">30 SEC AVG</div><div class="v">${est?.stats30?.mean!=null?est.stats30.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">2 MIN AVG</div><div class="v">${est?.stats120?.mean!=null?est.stats120.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">MIN / MAX</div><div class="v">${stats?`${stats.min.toFixed(1)} / ${stats.max.toFixed(1)}`:"—"}</div></div><div class="calPremiumMetric"><div class="k">VOLATILITY</div><div class="v">${est?`${(est.ti*100).toFixed(0)}%`:"—"}</div></div><div class="calPremiumMetric"><div class="k">TREND</div><div class="v ${trendClass}">${trend}</div></div><div class="calPremiumMetric"><div class="k">DIRECTION STATE</div><div class="v">${est?.dirState||"—"}</div></div><div class="calPremiumMetric"><div class="k">BATTERY</div><div class="v">${calypsoRuntime.battery!=null?calypsoRuntime.battery+"%":calypsoRuntime.batteryMv!=null?Math.round(calypsoRuntime.batteryMv)+" mV":"—"}</div></div><div class="calPremiumMetric"><div class="k">SAMPLES</div><div class="v">${samps.length}</div></div><div class="calPremiumMetric"><div class="k">PROTOCOL</div><div class="v" style="font-size:13px">${esc(calypsoRuntime.protocolVariant||"—")}</div></div></div><h3 style="margin-top:16px">Live Speed History</h3>${calypsoSpeedSvg(samps)}<div class="telemetryNote">Raw live view only. No WIND SIGHT target or ballistic calculations run on this screen.</div></div>`;
 }
 function home(){
  setBottom(false);const recentMatches=st.data.matches.filter(m=>!m.archivedAt).slice().reverse().slice(0,4);
@@ -1529,7 +1535,7 @@ function liveStage(){
  if(!s.liveStartedAt)s.liveStartedAt=iso();startStageTimer(s);
  const STEPS=["DOF","WIND","DOWNRANGE","BALLISTICS","SHOOT","POST"];
  setBottom(true,st.liveStep===STEPS.length-1?"BACK TO MATCH":"NEXT →");
- main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Live stage • ${esc(m.name)}</div><h2>${esc(s.name)}</h2></div><div class="stageTimer" id="stageTimer">${stageTimerText(s)}</div></div>${calypsoStripHTML()}<div id="liveCommandHost"></div>
+ main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Live stage • ${esc(m.name)}</div><h2>${esc(s.name)}</h2></div><div class="stageTimer" id="stageTimer">${stageTimerText(s)}</div></div><div id="liveCommandHost"></div>
  <div class="stepbar liveStepsWrap" id="liveSteps">${STEPS.map((x,i)=>`<div class="step ${st.liveStep===i?"active":""}">${x}</div>`).join("")}</div><div id="live"></div><div class="matchSaveExit"><button class="btn outline" id="liveSaveExit">SAVE & EXIT MATCH</button></div></div>`;
  if(st.liveStep===0)renderDOF(s);
  if(st.liveStep===1)renderWind(s);
@@ -1537,7 +1543,7 @@ function liveStage(){
  if(st.liveStep===3)renderKestrel(s);
  if(st.liveStep===4)renderShoot(s);
  if(st.liveStep===5)renderPost(s);
- bindCalypsoStrip();autoConnectCalypso();renderLiveCommand(s);
+ autoConnectCalypso();renderLiveCommand(s);
  setTimeout(()=>document.querySelector("#liveSteps .active")?.scrollIntoView({behavior:"auto",inline:"center",block:"nearest"}),0);
  clearInterval(window.__stageTimerInterval);window.__stageTimerInterval=setInterval(()=>{const el=document.getElementById("stageTimer");if(el)el.textContent=stageTimerText(s);else clearInterval(window.__stageTimerInterval)},1000);
  liveSaveExit.onclick=()=>{captureLive();flushCalypsoTelemetry();writeNow();st.selectedStage=null;st.selectedMatch=null;st.screen="matches";render()};
@@ -1655,16 +1661,22 @@ function renderShoot(s){
    const fz=fuse(s);
    if(!fz.valid){live.innerHTML=`<div class="bad">${fz.reason}</div><div class="note">Go back to WIND / BALLISTICS and complete required values.</div>`;return}
    const rows=s.targets.map(tt=>({tt,sol:optimizeImpactHoldV4(s,tt,10000),fallback:(n(tt.kMin)!==null&&n(tt.kMax)!==null&&n(tt.widthCm)>0&&n(tt.distanceM)>0),z:targetDirectionState(s,tt)}));
-   live.innerHTML=`<div class="cardhead"><div><h3>SHOOT</h3><div class="small">Accuracy Core 4</div></div><span class="tag live">${fz.quality}</span></div>
-   ${rows.map(x=>shootResultV2(x.tt,x.sol,x.fallback,x.z)).join("")}
-   <div class="card"><h3>Stage Card</h3><div class="stagecard">${rows.map(x=>stageLineV2(x.tt,x.sol,x.fallback,x.z)).join("")}</div></div>`;
+   live.innerHTML=`<div class="cardhead"><div><h3>SHOOT</h3><div class="small">Immediate firing solution</div></div><span class="tag live">${fz.quality}</span></div>
+   ${rows.map(x=>shootResultV2(x.tt,x.sol,x.fallback,x.z)).join("")}`;
  }catch(e){
    console.error("SHOOT v2 render error",e);
    live.innerHTML=`<div class="shootError"><strong>SHOOT could not render.</strong><br>${esc(e?.message||"Unknown rendering error")}<br><span class="small">Stage data remains saved.</span></div>`;
  }
 }
-function shootResultV2(tt,sol,fallback,z){if(sol?.sideAmbiguous)return `<div class="warn"><strong>${esc(tt.label)} • SIDE AMBIGUOUS</strong><br>${Math.round((sol.sideMinorProb||0)*100)}% of modeled wind correction lies on the opposite side. Re-check wind direction before shooting.</div>`;if(!fallback)return `<div class="note">${esc(tt.label)}: solver MIN/MAX holds and target width required.</div>`;if(!sol){return `<div class="shootCompact"><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootHold">—<small>WIND SIGHT HOLD UNAVAILABLE</small></div></div>`}const dims=targetDimsMil(tt),miss=suggestedMissCorrection(tt),confClass=sol.confidence==="HIGH"?"confHigh":sol.confidence==="MEDIUM"?"confMed":"confLow",lo=Math.min(n(tt.kMin)||0,n(tt.kMax)||0),hi=Math.max(n(tt.kMin)||0,n(tt.kMax)||0);return `<div class="shootCompact"><div class="shootTop"><div><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootMeta">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div></div><span class="tag done">CORE 4</span></div><div class="shootHold">${hold1(sol.hold)} ${sol.side}<small>WIND SIGHT HOLD</small></div><div class="wsHoldBand"><div><span>MIN</span><strong>${hold1(lo)} ${sol.side}</strong></div><div class="rec"><span>WIND SIGHT</span><strong>${hold1(sol.hold)} ${sol.side}</strong></div><div><span>MAX</span><strong>${hold1(hi)} ${sol.side}</strong></div></div><div class="wsMetricGrid"><div class="wsMetric"><div class="k">MODELED HIT</div><div class="v">${Math.round(sol.modeledHit*100)}%</div><div class="fastHint">Wind-only ${Math.round(sol.windHit*100)}%${sol.matchBiasWeight>0?` • Match learn ${sol.matchBias>=0?"+":""}${sol.matchBias.toFixed(1)} mil`:""}</div></div><div class="wsMetric"><div class="k">CONFIDENCE</div><div class="v ${confClass}">${sol.confidence}</div></div><div class="wsMetric"><div class="k">ROBUST HOLD</div><div class="v">${hold1(sol.robustMin)}–${hold1(sol.robustMax)} ${sol.robustSide}</div></div><div class="wsMetric"><div class="k">MISS CORRECTION</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div>${dims?`<div class="fastHint">${dims.w.toFixed(1)} mil target width</div>`:""}</div></div></div>`}
-function stageLineV2(tt,sol,fallback,z){if(sol?.sideAmbiguous)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><div class="hold">SIDE?</div><div class="meta">Recheck wind direction</div></div>`;if(sol)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m • ${esc(targetSizeText(tt))}</strong><div class="hold">${hold1(sol.hold)} ${sol.side}</div><div class="meta">Modeled Hit ${Math.round(sol.modeledHit*100)}% • ${sol.confidence} • Robust ${hold1(sol.robustMin)}–${hold1(sol.robustMax)} ${sol.robustSide}</div></div>`;return `<div class="stageLine"><strong>${esc(tt.label)}</strong><div class="hold">—</div><div class="meta">Solver holds required</div></div>`}
+function robustHoldText(sol){const a=hold1(sol.robustMin),b=hold1(sol.robustMax),side=sol.robustSide||sol.side||"";return a===b?`${a} ${side}`:`${a}–${b} ${side}`}
+function shootResultV2(tt,sol,fallback,z){
+ if(sol?.sideAmbiguous)return `<div class="warn"><strong>${esc(tt.label)} • SIDE AMBIGUOUS</strong><br>${Math.round((sol.sideMinorProb||0)*100)}% of modeled wind correction lies on the opposite side. Re-check wind direction before shooting.</div>`;
+ if(!fallback)return `<div class="note">${esc(tt.label)}: solver MIN/MAX holds and target width required.</div>`;
+ if(!sol)return `<div class="shootCompact"><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootHold">—<small>WIND SIGHT HOLD UNAVAILABLE</small></div></div>`;
+ const dims=targetDimsMil(tt),miss=suggestedMissCorrection(tt),confClass=sol.confidence==="HIGH"?"confHigh":sol.confidence==="MEDIUM"?"confMed":"confLow",lo=Math.min(n(tt.kMin)||0,n(tt.kMax)||0),hi=Math.max(n(tt.kMin)||0,n(tt.kMax)||0);
+ return `<div class="shootCompact"><div class="shootTop"><div><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootMeta">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div></div><span class="tag done">CORE 4</span></div><div class="shootHold">${hold1(sol.hold)} ${sol.side}<small>WIND SIGHT HOLD</small></div><div class="wsHoldBand"><div><span>MIN</span><strong>${hold1(lo)} ${sol.side}</strong></div><div class="rec"><span>CALL</span><strong>${hold1(sol.hold)} ${sol.side}</strong></div><div><span>MAX</span><strong>${hold1(hi)} ${sol.side}</strong></div></div><div class="wsMetricGrid"><div class="wsMetric primaryMetric"><div class="k">WIND HIT</div><div class="v">${Math.round(sol.windHit*100)}%</div><div class="impactSecondary">Est. impact ${Math.round(sol.modeledHit*100)}%</div></div><div class="wsMetric"><div class="k">CONFIDENCE</div><div class="v ${confClass}">${sol.confidence}</div></div><div class="wsMetric"><div class="k">ROBUST</div><div class="v">${robustHoldText(sol)}</div></div><div class="wsMetric"><div class="k">MISS</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div>${dims?`<div class="fastHint">${dims.w.toFixed(1)} mil target</div>`:""}</div></div></div>`;
+}
+function stageLineV2(tt,sol,fallback,z){if(sol?.sideAmbiguous)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><div class="hold">SIDE?</div><div class="meta">Recheck wind direction</div></div>`;if(sol)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m • ${esc(targetSizeText(tt))}</strong><div class="hold">${hold1(sol.hold)} ${sol.side}</div><div class="meta">Wind Hit ${Math.round(sol.windHit*100)}% • ${sol.confidence} • Robust ${robustHoldText(sol)}</div></div>`;return `<div class="stageLine"><strong>${esc(tt.label)}</strong><div class="hold">—</div><div class="meta">Solver holds required</div></div>`}
 
 function suggestedMissCorrection(tt){
  const dm=targetDimsMil(tt);
