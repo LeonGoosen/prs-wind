@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.2.1 FIRE UAT Fix</title>
+<title>WIND SIGHT PRS by ZealTech — v3.2.2 Workflow UAT Fix</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -167,13 +167,20 @@ input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 
 .correctionResult{border-left:3px solid #7fd5e9;background:#091b2a;border-radius:10px;padding:11px;margin-top:10px}
 .fireQuickNote{font-size:11px;color:#8fa4b7;line-height:1.4;margin-top:6px}
 @media(max-width:390px){.firePreset .hold{font-size:16px}.targetVisual{height:200px}}
+
+.grid>*{min-width:0}
+input[type="date"]{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;text-align:center;padding-left:8px;padding-right:8px}
+input[type="date"]::-webkit-date-and-time-value{text-align:center}
+.matchSaveExit{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+.matchSaveExit .btn{flex:1 1 180px}
+.shootError{border:1px solid #773d43;background:#2a1117;border-radius:14px;padding:14px;color:#ffd5d9}
 </style>
 </head>
 <body>
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.2.1</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.2.2</small></div></div>
   <div class="save" id="saveState">Saved</div>
 </div>
 <nav id="nav"></nav>
@@ -285,9 +292,10 @@ function importData(e){
 function navItems(){return [["home","HOME"],["matches","MATCHES"],["rifles","PROFILES"],["reports","REPORTS"]]}
 function renderNav(){nav.innerHTML="";navItems().forEach(([k,l])=>{let b=document.createElement("button");b.className="navbtn"+(st.screen===k?" active":"");b.textContent=l;b.onclick=()=>{saveCurrent();st.screen=k;st.step=0;render()};nav.appendChild(b)})}
 function setBottom(show=true,nextLabel="NEXT →",nextVisible=true){bottom.style.display=show?"block":"none";nextBtn.textContent=nextLabel;nextBtn.style.visibility=nextVisible?"visible":"hidden"}
-function render(){renderNav();main.innerHTML="";({home,rifles,rifleWizard,matches,matchWizard,matchDashboard,liveStage,reports}[st.screen]||home)();window.scrollTo(0,0)}
+function goTop(){try{window.scrollTo({top:0,left:0,behavior:"auto"})}catch(e){window.scrollTo(0,0)}document.documentElement.scrollTop=0;document.body.scrollTop=0;if(main)main.scrollTop=0}
+function render(){goTop();renderNav();main.innerHTML="";({home,rifles,rifleWizard,matches,matchWizard,matchDashboard,liveStage,reports}[st.screen]||home)();goTop();requestAnimationFrame(goTop);setTimeout(goTop,30)}
 function saveCurrent(){try{if(st.screen==="liveStage")captureLive()}catch(e){}autosave()}
-function f(lbl,id,val,mode="text"){let im=mode==="numeric"?"numeric":mode==="decimal"?"decimal":"text",type=mode==="date"?"date":"text";return `<label>${lbl}<input id="${id}" type="${type}" inputmode="${im}" autocomplete="off" value="${esc(val??"")}"></label>`}
+function f(lbl,id,val,mode="text"){let im=mode==="numeric"?"numeric":mode==="decimal"?"decimal":"text",type=mode==="date"?"date":"text",cls=mode==="date"?"dateInput":"";return `<label>${lbl}<input class="${cls}" id="${id}" type="${type}" inputmode="${im}" autocomplete="off" value="${esc(val??"")}"></label>`}
 function ta(lbl,id,val){return `<label>${lbl}<textarea id="${id}">${esc(val??"")}</textarea></label>`}
 function v(id){return document.getElementById(id)?.value??""}
 function bindAuto(cb){main.querySelectorAll("input,select,textarea").forEach(el=>{el.addEventListener("input",cb);el.addEventListener("change",cb)})}
@@ -318,10 +326,14 @@ function deleteCombo(rid,aid){
 function rifles(){
  setBottom(false);const combos=profileCombos();
  main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Rifle + ammo combos</div><h2>Profiles</h2></div><button class="btn" id="addCombo">+ NEW COMBO</button></div>
- ${combos.length?combos.map(({r,a,incomplete})=>`<div class="comboCard" data-r="${r.id}" data-a="${a?.id||""}"><div class="comboTitle">${esc(r.name)}${a?` + ${esc(a.name)}`:" • SETUP INCOMPLETE"}</div><div class="comboMeta">${esc(r.cartridge||"")}${a?` • ${esc(a.bullet||"")} • ${esc(a.mv||"—")} ${esc(a.mvUnit||"fps")} • ${esc(a.bcType||"G7")} ${esc(a.bcValue||a.bc||"—")}<br>${a.currentCalibrationVersion?`Calibration v${a.currentCalibrationVersion} ✓`:`Calibration incomplete`}`:` • Add ammunition to complete this combo`}</div><div class="actions"><button class="btn secondary small editCombo">VIEW / EDIT</button><button class="btn danger small deleteCombo">DELETE PROFILE</button></div></div>`).join(""):`<div class="note">No rifle + ammo combos yet.</div>`}</div>`;
+ ${combos.length?combos.map(({r,a,incomplete})=>`<div class="comboCard" data-r="${r.id}" data-a="${a?.id||""}"><div class="comboTitle">${esc(r.name)}${a?` + ${esc(a.name)}`:" • SETUP INCOMPLETE"}</div><div class="comboMeta">${esc(r.cartridge||"")}${a?` • ${esc(a.bullet||"")} • ${esc(a.mv||"—")} ${esc(a.mvUnit||"fps")} • ${esc(a.bcType||"G7")} ${esc(a.bcValue||a.bc||"—")}<br>${a.currentCalibrationVersion?`Calibration v${a.currentCalibrationVersion} ✓`:`Calibration incomplete`}`:` • Add ammunition to complete this combo`}</div><div class="actions"><button class="btn secondary small editCombo">RIFLE / AMMO</button>${a?`<button class="btn outline small editWindSpeed">WIND SPEED</button><button class="btn outline small editWindAngle">WIND ANGLE</button><button class="btn outline small editTargetDof">TARGET DOF</button>`:""}<button class="btn danger small deleteCombo">DELETE PROFILE</button></div></div>`).join(""):`<div class="note">No rifle + ammo combos yet.</div>`}</div>`;
  addCombo.onclick=()=>{st.screen="rifleWizard";st.step=0;st.selectedRifle=null;st.selectedAmmo=null;render()};
  document.querySelectorAll(".comboCard").forEach(el=>{
-   el.querySelector(".editCombo").onclick=()=>{st.selectedRifle=el.dataset.r;st.selectedAmmo=(el.dataset.a&&el.dataset.a!=="undefined")?el.dataset.a:null;st.step=0;st.screen="rifleWizard";render()};
+   const openProfileStep=(step)=>{st.selectedRifle=el.dataset.r;st.selectedAmmo=(el.dataset.a&&el.dataset.a!=="undefined")?el.dataset.a:null;st.step=step;st.screen="rifleWizard";render()};
+   el.querySelector(".editCombo").onclick=()=>openProfileStep(0);
+   el.querySelector(".editWindSpeed")?.addEventListener("click",()=>openProfileStep(2));
+   el.querySelector(".editWindAngle")?.addEventListener("click",()=>openProfileStep(3));
+   el.querySelector(".editTargetDof")?.addEventListener("click",()=>openProfileStep(4));
    el.querySelector(".deleteCombo").onclick=()=>deleteCombo(el.dataset.r,el.dataset.a||null);
  });
 }
@@ -347,18 +359,19 @@ function twistInputValue(r){
 }
 function loadAmmoWork(a){
  if(!a)return;
- if(!a._work){
-   const last=a.calibrationVersions?.[a.calibrationVersions.length-1];
-   a._work=last?.data?JSON.parse(JSON.stringify(last.data)):{A:[],B:[],D:[]};
- }
- a._work.meta=a._work.meta||{};
- a._work.sides=a._work.sides||{A:{},B:{},D:{}};
+ const last=a.calibrationVersions?.[a.calibrationVersions.length-1];
+ const hasCurrent=!!(a._work&&((a._work.A?.length||0)>0||(a._work.B?.length||0)>0||(a._work.D?.length||0)>0));
+ if(!hasCurrent&&last?.data)a._work=JSON.parse(JSON.stringify(last.data));
+ if(!a._work)a._work={A:[],B:[],D:[]};
+ a._work.A=a._work.A||[];a._work.B=a._work.B||[];a._work.D=a._work.D||[];
+ a._work.meta=a._work.meta||{};a._work.sides=a._work.sides||{A:{},B:{},D:{}};
+ a._work.sides.A=a._work.sides.A||{};a._work.sides.B=a._work.sides.B||{};a._work.sides.D=a._work.sides.D||{};
  a._work.meta.A=a._work.meta.A||{speeds:[5,10,15]};
  a._work.meta.B=a._work.meta.B||{speed:10,distances:[500,900]};
  a._work.meta.D=a._work.meta.D||{distance:700,stageWindFrom:90,ws1:8,ws2:12};
- if(!a._work.A?.length)a._work.A=[300,400,500,600,700,800,900].map(d=>[d,"","",""]);
- if(!a._work.B?.length)a._work.B=[15,30,45,60,75,90].map(x=>[x,"",""]);
- if(!a._work.D?.length)a._work.D=[0,30,60,120,180,240,330].map(x=>[x,"","",""]);
+ if(!a._work.A.length)a._work.A=[300,400,500,600,700,800,900].map(d=>[d,"","",""]);
+ if(!a._work.B.length)a._work.B=[15,30,45,60,75,90].map(x=>[x,"",""]);
+ if(!a._work.D.length)a._work.D=[0,30,60,120,180,240,330].map(x=>[x,"","",""]);
 }
 function currentWizardAmmo(){
  const r=st.selectedRifle?st.data.rifles.find(x=>x.id===st.selectedRifle):st._rd;
@@ -737,11 +750,13 @@ function matchWizard(){
  }
  if(st.step===2){if(!m.stages.length)m.stages.push(newStage("Stage 1"));mw.innerHTML=`<div class="note">Build each stage below. Each stage starts with T1. Add targets inside the stage, then add another stage when needed.</div><div id="stageSetup"></div><button class="btn secondary" id="addStage">+ ADD ANOTHER STAGE</button>`;renderStageSetup(m);addStage.onclick=()=>{saveMatch(m);m.stages.push(newStage("Stage "+(m.stages.length+1)));renderStageSetup(m);bindAuto(()=>saveMatch(m))};nextBtn.textContent="REVIEW MATCH →"}
  if(st.step===3){nextBtn.style.visibility="hidden";const rr=st.data.rifles.find(x=>x.id===m.rifleId),aa=rr?.ammo.find(x=>x.id===m.ammoId);mw.innerHTML=`<div class="liveOverview"><div class="kicker">Final overview</div><h3>${esc(m.name)}</h3><div class="small">${esc(rr?.name||"")} + ${esc(aa?.name||"")} • ${m.stages.length} stages</div></div>${m.stages.map((s,i)=>`<div class="card"><div class="cardhead"><strong>${i+1}. ${esc(s.name)}</strong><span class="tag ready">${s.targets.length} TARGETS</span></div><div class="small">${s.targets.map(t=>`${esc(t.label)} ${esc(t.distanceM)}m`).join(" • ")}</div></div>`).join("")}<div class="actions"><button class="btn secondary" id="backStages">← EDIT STAGES</button><button class="btn" id="finishMatchSetup">SAVE & OPEN MATCH</button></div>`;backStages.onclick=()=>{st.step=2;render()};finishMatchSetup.onclick=()=>{commitMatch(m);st.selectedMatch=m.id;st.screen="matchDashboard";render()};}
+ mw.insertAdjacentHTML("beforeend",`<div class="matchSaveExit"><button class="btn outline" id="matchSaveExit">SAVE & EXIT</button></div>`);
+ document.getElementById("matchSaveExit").onclick=()=>{saveMatch(m);if(!m.name)m.name="Draft Match";commitMatch(m);st.selectedMatch=null;st.screen="matches";st.step=0;render()};
  bindAuto(()=>saveMatch(m));
  backBtn.onclick=()=>{saveMatch(m);if(st.step===0){st.screen="matches";render()}else{st.step--;render()}};
  nextBtn.onclick=()=>{saveMatch(m);if(!validateMatchStep(m)){alert("Complete the required match / stage fields before continuing.");return;}if(st.step<3){st.step++;render()}else{commitMatch(m);st.screen="matches";render()}}
 }
-function matchDashboard(){setBottom(false);const m=st.data.matches.find(x=>x.id===st.selectedMatch);if(!m){st.screen="matches";render();return}const r=st.data.rifles.find(x=>x.id===m.rifleId),a=r?.ammo.find(x=>x.id===m.ammoId);const done=m.stages.filter(s=>s.completedAt),pts=done.reduce((x,s)=>x+(n(s.score)||0),0),possible=done.reduce((x,s)=>x+(n(s.pointsAvailable)||0),0);main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Match dashboard</div><h2>${esc(m.name)}</h2><div class="small">${esc(m.date||"")} • ${esc(m.venue||"")}</div></div><span class="tag ${m.completedAt?"done":"live"}">${m.completedAt?"COMPLETE":"ACTIVE"}</span></div><div class="profileSummary"><strong>${esc(r?.name||m.rifleSnapshot?.name||"Rifle")} + ${esc(a?.name||m.ammoSnapshot?.name||"Ammo")}</strong><div class="small">${m.calibrationVersion?`CALIBRATED ✓ • v${m.calibrationVersion}`:"CALIBRATION INCOMPLETE ⚠ • Match setup allowed"}</div></div>${done.length?`<div class="grid two"><div><div class="small">POINTS SO FAR</div><div class="metric">${pts}/${possible||"—"}</div></div><div><div class="small">MATCH %</div><div class="metric">${possible?(100*pts/possible).toFixed(0)+"%":"—"}</div></div></div>`:""}</div><div class="panel"><div class="cardhead"><h3>Select Stage</h3><button class="btn outline small" id="editStages">EDIT STAGES</button></div>${m.stages.map((s,i)=>`<button class="stageSelect selectStage" data-s="${s.id}"><div class="cardhead"><div><div class="stageName">${i+1}. ${esc(s.name)}</div><div class="stageMeta">${s.targets.length} targets • ${s.targets.map(tt=>`${tt.distanceM}m ${tt.shape||""} ${targetSizeText(tt)}`).join(" • ")}</div></div><span class="tag ${s.completedAt?"done":s.liveStartedAt?"live":"ready"}">${s.completedAt?"COMPLETE":s.liveStartedAt?"RESUME":"READY"}</span></div></button>`).join("")}</div><div class="panel"><button class="btn outline" id="manageMatch">⋯ MATCH OPTIONS</button><div id="manageArea" class="hidden"><div class="managementActions"><button class="btn outline" id="duplicateDash">DUPLICATE</button><button class="btn outline" id="archiveDash">${m.archivedAt?"RESTORE":"ARCHIVE"}</button><button class="btn danger" id="deleteDash">DELETE MATCH</button></div></div></div>`;document.querySelectorAll(".selectStage").forEach(b=>b.onclick=()=>{st.selectedStage=b.dataset.s;st.liveStep=0;st.screen="liveStage";render()});editStages.onclick=()=>{st.screen="matchWizard";st.step=2;render()};manageMatch.onclick=()=>manageArea.classList.toggle("hidden");duplicateDash.onclick=()=>duplicateMatchById(m.id);archiveDash.onclick=()=>{m.archivedAt=m.archivedAt?null:iso();writeNow();render()};deleteDash.onclick=()=>{softDeleteMatchById(m.id);st.screen="matches";st.selectedMatch=null;render()}}
+function matchDashboard(){setBottom(false);const m=st.data.matches.find(x=>x.id===st.selectedMatch);if(!m){st.screen="matches";render();return}const r=st.data.rifles.find(x=>x.id===m.rifleId),a=r?.ammo.find(x=>x.id===m.ammoId);const done=m.stages.filter(s=>s.completedAt),pts=done.reduce((x,s)=>x+(n(s.score)||0),0),possible=done.reduce((x,s)=>x+(n(s.pointsAvailable)||0),0);main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Match dashboard</div><h2>${esc(m.name)}</h2><div class="small">${esc(m.date||"")} • ${esc(m.venue||"")}</div></div><span class="tag ${m.completedAt?"done":"live"}">${m.completedAt?"COMPLETE":"ACTIVE"}</span></div><div class="profileSummary"><strong>${esc(r?.name||m.rifleSnapshot?.name||"Rifle")} + ${esc(a?.name||m.ammoSnapshot?.name||"Ammo")}</strong><div class="small">${m.calibrationVersion?`CALIBRATED ✓ • v${m.calibrationVersion}`:"CALIBRATION INCOMPLETE ⚠ • Match setup allowed"}</div></div>${done.length?`<div class="grid two"><div><div class="small">POINTS SO FAR</div><div class="metric">${pts}/${possible||"—"}</div></div><div><div class="small">MATCH %</div><div class="metric">${possible?(100*pts/possible).toFixed(0)+"%":"—"}</div></div></div>`:""}</div><div class="panel"><div class="cardhead"><h3>Select Stage</h3><button class="btn outline small" id="editStages">EDIT STAGES</button></div>${m.stages.map((s,i)=>`<button class="stageSelect selectStage" data-s="${s.id}"><div class="cardhead"><div><div class="stageName">${i+1}. ${esc(s.name)}</div><div class="stageMeta">${s.targets.length} targets • ${s.targets.map(tt=>`${tt.distanceM}m ${tt.shape||""} ${targetSizeText(tt)}`).join(" • ")}</div></div><span class="tag ${s.completedAt?"done":s.liveStartedAt?"live":"ready"}">${s.completedAt?"COMPLETE":s.liveStartedAt?"RESUME":"READY"}</span></div></button>`).join("")}</div><div class="panel"><div class="actions"><button class="btn outline" id="saveExitDashboard">SAVE & EXIT</button></div><button class="btn outline" id="manageMatch">⋯ MATCH OPTIONS</button><div id="manageArea" class="hidden"><div class="managementActions"><button class="btn outline" id="duplicateDash">DUPLICATE</button><button class="btn outline" id="archiveDash">${m.archivedAt?"RESTORE":"ARCHIVE"}</button><button class="btn danger" id="deleteDash">DELETE MATCH</button></div></div></div>`;document.querySelectorAll(".selectStage").forEach(b=>b.onclick=()=>{st.selectedStage=b.dataset.s;st.liveStep=0;st.screen="liveStage";render()});editStages.onclick=()=>{st.screen="matchWizard";st.step=2;render()};saveExitDashboard.onclick=()=>{writeNow();st.selectedMatch=null;st.selectedStage=null;st.screen="matches";render()};manageMatch.onclick=()=>manageArea.classList.toggle("hidden");duplicateDash.onclick=()=>duplicateMatchById(m.id);archiveDash.onclick=()=>{m.archivedAt=m.archivedAt?null:iso();writeNow();render()};deleteDash.onclick=()=>{softDeleteMatchById(m.id);st.screen="matches";st.selectedMatch=null;render()}}
 function fillAmmo(m){
  let rid=mRifle.value||m.rifleId||st.data.rifles[0]?.id,r=st.data.rifles.find(x=>x.id===rid);
  const ammo=(r?.ammo||[]).filter(a=>a.name&&a.bullet&&n(a.mv)>0&&(a.bcType||a.bc));
@@ -793,10 +808,9 @@ function syncShapeDims(si,ti){
  if(!needsHeight(sh)){if(w&&h)h.value=w.value; if(hw)hw.classList.add("hidden")}else if(hw)hw.classList.remove("hidden");
 }
 
-function renderStageSetup(m){stageSetup.innerHTML=m.stages.map((s,si)=>`<details class="stageBuilder" ${si===m.stages.length-1?"open":""}><summary>STAGE ${si+1}: ${esc(s.name||("Stage "+(si+1)))} <span class="summaryPill">${s.targets.length} target${s.targets.length===1?"":"s"}</span><div class="small" style="margin-top:5px">${s.targets.map(tt=>`${esc(tt.label)} ${esc(tt.distanceM||"—")}m • ${esc(tt.shape||"")} • ${esc(targetSizeText(tt))}`).join("<br>")}</div></summary><div class="managementActions"><button class="btn outline small" onclick="duplicateStageSetup(${si})">DUPLICATE STAGE</button><button class="btn danger small" onclick="removeStageSetup(${si})">DELETE STAGE</button></div>${f("Stage name","sn_"+si,s.name)}${s.targets.map((tr,ti)=>`<div class="targetCard"><div class="targetHeader"><strong>TARGET ${ti+1}</strong>${s.targets.length>1?`<button class="btn danger small" onclick="removePreTarget(${si},${ti})">REMOVE</button>`:""}</div><div class="grid two">${f("Target label","tl_"+si+"_"+ti,tr.label)}${f("Distance (m)","td_"+si+"_"+ti,tr.distanceM,"numeric")}<label>Shape<select id="ts_${si}_${ti}" onchange="syncShapeDims(${si},${ti})">${["Round","Square","Rectangle","Diamond","IPSC / Silhouette","Custom"].map(x=>`<option ${x===tr.shape?"selected":""}>${x}</option>`).join("")}</select></label>${f("Width / diameter cm","tw_"+si+"_"+ti,tr.widthCm,"decimal")}<div id="heightWrap_${si}_${ti}" class="${needsHeight(tr.shape)?"":"hidden"}">${f("Height cm","th_"+si+"_"+ti,tr.heightCm||tr.widthCm,"decimal")}</div></div></div>`).join("")}<button class="btn secondary small" onclick="addPreTarget(${si})">+ ADD TARGET TO STAGE ${si+1}</button></details>`).join("");m.stages.forEach((s,si)=>s.targets.forEach((tr,ti)=>syncShapeDims(si,ti)))}
+function renderStageSetup(m){stageSetup.innerHTML=m.stages.map((s,si)=>`<details class="stageBuilder" ${si===m.stages.length-1?"open":""}><summary>STAGE ${si+1}: ${esc(s.name||("Stage "+(si+1)))} <span class="summaryPill">${s.targets.length} target${s.targets.length===1?"":"s"}</span><div class="small" style="margin-top:5px">${s.targets.map(tt=>`${esc(tt.label)} ${esc(tt.distanceM||"—")}m • ${esc(tt.shape||"")} • ${esc(targetSizeText(tt))}`).join("<br>")}</div></summary><div class="managementActions"><button class="btn danger small" onclick="removeStageSetup(${si})">DELETE STAGE</button></div>${f("Stage name","sn_"+si,s.name)}${s.targets.map((tr,ti)=>`<div class="targetCard"><div class="targetHeader"><strong>TARGET ${ti+1}</strong>${s.targets.length>1?`<button class="btn danger small" onclick="removePreTarget(${si},${ti})">REMOVE</button>`:""}</div><div class="grid two">${f("Target label","tl_"+si+"_"+ti,tr.label)}${f("Distance (m)","td_"+si+"_"+ti,tr.distanceM,"numeric")}<label>Shape<select id="ts_${si}_${ti}" onchange="syncShapeDims(${si},${ti})">${["Round","Square","Rectangle","Diamond","IPSC / Silhouette","Custom"].map(x=>`<option ${x===tr.shape?"selected":""}>${x}</option>`).join("")}</select></label>${f("Width / diameter cm","tw_"+si+"_"+ti,tr.widthCm,"decimal")}<div id="heightWrap_${si}_${ti}" class="${needsHeight(tr.shape)?"":"hidden"}">${f("Height cm","th_"+si+"_"+ti,tr.heightCm||tr.widthCm,"decimal")}</div></div></div>`).join("")}<button class="btn secondary small" onclick="addPreTarget(${si})">+ ADD TARGET TO STAGE ${si+1}</button></details>`).join("");m.stages.forEach((s,si)=>s.targets.forEach((tr,ti)=>syncShapeDims(si,ti)))}
 
 
-window.duplicateStageSetup=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);const copy=duplicateStageRecord(m.stages[si],m.stages.length);m.stages.splice(si+1,0,copy);renderStageSetup(m);bindAuto(()=>saveMatch(m));autosave()}
 window.removeStageSetup=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(!confirm("Delete this stage and all of its target setup data?"))return;m.stages.splice(si,1);renderStageSetup(m);bindAuto(()=>saveMatch(m))}
 window.removePreTarget=(si,ti)=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(m.stages[si].targets.length<=1)return;if(!confirm("Remove this target?"))return;m.stages[si].targets.splice(ti,1);m.stages[si].targets.forEach((t,i)=>{if(!t.label||/^T\d+$/.test(t.label))t.label="T"+(i+1)});renderStageSetup(m);bindAuto(()=>saveMatch(m))}
 window.addPreTarget=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(m.stages[si].targets.length>=MAX_TARGETS){alert(`Easy Mode supports up to ${MAX_TARGETS} targets per stage.`);return;}m.stages[si].targets.push({id:uid("t"),label:"T"+(m.stages[si].targets.length+1),distanceM:"",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"});renderStageSetup(m);bindAuto(()=>saveMatch(m))}
@@ -812,17 +826,11 @@ const behavior={
 };
 function rel(ind){return ind==="Long grass"||ind==="Bush"?1:ind==="Trees"?.75:ind==="Dust"||ind==="Mirage"||ind==="Smoke"?.55:0}
 function newObs(){return {id:uid("o"),indicator:"Long grass",behavior:0,quality:"Clear",dir:""}}
-function ensureLive(s){if(!s.wind)s.wind={min:"",avg:"",max:"",now:"",avgDir:"",nowDir:"",window:"10 min"};if(!s.points?.length)s.points=[{id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs()]}];if(!s.points[0].obs.length)s.points[0].obs=[newObs()];if(!s.targetObs)s.targetObs=[];if(!s.intel)s.intel=[]}
+function ensureLive(s){s.downrangeOpen=s.downrangeOpen||"points";if(!s.wind)s.wind={min:"",avg:"",max:"",now:"",avgDir:"",nowDir:"",window:"10 min"};if(!s.points?.length)s.points=[{id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs()]}];if(!s.points[0].obs.length)s.points[0].obs=[newObs()];if(!s.targetObs)s.targetObs=[];if(!s.intel)s.intel=[]}
 
 function angleOK(x){const z=n(x);return z!==null&&z>=0&&z<=360}
 function angleValue(x){return angleOK(x)?String(Math.round(norm(n(x)))):""}
-function liveValidation(s,step){
- if(step===0){if(s.targets.some(t=>!angleOK(t.dof)))return "Enter a valid DOF (0–360°) for every target.";}
- if(step===1){const mi=n(s.wind.min),av=n(s.wind.avg),ma=n(s.wind.max),nw=n(s.wind.now);if(mi===null||av===null||ma===null||mi<0||av<0||ma<0||!(mi<=av&&av<=ma))return "Enter valid non-negative MIN ≤ AVG ≤ MAX wind speeds.";if(!angleOK(s.wind.avgDir))return "Enter a valid AVG WIND FROM angle (0–360°).";const hasNow=nw!==null||String(s.wind.nowDir??'').trim()!=='';if(hasNow&&(nw===null||nw<0||!angleOK(s.wind.nowDir)))return "NOW speed and NOW direction must both be valid, or both left blank.";}
- if(step===5){for(const t of s.targets){const lo=n(t.kMin),hi=n(t.kMax);if(lo===null||hi===null||lo<0||hi<0||lo>hi)return `Enter valid Kestrel MIN/MAX holds for ${t.label} (MIN ≤ MAX).`;}}
- if(step===6){if(s.targets.some(t=>!opt(t,fuse(s))&&!sideFlipForTarget(t,fuse(s))))return "Complete target dimensions and Kestrel holds before continuing.";}
- return null;
-}
+function liveValidation(s,step){return liveValidationFast(s,step)}
 
 function liveValidationFast(s,step){
  if(step===0){for(const tt of s.targets){if(!angleOK(tt.dof))return `Enter target DOF for ${tt.label}.`}}
@@ -870,7 +878,7 @@ function liveStage(){
  const STEPS=["DOF","WIND","DOWNRANGE","BALLISTICS","SHOOT","POST"];
  setBottom(true,st.liveStep===STEPS.length-1?"BACK TO MATCH":"NEXT →");
  main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Live stage • ${esc(m.name)}</div><h2>${esc(s.name)}</h2></div><div class="stageTimer" id="stageTimer">${stageTimerText(s)}</div></div>
- <div class="stepbar liveStepsWrap" id="liveSteps">${STEPS.map((x,i)=>`<div class="step ${st.liveStep===i?"active":""}">${x}</div>`).join("")}</div><div id="live"></div></div>`;
+ <div class="stepbar liveStepsWrap" id="liveSteps">${STEPS.map((x,i)=>`<div class="step ${st.liveStep===i?"active":""}">${x}</div>`).join("")}</div><div id="live"></div><div class="matchSaveExit"><button class="btn outline" id="liveSaveExit">SAVE & EXIT MATCH</button></div></div>`;
  if(st.liveStep===0)renderDOF(s);
  if(st.liveStep===1)renderWind(s);
  if(st.liveStep===2)renderFastDownrange(s);
@@ -879,6 +887,7 @@ function liveStage(){
  if(st.liveStep===5)renderPost(s);
  setTimeout(()=>document.querySelector("#liveSteps .active")?.scrollIntoView({behavior:"auto",inline:"center",block:"nearest"}),0);
  clearInterval(window.__stageTimerInterval);window.__stageTimerInterval=setInterval(()=>{const el=document.getElementById("stageTimer");if(el)el.textContent=stageTimerText(s);else clearInterval(window.__stageTimerInterval)},1000);
+ liveSaveExit.onclick=()=>{captureLive();writeNow();st.selectedStage=null;st.selectedMatch=null;st.screen="matches";render()};
 
  backBtn.onclick=()=>{
    captureLive();
@@ -897,35 +906,34 @@ function liveStage(){
 }
 function renderDOF(s){live.innerHTML=`<p class="sub">Targets are preloaded. Enter only the target DOFs measured on your tripod.</p><div class="tabs">${s.targets.map((t,i)=>`<button class="tab ${i===0?"active":""}">${t.label}</button>`).join("")}</div>${s.targets.map((t,i)=>`<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m • ${esc(t.shape)}</strong><span class="tag ready">TARGET</span></div><div class="grid two">${f("DOF (°)","dof_"+i,t.dof,"numeric")}<button class="btn outline fullMobile" type="button" onclick="openWheelField('dof_${i}','TARGET DOF')">◎ ANGLE WHEEL</button></div></div>`).join("")}`;bindAuto(captureLive)}
 function renderWind(s){let w=s.wind;live.innerHTML=`<div class="cardhead"><div><h3>Shooter wind</h3><div class="small">Calypso measured</div></div><span class="tag live">MEASURED</span></div><div class="grid four">${f("MIN mph","wmin",w.min,"numeric")}${f("AVG mph","wavg",w.avg,"numeric")}${f("MAX mph","wmax",w.max,"numeric")}${f("NOW mph","wnow",w.now,"numeric")}</div><div class="grid two">${f("AVG WIND FROM °","wdir",w.avgDir,"numeric")}${f("NOW WIND FROM °","wndir",w.nowDir,"numeric")}<button class="btn outline" type="button" onclick="openWheelField('wdir','AVG WIND FROM')">◎ AVG ANGLE</button><button class="btn outline" type="button" onclick="openWheelField('wndir','NOW WIND FROM')">◎ NOW ANGLE</button><label>Logging window<select id="wwin"><option ${w.window==="10 min"?"selected":""}>10 min</option><option ${w.window==="20 min"?"selected":""}>20 min</option><option ${w.window==="30 min"?"selected":""}>30 min</option></select></label><label>Shooter terrain<select id="wterrain">${["Open / normal","Sheltered","Ridge / exposed","Valley / channel","Turbulent / complex","Unknown"].map(x=>`<option ${x===(w.terrain||"Open / normal")?"selected":""}>${x}</option>`).join("")}</select></label></div><div class="note">Easy Mode stores wind speed as whole mph. Direction remains exact degrees.</div>`;bindAuto(captureLive)}
+function setDownrangeOpen(section){const s=getStage();if(!s)return;s.downrangeOpen=section;autosave()}
 function renderFastDownrange(s){
- live.innerHTML=`<div class="cardhead"><div><h3>Downrange</h3><div class="small">Only capture what adds useful information. Everything here is optional.</div></div><span class="optionalChip">OPTIONAL</span></div>
- <details class="fastSection" open><summary>1. Downrange Point(s)</summary>
+ const open=s.downrangeOpen||"points";
+ live.innerHTML=`<div class="cardhead"><div><h3>Downrange</h3><div class="small">Only capture useful information. Target Zone and Shooter Intel remain optional.</div></div><span class="optionalChip">OPTIONAL</span></div>
+ <details id="downPoints" class="fastSection" ${open==="points"?"open":""}><summary onclick="setDownrangeOpen('points')">1. Downrange Point(s)</summary>
  ${s.points.map((p,pi)=>`<div class="card"><div class="cardhead"><strong>POINT ${pi+1}</strong>${s.points.length>1?`<button class="btn danger small" onclick="removePoint(${pi})">REMOVE</button>`:""}</div><div class="grid two">${f("Distance (m)","pd_"+pi,p.distanceM,"numeric")}<label>Terrain<select id="pt_${pi}">${["Open / normal","Sheltered","Ridge / exposed","Valley / channel","Turbulent / complex","Unknown"].map(x=>`<option ${x===p.terrain?"selected":""}>${x}</option>`).join("")}</select></label></div>${p.obs.map((o,oi)=>obsHTML(o,"point",pi,oi)).join("")}<button class="btn secondary small" onclick="addObs('point',${pi})">+ OBSERVATION</button></div>`).join("")}
  <div class="quickActions"><button class="btn secondary small" onclick="addPoint()">+ ADD POINT</button></div></details>
-
- <details class="fastSection"><summary>2. Target Zone <span class="optionalChip">OPTIONAL</span></summary>
+ <details id="downTarget" class="fastSection" ${open==="target"?"open":""}><summary onclick="setDownrangeOpen('target')">2. Target Zone <span class="optionalChip">OPTIONAL</span></summary>
  <label>Target-zone terrain<select id="targetTerrain">${["Open / normal","Sheltered","Ridge / exposed","Valley / channel","Turbulent / complex","Unknown"].map(x=>`<option ${x===s.targetTerrain?"selected":""}>${x}</option>`).join("")}</select></label>
- ${s.targetObs.length?s.targetObs.map((o,oi)=>obsHTML(o,"target",0,oi)).join(""):`<div class="note">Leave empty when you cannot read anything useful at the target.</div>`}
+ ${s.targetObs.length?s.targetObs.map((o,oi)=>obsHTML(o,"target",0,oi)).join(""):`<div class="note">Leave empty when nothing reliable is visible at the target.</div>`}
  <button class="btn secondary small" onclick="addObs('target',0)">+ TARGET OBSERVATION</button></details>
-
- <details class="fastSection"><summary>3. Shooter Intel <span class="optionalChip">OPTIONAL</span></summary>
+ <details id="downIntel" class="fastSection" ${open==="intel"?"open":""}><summary onclick="setDownrangeOpen('intel')">3. Shooter Intel <span class="optionalChip">OPTIONAL</span></summary>
  <div class="small">Sanity check only. It never silently changes the current wind call.</div>
  ${s.intel.length?s.intel.map((x,i)=>`<div class="card"><div class="grid two"><label>Target<select id="intelT_${i}">${s.targets.map(tt=>`<option ${tt.label===x.target?"selected":""}>${tt.label}</option>`).join("")}</select></label>${f("Reported hold","intelH_"+i,x.hold,"decimal")}</div></div>`).join(""):`<div class="note">No Shooter Intel entered.</div>`}
  <button class="btn secondary small" onclick="addIntel()">+ SHOOTER HOLD</button></details>
-
- <div class="note"><strong>Speed rule:</strong> if there is no reliable downrange indicator, press NEXT. Do not invent data.</div>`;
+ <div class="note"><strong>Speed rule:</strong> if there is no reliable observation, press NEXT. Do not invent data.</div>`;
  bindAuto(captureLive);
 }
 function obsHTML(o,where,pi,oi){return `<div class="obs"><div class="cardhead"><strong>Observation ${oi+1}</strong><button class="btn danger small" onclick="removeObs('${where}',${pi},${oi})">REMOVE</button></div><div class="grid two"><label>Indicator<select id="oi_${where}_${pi}_${oi}" onchange="changeIndicator('${where}',${pi},${oi},this.value)">${Object.keys(behavior).map(x=>`<option ${x===o.indicator?"selected":""}>${x}</option>`).join("")}</select></label><label>Behaviour<select id="ob_${where}_${pi}_${oi}" onchange="changeBehavior('${where}',${pi},${oi},this.value)">${behavior[o.indicator].map((x,i)=>`<option value="${i}" ${i===+o.behavior?"selected":""}>${x[0]}</option>`).join("")}</select></label><label>Direction quality<select id="oq_${where}_${pi}_${oi}" onchange="changeQuality('${where}',${pi},${oi},this.value)"><option ${o.quality==="Clear"?"selected":""}>Clear</option><option ${o.quality==="Approximate"?"selected":""}>Approximate</option><option ${o.quality==="Unknown"?"selected":""}>Unknown</option></select></label>${o.quality==="Unknown"?"":f("Indicator moving TO °","od_"+where+"_"+pi+"_"+oi,o.dir,"numeric")}</div>${o.quality==="Unknown"?"":`<button class="btn outline small" onclick="openObsWheel('${where}',${pi},${oi})">◎ TO ANGLE</button>`}<div class="small" style="margin-top:8px">${evidenceText(o)}</div></div>`}
 function evidenceText(o){let b=behavior[o.indicator][+o.behavior||0];return b[1]!=null?(b[1]===b[2]?`~${b[1]} mph evidence`:`${b[1]}–${b[2]} mph evidence`) + (b[3].includes("direction")?" • direction useful":""):(b[3]==="direction"?"Direction evidence":"Qualitative only")}
-window.addPoint=()=>{captureLive();let s=getStage();if(s.points.length>=MAX_POINTS){alert(`Easy Mode supports up to ${MAX_POINTS} downrange points.`);return;}s.points.push({id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs()]});renderFastDownrange(s)}
-window.removePoint=pi=>{captureLive();let s=getStage();s.points.splice(pi,1);if(!s.points.length)s.points.push({id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs()]});renderFastDownrange(s)}
-window.addObs=(where,pi)=>{captureLive();let s=getStage();const arr=where==="target"?s.targetObs:s.points[pi].obs;if(arr.length>=MAX_OBS){alert(`Easy Mode supports up to ${MAX_OBS} observations per zone.`);return;}arr.push(newObs());renderFastDownrange(s)}
-window.removeObs=(where,pi,oi)=>{captureLive();let s=getStage();if(where==="target")s.targetObs.splice(oi,1);else s.points[pi].obs.splice(oi,1);renderFastDownrange(s)}
-window.changeIndicator=(where,pi,oi,val)=>{captureLive();let s=getStage(),o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];o.indicator=val;o.behavior=0;renderFastDownrange(s)}
-window.changeBehavior=(where,pi,oi,val)=>{captureLive();let s=getStage(),o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];o.behavior=+val;renderFastDownrange(s)}
-window.changeQuality=(where,pi,oi,val)=>{captureLive();let s=getStage(),o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];o.quality=val;if(val==="Unknown")o.dir="";renderFastDownrange(s)}
-window.addIntel=()=>{captureLive();let s=getStage();if(s.intel.length>=MAX_INTEL){alert(`Shooter Intel is capped at ${MAX_INTEL} reports per stage.`);return;}s.intel.push({target:s.targets[0]?.label||"T1",hold:""});renderFastDownrange(s)}
+window.addPoint=()=>{captureLive();let s=getStage();s.downrangeOpen="points";if(s.points.length>=MAX_POINTS){alert(`Easy Mode supports up to ${MAX_POINTS} downrange points.`);return;}s.points.push({id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs()]});renderFastDownrange(s)}
+window.removePoint=pi=>{captureLive();let s=getStage();s.downrangeOpen="points";s.points.splice(pi,1);if(!s.points.length)s.points.push({id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs()]});renderFastDownrange(s)}
+window.addObs=(where,pi)=>{captureLive();let s=getStage();s.downrangeOpen=where==="target"?"target":"points";const arr=where==="target"?s.targetObs:s.points[pi].obs;if(arr.length>=MAX_OBS){alert(`Easy Mode supports up to ${MAX_OBS} observations per zone.`);return;}arr.push(newObs());renderFastDownrange(s)}
+window.removeObs=(where,pi,oi)=>{captureLive();let s=getStage();s.downrangeOpen=where==="target"?"target":"points";if(where==="target")s.targetObs.splice(oi,1);else s.points[pi].obs.splice(oi,1);renderFastDownrange(s)}
+window.changeIndicator=(where,pi,oi,val)=>{captureLive();let s=getStage();s.downrangeOpen=where==="target"?"target":"points";let o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];o.indicator=val;o.behavior=0;renderFastDownrange(s)}
+window.changeBehavior=(where,pi,oi,val)=>{captureLive();let s=getStage();s.downrangeOpen=where==="target"?"target":"points";let o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];o.behavior=+val;renderFastDownrange(s)}
+window.changeQuality=(where,pi,oi,val)=>{captureLive();let s=getStage();s.downrangeOpen=where==="target"?"target":"points";let o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];o.quality=val;if(val==="Unknown")o.dir="";renderFastDownrange(s)}
+window.addIntel=()=>{captureLive();let s=getStage();s.downrangeOpen="intel";if(s.intel.length>=MAX_INTEL){alert(`Shooter Intel is capped at ${MAX_INTEL} reports per stage.`);return;}s.intel.push({target:s.targets[0]?.label||"T1",hold:""});renderFastDownrange(s)}
 
 function getBallisticSoftware(){const m=st.data.matches.find(x=>x.id===st.selectedMatch),r=st.data.rifles.find(x=>x.id===m?.rifleId);return r?.kestrelModel||m?.rifleSnapshot?.kestrelModel||"Ballistic software"}
 function renderKestrel(s){
@@ -939,7 +947,7 @@ function renderKestrel(s){
 function kTargetHTML(t,i,fz){
  let z=tWind(t,fz);
  return `<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag ready">SOLVER</span></div>
- <div class="hero"><div class="small">BALLISTIC INPUT / VERIFY</div><div style="font-size:24px;font-weight:1000;margin-top:8px">DOF ${String(Math.round(norm(n(t.dof)||0))).padStart(3,"0")}°</div><div style="font-size:38px;font-weight:1000;color:var(--blue)">WD ${String(Math.round(z.expectedWD)).padStart(3,"0")}°</div><div class="small">${clock(z.expectedWD)} • WIND FROM</div></div>
+ <div class="hero"><div class="small">BALLISTIC INPUT / VERIFY</div><div style="font-size:24px;font-weight:1000;margin-top:8px">DOF ${String(Math.round(norm(n(t.dof)||0))).padStart(3,"0")}°</div><div style="font-size:32px;font-weight:1000;color:var(--blue)">TARGET WIND DIRECTION ${String(Math.round(z.expectedWD)).padStart(3,"0")}°</div><div class="small">${clock(z.expectedWD)} • WIND FROM • GLOBAL WIND FROM − TARGET DOF</div></div>
  <div class="out3"><div class="obox"><div class="t">LOW WIND</div><div class="n">${fz.low.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox best"><div class="t">BEST WIND</div><div class="n">${fz.best.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox"><div class="t">HIGH WIND</div><div class="n">${fz.high.toFixed(0)}</div><div class="unit">mph</div></div></div>
  <div class="grid two">${f("Solver MIN hold","kmin_"+i,t.kMin,"decimal")}${f("Solver MAX hold","kmax_"+i,t.kMax,"decimal")}</div>
  ${fz.learnedBias!==null?`<div class="note">MATCH INTEL: recent actual working holds have trended ${fz.learnedBias>0?"ABOVE":"BELOW"} their Solver bracket midpoint. Sanity signal only; it does not alter this wind solution.</div>`:""}
@@ -1071,7 +1079,15 @@ function targetVisualSVG(tt,r,z){
  return `<div class="targetVisualWrap"><svg class="targetVisual" viewBox="0 0 600 220" role="img" aria-label="Target wind window visual"><line x1="35" y1="${cy}" x2="565" y2="${cy}" stroke="#31495c"/><line x1="${cx}" y1="${cy-75}" x2="${cx}" y2="${cy+75}" stroke="#587489" stroke-dasharray="5 5"/>${safeBand}${target}${dots}<text x="300" y="22" text-anchor="middle" fill="#e8f0f5" font-size="14" font-weight="700">CHOSEN HOLD ${hold1(selected)} ${side} • ${esc(tt.selectedHoldSource||"SELECTED")}</text><text x="300" y="208" text-anchor="middle" fill="#9eb1c4" font-size="11">Predicted horizontal impact positions at MIN / BEST / MAX modeled wind.</text></svg></div>`;
 }
 
+function loadTargetVisual(targetId,details){
+ if(!details?.open)return;const host=document.getElementById(`targetVisual_${targetId}`);if(!host||host.dataset.loaded==="1")return;
+ try{const s=getStage(),fz=fuse(s),tt=s.targets.find(x=>x.id===targetId),r=tt?opt(tt,fz):null,z=tt?tWind(tt,fz):null;host.innerHTML=(tt&&r&&z)?targetVisualSVG(tt,r,z):`<div class="note">Target visual unavailable.</div>`}
+ catch(e){console.error("Target visual error",e);host.innerHTML=`<div class="warn">Target visual could not be rendered. Numerical FIRE data remains valid.</div>`}
+ host.dataset.loaded="1";
+}
+
 function renderShoot(s){
+ try{
  const fz=fuse(s);if(!fz.valid){live.innerHTML=`<div class="bad">${fz.reason}</div><div class="note">Go back to WIND / BALLISTICS and complete required values.</div>`;return}
  const results=s.targets.map(tt=>({tt,r:opt(tt,fz),z:tWind(tt,fz),flip:sideFlipForTarget(tt,fz)}));
  results.forEach(({tt,r,z})=>{if(r)ensureFireTargetState(tt,r,z)});
@@ -1079,6 +1095,8 @@ function renderShoot(s){
  ${results.map(({tt,r,z,flip})=>shootResultHTML(tt,r,z,flip,fz)).join("")}
  <div class="card"><h3>Stage Card</h3><div class="stagecard">${results.map(({tt,r,z,flip})=>stageLineFast(tt,r,z,flip)).join("")}</div></div>`;
  bindAuto(captureLive);
+
+ }catch(e){console.error("FIRE render error",e);live.innerHTML=`<div class="shootError"><strong>FIRE could not render.</strong><br>${esc(e?.message||"Unknown rendering error")}<br><span class="small">Your stage data remains saved. Go back one step and reopen FIRE.</span></div>`}
 }
 function shootResultHTML(tt,r,z,flip,fz){
  if(flip)return `<div class="warn"><strong>${esc(tt.label)} • SIDE FLIP RISK</strong><br>Wind-direction uncertainty crosses the bore line. FIRE will not issue a single-side hold. Recheck direction.</div>`;
@@ -1106,7 +1124,7 @@ function shootResultHTML(tt,r,z,flip,fz){
  <div class="listrow"><span>Safe hold window</span><strong>${r.safe?hold1(r.sl)+"–"+hold1(r.sh)+" "+side:"NONE"}</strong></div>
  ${tip?`<div class="aimTip"><strong>WIND SIGHT AIM TIP: ${tip.label}</strong><div class="whyHold">${tip.text}</div></div>`:""}
  <div class="note"><strong>WHY ${hold1(r.bh)}?</strong><br>${whyOptimalHold(tt,r,fz)}<br><span class="small">Impact Score is a WIND SIGHT modeled wind-window score, not total hit probability.</span></div>
- <details class="fireDetails"><summary><span>VIEW TARGET / HOLD VISUAL</span><span>⌄</span></summary><div class="fireDetailBody">${targetVisualSVG(tt,r,z)}</div></details>
+ <details class="fireDetails" ontoggle="loadTargetVisual('${tt.id}',this)"><summary><span>VIEW TARGET / HOLD VISUAL</span><span>⌄</span></summary><div class="fireDetailBody" id="targetVisual_${tt.id}"><div class="small">Open to render target visual.</div></div></details>
  <details class="fireDetails"><summary><span>SHOT / MISS CORRECTION</span><span>⌄</span></summary><div class="fireDetailBody">
    <div class="small">Enter observed horizontal impact offset. WIND SIGHT returns the mechanical hold correction; it does not assume wind caused the miss.</div>
    <div class="grid two">${f("Observed offset (mil)",`missOffset_${tt.id}`,tt.missOffset,"decimal")}<label>Impact was<select id="missSide_${tt.id}" onchange="updateFireCorrection('${tt.id}')"><option ${tt.missSide==="L"?"selected":""}>L</option><option ${tt.missSide==="R"?"selected":""}>R</option></select></label></div>
@@ -1230,9 +1248,16 @@ function svgLine(values,minV,maxV,label){const w=600,h=160,p=24;if(!values.lengt
 function reportStageCapture(s){let total=0,inside=0;const sol=s.preShootSolution;(s.targets||[]).forEach(tt=>{const a=n(tt.actualHold),lo=n(tt.kMin),hi=n(tt.kMax),ps=sol?.targets?.find(x=>x.targetId===tt.id||x.label===tt.label);if(a!==null&&lo!==null&&hi!==null){total++;const sideOK=!ps?.recommendedSide||tt.holdSide===ps.recommendedSide;if(sideOK&&a>=Math.min(lo,hi)&&a<=Math.max(lo,hi))inside++}});return {total,inside,pct:total?100*inside/total:null}}
 function reports(){setBottom(false);const matches=st.data.matches.filter(m=>!m.archivedAt);main.innerHTML=`<div class="panel"><div class="kicker">Match analytics</div><h2>Reports</h2><div id="rep"></div></div>`;if(!matches.length){rep.innerHTML=`<div class="note">No match history yet.</div>`;return}rep.innerHTML=matches.slice().reverse().map(m=>{const done=m.stages.filter(s=>s.completedAt),score=done.reduce((x,s)=>x+(n(s.score)||0),0),avail=done.reduce((x,s)=>x+(n(s.pointsAvailable)||0),0);let bt=0,bi=0,errs=[];done.forEach(s=>{const c=reportStageCapture(s);bt+=c.total;bi+=c.inside;const sol=s.preShootSolution;if(sol)s.targets.forEach(tt=>{const ps=sol.targets?.find(x=>x.targetId===tt.id||x.label===tt.label),aa=n(tt.actualHold);if(ps&&aa!==null&&ps.recommendedHold!==null){const as=(tt.holdSide==="R"?1:-1)*aa,pr=(ps.recommendedSide==="R"?1:-1)*ps.recommendedHold;errs.push(Math.abs(as-pr))}})});const cap=bt?100*bi/bt:null,mae=errs.length?errs.reduce((a,b)=>a+b,0)/errs.length:null,windAvg=done.map(s=>n(s.wind?.avg)).filter(x=>x!==null),windDir=done.map(s=>n(s.wind?.avgDir)).filter(x=>x!==null),windDirPlot=unwrapAngles(windDir),stagePct=done.map(s=>n(s.pointsAvailable)>0?100*n(s.score)/n(s.pointsAvailable):0);return `<div class="card"><div class="cardhead"><div><strong>${esc(m.name)}</strong><div class="small">${done.length}/${m.stages.length} stages complete</div></div><span class="tag done">${avail?(100*score/avail).toFixed(1)+"%":"—"}</span></div><div class="grid four"><div><div class="small">TOTAL POINTS</div><div class="metric">${score}/${avail||"—"}</div></div><div><div class="small">WIND BRACKET CAPTURE</div><div class="metric">${cap!==null?cap.toFixed(0)+"%":"—"}</div></div><div><div class="small">MEAN HOLD ERROR</div><div class="metric">${mae!==null?mae.toFixed(1):"—"}</div><div class="small">mil</div></div><div><div class="small">AVG WIND</div><div class="metric">${windAvg.length?(windAvg.reduce((a,b)=>a+b,0)/windAvg.length).toFixed(1):"—"}</div><div class="small">mph</div></div></div><div class="note"><strong>WIND BRACKET CAPTURE</strong> = percentage of actual working holds that fell inside the pre-stage MIN–MAX solver hold bracket.</div><h3 style="margin-top:18px">Wind Speed Through Match</h3>${svgLine(windAvg,windAvg.length?Math.min(...windAvg):0,windAvg.length?Math.max(...windAvg):1,"AVG mph")}<h3 style="margin-top:18px">Wind Direction Through Match</h3>${svgLine(windDirPlot,windDirPlot.length?Math.min(...windDirPlot):0,windDirPlot.length?Math.max(...windDirPlot):360,"WIND FROM ° (unwrapped for continuity)")}<h3 style="margin-top:18px">Stage Score %</h3>${svgLine(stagePct,0,100,"Stage %")}<div class="matchSectionTitle">Stage Summary</div>${done.map(s=>{const c=reportStageCapture(s);return `<div class="listrow"><span>${esc(s.name)} • ${esc(s.wind?.avg||"—")} mph @ ${esc(s.wind?.avgDir||"—")}°</span><strong>${esc(s.score||"—")}/${esc(s.pointsAvailable||"—")} ${c.pct!==null?`• bracket ${c.pct.toFixed(0)}%`:""}</strong></div>`}).join("")||`<div class="note">No completed stages.</div>`}</div>`}).join("")}
 function openWheelField(id,title){let el=document.getElementById(id);wheelCtx={type:"field",id,title};openWheel(el?.value||0,title)}
-function openObsWheel(where,pi,oi){captureLive();let s=getStage(),o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];wheelCtx={type:"obs",where,pi,oi,title:"INDICATOR MOVING TO"};openWheel(o.dir||0,"INDICATOR MOVING TO")}
+function openObsWheel(where,pi,oi){captureLive();let s=getStage();s.downrangeOpen=where==="target"?"target":"points";let o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];wheelCtx={type:"obs",where,pi,oi,title:"INDICATOR MOVING TO"};openWheel(o.dir||0,"INDICATOR MOVING TO")}
 function openWheel(val,title){wheelTitle.textContent=title;setTimeout(positionTicks,0);document.body.classList.add("modal-open");overlay.classList.remove("hidden");setWheel(n(val)||0)}
-function closeWheel(commit=true){if(commit&&wheelCtx){let val=String(Math.round(n(wheelInput.value)||0));if(wheelCtx.type==="field"){let el=document.getElementById(wheelCtx.id);if(el){el.value=val;el.dispatchEvent(new Event("input",{bubbles:true}));captureLive();writeNow()}}else{let s=getStage(),o=wheelCtx.where==="target"?s.targetObs[wheelCtx.oi]:s.points[wheelCtx.pi].obs[wheelCtx.oi];o.dir=val;captureLive();writeNow();if(st.liveStep===2)renderFastDownrange(s)}}overlay.classList.add("hidden");document.body.classList.remove("modal-open");wheelCtx=null}
+function closeWheel(commit=true){
+ if(commit&&wheelCtx){
+  let val=String(Math.round(n(wheelInput.value)||0));
+  if(wheelCtx.type==="field"){let el=document.getElementById(wheelCtx.id);if(el){el.value=val;el.dispatchEvent(new Event("input",{bubbles:true}));captureLive();writeNow()}}
+  else{let s=getStage();s.downrangeOpen=wheelCtx.where==="target"?"target":"points";let o=wheelCtx.where==="target"?s.targetObs[wheelCtx.oi]:s.points[wheelCtx.pi].obs[wheelCtx.oi];o.dir=angleValue(val);writeNow();if(st.liveStep===2)renderFastDownrange(s)}
+ }
+ overlay.classList.add("hidden");document.body.classList.remove("modal-open");wheelCtx=null
+}
 function setWheel(vv){let d=norm(vv);pointer.style.transform=`rotate(${d}deg)`;wheelDeg.textContent=String(Math.round(d)).padStart(3,"0")+"°";wheelClock.textContent=clock(d);wheelInput.value=String(Math.round(d))}
 function evtAngle(e){e.preventDefault();let r=wheel.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),d=Math.atan2(x,-y)*180/Math.PI;if(d<0)d+=360;setWheel(d)}
 wheel.addEventListener("pointerdown",e=>{e.preventDefault();drag=true;wheel.setPointerCapture(e.pointerId);evtAngle(e)},{passive:false});

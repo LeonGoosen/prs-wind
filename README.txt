@@ -1,11 +1,3 @@
-WIND SIGHT PRS v3.2.1 — FIRE UAT Fix
+WIND SIGHT PRS v3.2.2 Workflow UAT Fix
 
-Focused corrections from v3.2.0 formal UAT:
-- Custom Selected Hold added.
-- Selected source behavior made explicit and stable:
-  WIND SIGHT/MIN/MAX track recalculation; MANUAL/CORRECTED are preserved.
-- Safe Hold Window added to target visual.
-- Corrected-hold action appears immediately after calculation.
-- Full regression/UAT rerun.
-
-See UAT_REPORT_v3.2.1.txt.
+Physical-test fixes for calibration editing, match Save & Exit, event date layout, stage duplicate removal, scroll-to-top, Downrange accordion persistence, observation direction commit, target-relative WD labeling, and FIRE blank-screen containment.
