@@ -1,13 +1,11 @@
-WIND SIGHT PRS v3.1.1 — Profile Edit Fix
+WIND SIGHT PRS v3.2.1 — FIRE UAT Fix
 
-Fixes:
-- Existing saved profiles now normalize legacy fields before editing.
-- Legacy twist values are migrated correctly into twistValue.
-- Legacy BC values are migrated into bcValue.
-- Saved ammo calibration data is rehydrated from the latest calibration version when editing.
-- If a stored ammo id is missing, the editor falls back to the first ammo profile instead of rendering blank.
-- Profile normalization is persisted immediately.
-- A visible error is shown if a profile truly cannot be loaded, instead of a blank page.
-- Version shown in app header: v3.1.1.
+Focused corrections from v3.2.0 formal UAT:
+- Custom Selected Hold added.
+- Selected source behavior made explicit and stable:
+  WIND SIGHT/MIN/MAX track recalculation; MANUAL/CORRECTED are preserved.
+- Safe Hold Window added to target visual.
+- Corrected-hold action appears immediately after calculation.
+- Full regression/UAT rerun.
 
-JavaScript syntax: PASS
+See UAT_REPORT_v3.2.1.txt.
