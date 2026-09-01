@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.2.3 SHOOT Cleanup</title>
+<title>WIND SIGHT PRS by ZealTech — v3.2.4 SHOOT Runtime Fix</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -196,7 +196,7 @@ input[type="date"]::-webkit-date-and-time-value{text-align:center}
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.2.3</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.2.4</small></div></div>
   <div class="save" id="saveState">Saved</div>
 </div>
 <nav id="nav"></nav>
@@ -1131,7 +1131,7 @@ function shootResultHTML(tt,r,z,flip,fz){
      <div><div class="k">WIND SIGHT SHOT INDEX</div><div class="v">${score}/100</div></div>
      <div><div class="k">AIM</div><div class="v">${tip?esc(tip.label):"CENTER"}</div></div>
      <div><div class="k">SAFE HOLD</div><div class="v">${r.safe?`${hold1(r.sl)}–${hold1(r.sh)} ${side}`:"NONE"}</div></div>
-     <div><div class="k">MISS CORRECTION</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div></div>
+     <div><div class="k">MISS CORRECTION</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div><div class="fastHint">${dims?`${dims.w.toFixed(1)} mil target width`:""}</div></div>
    </div>
  </div>`;
 }
@@ -1140,6 +1140,15 @@ function stageLineFast(tt,r,z,flip){
  const side=z.rel>=0?"R":"L",score=windSightImpactScore(r),miss=suggestedMissCorrection(tt);
  return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m • ${esc(targetSizeText(tt))}</strong><div class="hold">${flip?"SIDE FLIP":`${hold1(r.bh)} ${side}`}</div><div class="meta">${!flip?`MIN ${hold1(r.lo)} • MAX ${hold1(r.hi)} • Shot Index ${score}/100${miss!==null?` • Miss corr ${hold1(miss)}`:""}`:"Recheck wind side"}</div></div>`;
 }
+
+function suggestedMissCorrection(tt){
+ const dm=targetDimsMil(tt);
+ if(!dm||!(dm.w>0))return null;
+ // Practical correction guide: 75% of horizontal angular target width,
+ // displayed to nearest 0.1 mil. Example: 0.4 mil target => 0.3 mil.
+ return Number((dm.w*0.75).toFixed(1));
+}
+
 function targetDimsMil(tt){
  const d=n(tt.distanceM),w=n(tt.widthCm),h=n(tt.heightCm||tt.widthCm);
  if(!(d>0&&w>0))return null;
