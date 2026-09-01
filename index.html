@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.5.0 Calypso Live Beta</title>
+<title>WIND SIGHT PRS by ZealTech — v3.7.0 Accuracy Core + Calypso Instrument</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -215,13 +215,49 @@ html,body{touch-action:manipulation}
 .calypsoMetric .k{font-size:9px;color:#8fa4b7;font-weight:900}
 .calypsoMetric .v{font-size:16px;font-weight:1000;margin-top:2px}
 @media(max-width:390px){.calypsoGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.liveCommand{border:1px solid #29435a;border-radius:15px;background:#07131f;padding:12px;margin-top:10px}
+.liveCommandHead{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.liveBig{font-size:34px;font-weight:1000;line-height:1}
+.liveSub{font-size:11px;color:#8fa4b7;margin-top:4px}
+.liveTrendUp{color:#f1c36b}.liveTrendDown{color:#7fd5e9}.liveTrendStable{color:#74d59b}
+.liveTargets{display:grid;gap:8px;margin-top:10px}
+.liveTargetRow{border:1px solid #243b50;border-radius:12px;padding:10px;background:#08131f}
+.liveTargetTop{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.liveHold{font-size:28px;font-weight:1000}
+.liveMeta{font-size:11px;color:#8fa4b7}
+.lockedCall{border-color:#7fd5e9!important;background:#0a2230!important}
+.lockBadge{font-size:10px;font-weight:1000;padding:4px 7px;border-radius:999px;background:#123343;color:#9be8f7}
+
+.calypsoWarn{font-size:10px;color:#f1c36b;font-weight:900;margin-top:4px}
+.refGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.telemetryNote{font-size:10px;color:#8fa4b7;margin-top:4px}
+.qualityConfirmed{color:#74d59b}.qualityApprox{color:#f1c36b}.qualityUnknown{color:#8fa4b7}
+
+.calStandaloneHero{border:1px solid #29435a;border-radius:18px;padding:16px;background:linear-gradient(180deg,#0b1d2b,#07131f);margin-bottom:12px}
+.calLiveBig{font-size:54px;font-weight:1000;line-height:.95;margin-top:10px;letter-spacing:-.03em}
+.calDirBig{font-size:34px;font-weight:1000;color:#7fd5e9;margin-top:6px}
+.calPremiumGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.calPremiumMetric{border:1px solid #243b50;border-radius:13px;padding:10px;background:#08131f}
+.calPremiumMetric .k{font-size:10px;color:#8fa4b7;font-weight:900;letter-spacing:.05em}
+.calPremiumMetric .v{font-size:21px;font-weight:1000;margin-top:3px}
+.calCompass{width:170px;height:170px;margin:12px auto 0;position:relative;border:2px solid #385269;border-radius:50%;background:radial-gradient(circle,#0b1d2a 0 55%,#08131f 56%)}
+.calCompass:before,.calCompass:after{content:"";position:absolute;background:#385269;left:50%;top:10%;bottom:10%;width:1px}
+.calCompass:after{top:50%;left:10%;right:10%;height:1px;width:auto}
+.calNeedle{position:absolute;left:50%;top:50%;height:64px;width:4px;background:#7fd5e9;transform-origin:50% 100%;margin-left:-2px;margin-top:-64px;border-radius:4px}
+.calNeedle:after{content:"";position:absolute;left:-5px;top:-8px;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:13px solid #7fd5e9}
+.calCompassLabel{position:absolute;font-size:10px;font-weight:1000;color:#8fa4b7}.calN{top:4px;left:50%;transform:translateX(-50%)}.calE{right:6px;top:50%;transform:translateY(-50%)}.calS{bottom:4px;left:50%;transform:translateX(-50%)}.calW{left:6px;top:50%;transform:translateY(-50%)}
+.calTrendBar{height:8px;border-radius:999px;background:#162838;overflow:hidden;margin-top:5px}.calTrendFill{height:100%;background:#7fd5e9;border-radius:999px}
+.calLiveOnly{font-size:10px;letter-spacing:.12em;color:#74d59b;font-weight:1000}
+.calChart{width:100%;height:145px;display:block;border:1px solid #243b50;border-radius:13px;background:#08131f;margin-top:9px}
+@media(max-width:390px){.calLiveBig{font-size:46px}.calDirBig{font-size:29px}.calPremiumGrid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.5.0</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.7.0</small></div></div>
   <div class="save" id="saveState">Saved</div>
 </div>
 <nav id="nav"></nav>
@@ -247,10 +283,12 @@ const LEGACY_KEYS=["windSightPRS_v24","prsWindPlatformV21","prsWindPlatformProto
 let st={screen:"home",step:0,selectedRifle:null,selectedAmmo:null,selectedMatch:null,selectedStage:null,liveStep:0,data:{schemaVersion:SCHEMA_VERSION,rifles:[],matches:[],drafts:{}}};
 let saveTimer=null,wheelCtx=null,drag=false;
 
-const IDB_NAME="windSightPRSDB",IDB_STORE="state",IDB_KEY="appData";
-function idbOpen(){return new Promise((resolve,reject)=>{if(!('indexedDB' in window)){reject(new Error('IndexedDB unavailable'));return;}const req=indexedDB.open(IDB_NAME,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(IDB_STORE))db.createObjectStore(IDB_STORE)};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+const IDB_NAME="windSightPRSDB",IDB_STORE="state",IDB_KEY="appData",IDB_TELEMETRY="telemetry";
+function idbOpen(){return new Promise((resolve,reject)=>{if(!('indexedDB' in window)){reject(new Error('IndexedDB unavailable'));return;}const req=indexedDB.open(IDB_NAME,2);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(IDB_STORE))db.createObjectStore(IDB_STORE);if(!db.objectStoreNames.contains(IDB_TELEMETRY)){const s=db.createObjectStore(IDB_TELEMETRY,{keyPath:'id',autoIncrement:true});s.createIndex('stage','stageId',{unique:false});s.createIndex('match','matchId',{unique:false});s.createIndex('time','t',{unique:false})}};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
 async function idbPut(data){const db=await idbOpen();return new Promise((resolve,reject)=>{const tx=db.transaction(IDB_STORE,'readwrite');tx.objectStore(IDB_STORE).put(data,IDB_KEY);tx.oncomplete=()=>resolve(true);tx.onerror=()=>reject(tx.error)})}
 async function idbGet(){const db=await idbOpen();return new Promise((resolve,reject)=>{const tx=db.transaction(IDB_STORE,'readonly'),rq=tx.objectStore(IDB_STORE).get(IDB_KEY);rq.onsuccess=()=>resolve(rq.result||null);rq.onerror=()=>reject(rq.error)})}
+async function idbPutTelemetry(records){if(!records?.length)return true;const db=await idbOpen();return new Promise((resolve,reject)=>{const tx=db.transaction(IDB_TELEMETRY,'readwrite'),stx=tx.objectStore(IDB_TELEMETRY);records.forEach(r=>stx.add(r));tx.oncomplete=()=>resolve(true);tx.onerror=()=>reject(tx.error)})}
+async function idbGetStageTelemetry(stageId){const db=await idbOpen();return new Promise((resolve,reject)=>{const tx=db.transaction(IDB_TELEMETRY,'readonly'),idx=tx.objectStore(IDB_TELEMETRY).index('stage'),rq=idx.getAll(stageId);rq.onsuccess=()=>resolve(rq.result||[]);rq.onerror=()=>reject(rq.error)})}
 async function hydrateFromIDB(){try{const d=await idbGet();if(!d)return;const localTs=Date.parse(st.data.lastSavedAt||0)||0,idbTs=Date.parse(d.lastSavedAt||0)||0;if(idbTs>localTs){st.data=migrateData(d);try{localStorage.setItem(DBKEY,JSON.stringify(st.data))}catch(e){}render();saveState.textContent='Recovered ✓'}}catch(e){}}
 
 const iso=()=>new Date().toISOString(), uid=p=>p+"_"+Math.random().toString(36).slice(2,8)+"_"+Date.now().toString(36);
@@ -319,7 +357,7 @@ function clearDraft(kind){if(st.data.drafts)delete st.data.drafts[kind];autosave
 
 
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")writeLocalFast()});
-window.addEventListener("pagehide",()=>writeLocalFast());
+window.addEventListener("pagehide",()=>{try{flushCalypsoTelemetry()}catch(e){}writeLocalFast()});
 function exportData(){
  const blob=new Blob([JSON.stringify(st.data,null,2)],{type:"application/json"}),a=document.createElement("a");
  a.href=URL.createObjectURL(blob);a.download="wind-sight-prs-"+new Date().toISOString().slice(0,10)+".json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);
@@ -330,7 +368,7 @@ function importData(e){
  const rd=new FileReader();rd.onload=()=>{try{const parsed=JSON.parse(rd.result);if(!validBackupShape(parsed))throw new Error('shape');const d=migrateData(parsed);st.data=d;writeNow();render();alert("Data imported successfully.")}catch(err){alert("Invalid WIND SIGHT PRS backup file.")}};rd.readAsText(file);
 }
 
-function navItems(){return [["home","HOME"],["matches","MATCHES"],["rifles","PROFILES"],["reports","REPORTS"]]}
+function navItems(){return [["home","HOME"],["matches","MATCHES"],["calypso","CALYPSO"],["rifles","PROFILES"],["reports","REPORTS"]]}
 function renderNav(){nav.innerHTML="";navItems().forEach(([k,l])=>{let b=document.createElement("button");b.className="navbtn"+(st.screen===k?" active":"");b.textContent=l;b.onclick=()=>{saveCurrent();st.screen=k;st.step=0;render()};nav.appendChild(b)})}
 function setBottom(show=true,nextLabel="NEXT →",nextVisible=true){bottom.style.display=show?"block":"none";nextBtn.textContent=nextLabel;nextBtn.style.visibility=nextVisible?"visible":"hidden"}
 
@@ -347,12 +385,46 @@ const CALYPSO={
  CHAR_DATA:"heart_rate_control_point",
  STATUS_UUID:"0000a001-0000-1000-8000-00805f9b34fb"
 };
-const calypsoRuntime={device:null,server:null,status:"idle",lastError:"",speedChar:null,dirChar:null,battChar:null,samples:[],model:"",firmware:"",battery:null,lastSeen:null,connecting:false};
+const calypsoRuntime={device:null,server:null,status:"idle",lastError:"",speedChar:null,dirChar:null,battChar:null,samples:[],model:"",firmware:"",battery:null,lastSeen:null,connecting:false,stageSessionId:null,stageSessionStart:0,lastPredictionAt:0,predictionTimer:null,lastUiAt:0,persistTimer:null,pendingTelemetry:[],lastStateKey:"",protocolVariant:"ENV",recordStandalone:false};
 function ensureCalypsoSettings(){
  st.data.settings=st.data.settings||{};
- st.data.settings.calypso=st.data.settings.calypso||{enabled:true,paired:false,name:"",directionOffsetDeg:0,sampleWindowSec:30};
- return st.data.settings.calypso;
+ st.data.settings.calypso=st.data.settings.calypso||{enabled:true,paired:false,name:"",directionOffsetDeg:0,referenceConfigured:false,referenceBearingDeg:0,protocolVerified:false,sampleWindowSec:30,predictionHz:1,deviceId:"",standaloneWindowSec:120};
+ const c=st.data.settings.calypso;
+ if(c.referenceConfigured==null)c.referenceConfigured=false;
+ if(c.referenceBearingDeg==null)c.referenceBearingDeg=0;
+ if(c.protocolVerified==null)c.protocolVerified=false;
+ if(!c.predictionHz)c.predictionHz=1;if(c.deviceId==null)c.deviceId="";if(!c.standaloneWindowSec)c.standaloneWindowSec=120;
+ return c;
 }
+
+function findStageById(stageId){
+ for(const m of st.data.matches||[]){const s=(m.stages||[]).find(x=>x.id===stageId);if(s)return {m,s}}
+ return {m:null,s:null};
+}
+async function flushCalypsoTelemetry(){
+ if(!calypsoRuntime.pendingTelemetry.length)return;
+ const batch=calypsoRuntime.pendingTelemetry.splice(0);
+ try{await idbPutTelemetry(batch)}catch(e){console.error("Telemetry IDB",e);calypsoRuntime.pendingTelemetry.unshift(...batch);return}
+ const groups={};batch.forEach(r=>{(groups[r.stageId]||(groups[r.stageId]=[])).push(r)});
+ Object.entries(groups).forEach(([sid,rows])=>{const {s}=findStageById(sid);if(!s)return;s.calypsoSampleCount=(s.calypsoSampleCount||0)+rows.length;s.calypsoBlocks30s=mergeCalypsoBlocks(s.calypsoBlocks30s||[],buildCalypsoBlocks(rows,30));s.calypsoLastPersistedAt=iso()});
+ writeLocalFast();
+}
+function mergeCalypsoBlocks(existing,incoming){const m=new Map();[...(existing||[]),...(incoming||[])].forEach(b=>{const k=b.start,old=m.get(k);if(!old)m.set(k,b);else{const n1=old.n||0,n2=b.n||0,nx=n1+n2;m.set(k,{start:k,end:Math.max(old.end,b.end),avg:(old.avg*n1+b.avg*n2)/Math.max(1,nx),sd:Math.max(old.sd,b.sd),min:Math.min(old.min,b.min),max:Math.max(old.max,b.max),dir:b.dir??old.dir,n:nx})}});return [...m.values()].sort((a,b)=>a.start-b.start)}
+function startCalypsoStageSession(s){
+ if(!s)return;
+ if(calypsoRuntime.stageSessionId===s.id)return;
+ // Flush samples to their ORIGINAL stage before switching ownership.
+ if(calypsoRuntime.pendingTelemetry.length)flushCalypsoTelemetry();
+ calypsoRuntime.stageSessionId=s.id;calypsoRuntime.stageSessionStart=Date.now();s.calypsoSessionStart=iso();s.calypsoBlocks30s=s.calypsoBlocks30s||[];calypsoRuntime.samples=[];calypsoRuntime.lastStateKey="";
+}
+function scheduleTelemetryFlush(){clearTimeout(calypsoRuntime.persistTimer);calypsoRuntime.persistTimer=setTimeout(()=>flushCalypsoTelemetry(),2500)}
+function predictionStateKey(){const e=calypsoStateEstimate();if(!e)return "none";return [Math.round((e.speed||0)*5)/5,e.dir==null?"x":Math.round(e.dir/2)*2,e.trend,e.regime,Math.round((e.ti||0)*20)/20].join("|")}
+function scheduleLivePrediction(){
+ const cfg=ensureCalypsoSettings(),now=Date.now(),key=predictionStateKey();if(key===calypsoRuntime.lastStateKey)return;calypsoRuntime.lastStateKey=key;
+ const minGap=1000/Math.max(.25,Math.min(1,n(cfg.predictionHz)||1)),wait=Math.max(0,minGap-(now-calypsoRuntime.lastPredictionAt));if(calypsoRuntime.predictionTimer)return;
+ calypsoRuntime.predictionTimer=setTimeout(()=>{calypsoRuntime.predictionTimer=null;calypsoRuntime.lastPredictionAt=Date.now();const s=getStage();if(s)renderLiveCommand(s);if(st.screen==="calypso")renderCalypsoLivePanel()},wait);
+}
+
 function calypsoSupported(){return !!navigator.bluetooth}
 function calypsoStatusText(){
  if(!calypsoSupported())return "CALYPSO • NATIVE BLE REQUIRED";
@@ -367,31 +439,98 @@ function calypsoDotClass(){
 function decodeU16LE(dv){return dv.getUint16(0,true)}
 function calypsoMpsToMph(v){return v*2.2369362921}
 function circularMeanDeg(vals){
+ vals=(vals||[]).filter(v=>n(v)!==null);
  if(!vals.length)return null;let x=0,y=0;
- vals.forEach(v=>{const a=v*Math.PI/180;x+=Math.cos(a);y+=Math.sin(a)});
+ vals.forEach(v=>{const a=n(v)*Math.PI/180;x+=Math.cos(a);y+=Math.sin(a)});
  return norm(Math.atan2(y,x)*180/Math.PI);
 }
+
+function weightedCircularMean(samples,weightFn){
+ let x=0,y=0,w=0;
+ samples.filter(s=>n(s.dir)!==null).forEach(s=>{const ww=weightFn(s);const a=n(s.dir)*Math.PI/180;x+=ww*Math.cos(a);y+=ww*Math.sin(a);w+=ww});
+ if(!w)return {mean:null,R:0};
+ return {mean:norm(Math.atan2(y,x)*180/Math.PI),R:Math.sqrt(x*x+y*y)/w};
+}
+function weightedStats(samples,key,weightFn){
+ let w=0,m=0;for(const s of samples){const ww=weightFn(s);w+=ww;m+=ww*s[key]}
+ if(!w)return {mean:null,sd:null};
+ m/=w;let v=0;for(const s of samples){const ww=weightFn(s);v+=ww*(s[key]-m)*(s[key]-m)}
+ return {mean:m,sd:Math.sqrt(v/w)};
+}
+function linTrend(samples,key,windowMs){
+ const cut=Date.now()-windowMs,ss=samples.filter(x=>x.t>=cut);if(ss.length<4)return 0;
+ const t0=ss[0].t;let sx=0,sy=0,sxx=0,sxy=0,nc=0;
+ ss.forEach(s=>{const x=(s.t-t0)/1000,y=s[key];sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;nc++});
+ const den=nc*sxx-sx*sx;if(!den)return 0;return (nc*sxy-sx*sy)/den;
+}
+function calypsoWindow(sec){
+ const cut=Date.now()-sec*1000;
+ return calypsoRuntime.samples.filter(x=>x.t>=cut);
+}
+function calypsoStateEstimate(){
+ const all=calypsoRuntime.samples;if(!all.length)return null;
+ const now=Date.now();
+ const weightFn=s=>Math.exp(-(now-s.t)/18000); // ~18s decay
+ const w10=calypsoWindow(10),w30=calypsoWindow(30),w120=calypsoWindow(120),base=w30.length?w30:all;
+ const sp=weightedStats(base,"mph",weightFn),dr=weightedCircularMean(base,weightFn);
+ const speedTrend=linTrend(all,"mph",20000);
+ // directional drift via unwrapped recent sequence
+ let dirTrend=0;
+ const wd30=w30.filter(x=>n(x.dir)!==null);
+ if(wd30.length>=4){
+   let vals=[wd30[0].dir],last=wd30[0].dir;
+   for(let i=1;i<wd30.length;i++){let d=sdelta(wd30[i].dir,last);vals.push(vals[vals.length-1]+d);last=wd30[i].dir}
+   const faux=wd30.map((s,i)=>({t:s.t,val:vals[i]}));
+   const t0=faux[0].t;let sx=0,sy=0,sxx=0,sxy=0,nc=0;
+   faux.forEach(s=>{const x=(s.t-t0)/1000,y=s.val;sx+=x;sy+=y;sxx+=x*x;sxy+=x*y;nc++});
+   const den=nc*sxx-sx*sx;dirTrend=den?(nc*sxy-sx*sy)/den:0;
+ }
+ const ti=sp.mean>0?sp.sd/sp.mean:0;
+ const recent10=weightedStats(w10.length?w10:base,"mph",()=>1);
+ const older=all.filter(x=>x.t>=now-60000&&x.t<now-20000);
+ const oldStats=weightedStats(older,"mph",()=>1);
+ let regimeScore=0;
+ if(recent10.mean!=null&&oldStats.mean!=null){
+   const pooled=Math.max(.5,(recent10.sd||0)+(oldStats.sd||0));
+   regimeScore=Math.abs(recent10.mean-oldStats.mean)/pooled;
+ }
+ const regime=regimeScore>=1.6?"SHIFT":Math.abs(speedTrend)>=.06?"TREND":"STABLE";
+ const trend=speedTrend>.04?"BUILDING":speedTrend<-.04?"DROPPING":"STABLE";
+ const dirState=Math.abs(dirTrend)>.45?(dirTrend>0?"VEERING":"BACKING"):"STABLE";
+ return {
+   speed:sp.mean,sd:sp.sd,dir:dr.mean,dirR:dr.R,dirReferenced:dr.mean!==null,ti,
+   speedTrend,dirTrend,trend,dirState,regime,regimeScore,
+   now:w10.length?w10[w10.length-1]:all[all.length-1],
+   stats10:recent10,stats30:weightedStats(w30.length?w30:base,"mph",()=>1),
+   stats120:weightedStats(w120.length?w120:base,"mph",()=>1),
+   count30:w30.length,count120:w120.length
+ };
+}
+function decisionHysteresis(prev,next){if(!prev)return next;if(prev.locked)return prev;if(prev.side!==next.side)return next;const diff=Math.abs((prev.hold||0)-(next.hold||0)),gain=(next.modeledHit||0)-(prev.modeledHit||0);if(diff<=.100001&&gain<.04){const signed=prev.side==="L"?-Math.abs(prev.hold):Math.abs(prev.hold),cand=next.candidates?.find(x=>Math.abs(x.h-signed)<.0001);return {...next,hold:prev.hold,side:prev.side,signedHold:signed,modeledHit:cand?.p??prev.modeledHit,hysteresisHeld:true}}return next}
+function liveCommandSolutions(s){const N=s.targets.length>4?500:s.targets.length>2?750:1000;return s.targets.map(tt=>{const sol=optimizeImpactHoldV4(s,tt,N),z=targetDirectionState(s,tt);if(!sol)return {tt,sol:null,z};const prev=s.liveDecision?.[tt.id],final=decisionHysteresis(prev,{...sol,locked:false});s.liveDecision=s.liveDecision||{};s.liveDecision[tt.id]=final;return {tt,sol:final,z}})}
+function lockStageCall(){const s=getStage();if(!s)return;const sols=liveCommandSolutions(s);s.lockedCall={at:iso(),targets:{}};sols.forEach(({tt,sol})=>{if(sol)s.lockedCall.targets[tt.id]={hold:sol.hold,side:sol.side,modeledHit:sol.modeledHit,confidence:sol.confidence,robustMin:sol.robustMin,robustMax:sol.robustMax,sideAmbiguous:sol.sideAmbiguous,sideMinorProb:sol.sideMinorProb}});autosave();renderLiveCommand(s)}
+function unlockStageCall(){const s=getStage();if(!s)return;s.lockedCall=null;autosave();renderLiveCommand(s)}
+function renderLiveCommand(s){const host=document.getElementById("liveCommandHost");if(!host)return;const est=calypsoStateEstimate(),sols=liveCommandSolutions(s),locked=!!s.lockedCall,trendClass=est?.trend==="BUILDING"?"liveTrendUp":est?.trend==="DROPPING"?"liveTrendDown":"liveTrendStable",arrow=est?.trend==="BUILDING"?"↑":est?.trend==="DROPPING"?"↓":"→";host.innerHTML=`<div class="liveCommand ${locked?"lockedCall":""}"><div class="liveCommandHead"><div><div class="deviceState"><span class="deviceDot ${calypsoDotClass()}"></span><span>${esc(calypsoStatusText())}</span>${locked?`<span class="lockBadge">LOCKED</span>`:""}</div>${est?`<div class="liveBig">${Math.round(est.now.mph)} mph${est.now.dir!==null?` • ${Math.round(est.now.dir)}°`:""}</div><div class="liveSub"><span class="${trendClass}">${est.trend} ${arrow}</span> • ${est.regime}${est.dirState!=="STABLE"?` • ${est.dirState}`:""} • TI ${(est.ti*100).toFixed(0)}%</div>`:`<div class="liveSub">Waiting for Calypso samples…</div>`}</div><button class="btn ${locked?"secondary":"outline"} small" id="lockStageCallBtn">${locked?"UNLOCK":"LOCK STAGE CALL"}</button></div><div class="liveTargets">${sols.map(({tt,sol,z})=>{const use=locked?s.lockedCall.targets[tt.id]:null,ss=use||sol;if(!ss)return `<div class="liveTargetRow"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><div class="liveMeta">Awaiting solver/target data</div></div>`;return `<div class="liveTargetRow"><div class="liveTargetTop"><div><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><div class="liveMeta">DOF ${Math.round(n(tt.dof)||0)}° • Fused WD ${Math.round(z.targetWD)}°</div></div><div class="liveHold">${ss.sideAmbiguous?"SIDE?":hold1(ss.hold)+" "+ss.side}</div></div><div class="liveMeta">Modeled Hit ${Math.round((ss.modeledHit||0)*100)}% • ${ss.confidence} • ${ss.sideAmbiguous?`L/R ambiguity ${Math.round((ss.sideMinorProb||0)*100)}%`:`Robust ${hold1(ss.robustMin)}–${hold1(ss.robustMax)} ${ss.side}`}</div></div>`}).join("")}</div></div>`;const b=document.getElementById("lockStageCallBtn");if(b)b.onclick=locked?unlockStageCall:lockStageCall}
+
 function calypsoStats(){
  const cfg=ensureCalypsoSettings(),cut=Date.now()-(n(cfg.sampleWindowSec)||30)*1000;
  const s=calypsoRuntime.samples.filter(x=>x.t>=cut);
  if(!s.length)return null;
- const speeds=s.map(x=>x.mph),dirs=s.map(x=>x.dir);
- return {min:Math.min(...speeds),avg:speeds.reduce((a,b)=>a+b,0)/speeds.length,max:Math.max(...speeds),dir:circularMeanDeg(dirs),count:s.length,last:s[s.length-1]};
+ const speeds=s.map(x=>x.mph),dirs=s.map(x=>x.dir).filter(x=>n(x)!==null);
+ return {min:Math.min(...speeds),avg:speeds.reduce((a,b)=>a+b,0)/speeds.length,max:Math.max(...speeds),dir:circularMeanDeg(dirs),dirReferenced:dirs.length>0,count:s.length,last:s[s.length-1]};
 }
 function applyCalypsoToStage(){
  const s=getStage();if(!s)return;
  const stx=calypsoStats();if(!stx)return;
  s.wind=s.wind||{};
- s.wind.min=String(Math.round(stx.min));
- s.wind.avg=String(Math.round(stx.avg));
- s.wind.max=String(Math.round(stx.max));
- s.wind.now=String(Math.round(stx.last.mph));
- s.wind.avgDir=String(Math.round(stx.dir));
- s.wind.nowDir=String(Math.round(stx.last.dir));
- s.wind.source="CALYPSO LIVE";
- s.wind.calypsoSampleCount=stx.count;
- s.wind.calypsoLastSeen=iso();
- autosave();
+ s.wind.min=String(Math.round(stx.min));s.wind.avg=String(Math.round(stx.avg));s.wind.max=String(Math.round(stx.max));s.wind.now=String(Math.round(stx.last.mph));
+ if(stx.dirReferenced&&stx.dir!==null){
+   s.wind.avgDir=String(Math.round(stx.dir));
+   if(stx.last.dir!==null)s.wind.nowDir=String(Math.round(stx.last.dir));
+   s.wind.directionSource="CALYPSO REFERENCED";
+ }
+ s.wind.source="CALYPSO LIVE";s.wind.calypsoSampleCount=stx.count;s.wind.calypsoLastSeen=iso();
+ // High-rate telemetry persistence is batched separately; do not serialize the app on every sample.
 }
 function onCalypsoSpeed(ev){
  const raw=decodeU16LE(ev.target.value)/100;
@@ -401,18 +540,21 @@ function onCalypsoDir(ev){
  const raw=decodeU16LE(ev.target.value)/100;
  const cfg=ensureCalypsoSettings();
  calypsoRuntime._dirRaw=raw;
- calypsoRuntime._dir=norm(raw+(n(cfg.directionOffsetDeg)||0));
+ calypsoRuntime._dir=cfg.referenceConfigured?norm(raw+(n(cfg.referenceBearingDeg)||0)+(n(cfg.directionOffsetDeg)||0)):null;
  calypsoRuntime.lastSeen=Date.now();pushCalypsoSample();
 }
 function onCalypsoBatt(ev){calypsoRuntime.battery=ev.target.value.getUint8(0);refreshCalypsoStrip()}
 function pushCalypsoSample(){
- if(calypsoRuntime._speedMps==null||calypsoRuntime._dir==null)return;
- const rec={t:Date.now(),mps:calypsoRuntime._speedMps,mph:calypsoMpsToMph(calypsoRuntime._speedMps),rawDir:calypsoRuntime._dirRaw,dir:calypsoRuntime._dir};
- const last=calypsoRuntime.samples[calypsoRuntime.samples.length-1];
- if(last&&rec.t-last.t<100) return;
+ if(calypsoRuntime._speedMps==null)return;
+ const s=getStage();if(s)startCalypsoStageSession(s);
+ const matchId=st.selectedMatch||null,stageId=s?.id||null;
+ const rec={matchId,stageId,t:Date.now(),mps:calypsoRuntime._speedMps,mph:calypsoMpsToMph(calypsoRuntime._speedMps),rawDir:calypsoRuntime._dirRaw,dir:calypsoRuntime._dir};
+ const last=calypsoRuntime.samples[calypsoRuntime.samples.length-1];if(last&&rec.t-last.t<100)return;
  calypsoRuntime.samples.push(rec);
- const keep=Date.now()-120000;calypsoRuntime.samples=calypsoRuntime.samples.filter(x=>x.t>=keep);
- applyCalypsoToStage();refreshCalypsoStrip();
+ // Standalone screen keeps only a memory window; stage telemetry is persisted separately.
+ const memCut=Date.now()-15*60*1000;calypsoRuntime.samples=calypsoRuntime.samples.filter(x=>x.t>=memCut);
+ if(stageId){calypsoRuntime.pendingTelemetry.push(rec);scheduleTelemetryFlush()}
+ applyCalypsoToStage();refreshCalypsoStrip();if(st.screen==="calypso")renderCalypsoLivePanel();scheduleLivePrediction();
 }
 async function readTextChar(service,charName){
  try{const c=await service.getCharacteristic(charName),v=await c.readValue();return new TextDecoder().decode(v)}catch(e){return ""}
@@ -423,7 +565,7 @@ async function connectCalypsoDevice(device,manual=false){
  try{
    calypsoRuntime.device=device;
    device.addEventListener("gattserverdisconnected",()=>{calypsoRuntime.status="idle";calypsoRuntime.server=null;refreshCalypsoStrip()},{once:true});
-   const server=await device.gatt.connect();calypsoRuntime.server=server;
+   const server=await device.gatt.connect();calypsoRuntime.server=server;calypsoRuntime.protocolVariant="ENV";
    try{
      const env=await server.getPrimaryService(CALYPSO.SERVICE_ENV);
      calypsoRuntime.speedChar=await env.getCharacteristic(CALYPSO.CHAR_SPEED);
@@ -432,7 +574,7 @@ async function connectCalypsoDevice(device,manual=false){
      await calypsoRuntime.dirChar.startNotifications();calypsoRuntime.dirChar.addEventListener("characteristicvaluechanged",onCalypsoDir);
      const sv=await calypsoRuntime.speedChar.readValue();onCalypsoSpeed({target:{value:sv}});
      const dv=await calypsoRuntime.dirChar.readValue();onCalypsoDir({target:{value:dv}});
-   }catch(e){throw new Error("Wind characteristics unavailable: "+e.message)}
+   }catch(e){try{await server.getPrimaryService(CALYPSO.SERVICE_DATA);calypsoRuntime.protocolVariant="DATA_SERVICE_UNVERIFIED";throw new Error("Environmental wind characteristics unavailable. Calypso Data Service detected but payload decoding awaits official Developer Manual.")}catch(e2){throw new Error("Wind characteristics unavailable: "+e.message)}}
    try{
      const b=await server.getPrimaryService(CALYPSO.SERVICE_BATT);calypsoRuntime.battChar=await b.getCharacteristic(CALYPSO.CHAR_BATT);
      const bv=await calypsoRuntime.battChar.readValue();calypsoRuntime.battery=bv.getUint8(0);
@@ -451,34 +593,46 @@ async function connectCalypsoDevice(device,manual=false){
  }finally{calypsoRuntime.connecting=false}
 }
 async function pairCalypso(){
- if(!calypsoSupported()){alert("This browser does not provide Web Bluetooth. iPhone Safari/Home Screen requires the future native WIND SIGHT BLE shell.");return}
+ if(!calypsoSupported()){alert("This browser does not provide Web Bluetooth. iPhone Safari/Home Screen requires the native WIND SIGHT BLE shell.");return}
  try{
-   const dev=await navigator.bluetooth.requestDevice({filters:[{namePrefix:"ULTRASONIC"}],optionalServices:[CALYPSO.SERVICE_ENV,CALYPSO.SERVICE_BATT,CALYPSO.SERVICE_INFO,CALYPSO.SERVICE_DATA]});
-   await connectCalypsoDevice(dev,true);
+   const dev=await navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:[CALYPSO.SERVICE_ENV,CALYPSO.SERVICE_BATT,CALYPSO.SERVICE_INFO,CALYPSO.SERVICE_DATA]});
+   const cfg=ensureCalypsoSettings();cfg.deviceId=dev.id||"";cfg.name=dev.name||cfg.name||"Calypso";writeNow();await connectCalypsoDevice(dev,true);
  }catch(e){if(e.name!=="NotFoundError"){calypsoRuntime.status="error";calypsoRuntime.lastError=e.message;refreshCalypsoStrip()}}
 }
 async function autoConnectCalypso(){
- const cfg=ensureCalypsoSettings();if(!cfg.enabled||calypsoRuntime.status==="connected"||calypsoRuntime.connecting||!calypsoSupported())return;
- try{
-   if(navigator.bluetooth.getDevices){
-     const ds=await navigator.bluetooth.getDevices(),dev=ds.find(d=>d.name?.startsWith("ULTRASONIC"))||ds[0];
-     if(dev){await connectCalypsoDevice(dev);return}
-   }
-   if(calypsoRuntime.device)await connectCalypsoDevice(calypsoRuntime.device);
- }catch(e){}
+ const cfg=ensureCalypsoSettings();if(!cfg.enabled||calypsoRuntime.status==="connected"||calypsoRuntime.connecting||!calypsoSupported()||!cfg.deviceId)return;
+ try{if(navigator.bluetooth.getDevices){const ds=await navigator.bluetooth.getDevices(),dev=ds.find(d=>d.id===cfg.deviceId);if(dev){await connectCalypsoDevice(dev);return}}if(calypsoRuntime.device?.id===cfg.deviceId)await connectCalypsoDevice(calypsoRuntime.device)}catch(e){}
 }
 function calypsoStripHTML(){
  const stx=calypsoStats(),cfg=ensureCalypsoSettings();
- return `<div class="deviceStrip" id="calypsoStrip"><div><div class="deviceState"><span class="deviceDot ${calypsoDotClass()}"></span><span>${esc(calypsoStatusText())}</span></div>${calypsoRuntime.status==="connected"?`<div class="calypsoGrid"><div class="calypsoMetric"><div class="k">NOW</div><div class="v">${stx?Math.round(stx.last.mph):"—"} mph</div></div><div class="calypsoMetric"><div class="k">AVG</div><div class="v">${stx?Math.round(stx.avg):"—"} mph</div></div><div class="calypsoMetric"><div class="k">DIR</div><div class="v">${stx?Math.round(stx.dir):"—"}°</div></div><div class="calypsoMetric"><div class="k">MIN/MAX</div><div class="v">${stx?`${Math.round(stx.min)}/${Math.round(stx.max)}`:"—"}</div></div><div class="calypsoMetric"><div class="k">BATTERY</div><div class="v">${calypsoRuntime.battery??"—"}%</div></div><div class="calypsoMetric"><div class="k">SAMPLES</div><div class="v">${stx?.count||0}</div></div></div><div class="fastHint">${esc(calypsoRuntime.model||"Calypso")} ${calypsoRuntime.firmware?`• FW ${esc(calypsoRuntime.firmware)}`:""} • ${cfg.sampleWindowSec}s rolling window</div>`:""}</div><button class="btn secondary small" id="calypsoPairBtn">${calypsoRuntime.status==="connected"?"RECONNECT":"PAIR"}</button></div>`;
+ const dirReady=!!cfg.referenceConfigured;
+ return `<div class="deviceStrip" id="calypsoStrip"><div><div class="deviceState"><span class="deviceDot ${calypsoDotClass()}"></span><span>${esc(calypsoStatusText())}</span></div>
+ ${calypsoRuntime.status==="connected"?`<div class="calypsoGrid"><div class="calypsoMetric"><div class="k">NOW</div><div class="v">${stx?Math.round(stx.last.mph):"—"} mph</div></div><div class="calypsoMetric"><div class="k">AVG</div><div class="v">${stx?Math.round(stx.avg):"—"} mph</div></div><div class="calypsoMetric"><div class="k">DIR</div><div class="v">${stx?.dirReferenced?Math.round(stx.dir)+"°":"REF?"}</div></div><div class="calypsoMetric"><div class="k">MIN/MAX</div><div class="v">${stx?`${Math.round(stx.min)}/${Math.round(stx.max)}`:"—"}</div></div><div class="calypsoMetric"><div class="k">BATTERY</div><div class="v">${calypsoRuntime.battery??"—"}%</div></div><div class="calypsoMetric"><div class="k">SAMPLES</div><div class="v">${stx?.count||0}</div></div></div>
+ ${!dirReady?`<div class="calypsoWarn">DIRECTION NOT REFERENCED — speed is live; direction is excluded from the model until reference is set.</div>`:""}
+ <div class="fastHint">${esc(calypsoRuntime.model||"Calypso")} ${calypsoRuntime.firmware?`• FW ${esc(calypsoRuntime.firmware)}`:""} • ${cfg.sampleWindowSec}s tactical window</div>`:""}</div>
+ <div class="actions"><button class="btn secondary small" id="calypsoPairBtn">${calypsoRuntime.status==="connected"?"RECONNECT":"PAIR"}</button><button class="btn outline small" id="calypsoRefBtn">SET REFERENCE</button></div></div>`;
 }
+
+function setCalypsoReference(){
+ const cfg=ensureCalypsoSettings();
+ const val=prompt("Enter the GLOBAL bearing (0–359°) that the Calypso reference mark / 0° axis is pointing toward.",String(cfg.referenceBearingDeg||0));
+ if(val===null)return;
+ const d=n(val);if(d===null||d<0||d>=360){alert("Enter a bearing from 0 to 359°.");return}
+ cfg.referenceBearingDeg=norm(d);cfg.referenceConfigured=true;writeNow();refreshCalypsoStrip();
+}
+function bindCalypsoStrip(){
+ const p=document.getElementById("calypsoPairBtn"),r=document.getElementById("calypsoRefBtn");
+ if(p)p.onclick=pairCalypso;if(r)r.onclick=setCalypsoReference;
+}
+
 function refreshCalypsoStrip(){
  const el=document.getElementById("calypsoStrip");if(!el)return;
  const temp=document.createElement("div");temp.innerHTML=calypsoStripHTML();el.replaceWith(temp.firstElementChild);
- const b=document.getElementById("calypsoPairBtn");if(b)b.onclick=pairCalypso;
+ bindCalypsoStrip();
 }
 
 function goTop(){try{window.scrollTo({top:0,left:0,behavior:"auto"})}catch(e){window.scrollTo(0,0)}document.documentElement.scrollTop=0;document.body.scrollTop=0;if(main)main.scrollTop=0}
-function render(){goTop();renderNav();main.innerHTML="";({home,rifles,rifleWizard,matches,matchWizard,matchDashboard,liveStage,reports}[st.screen]||home)();goTop();requestAnimationFrame(goTop);setTimeout(goTop,30)}
+function render(){goTop();renderNav();main.innerHTML="";({home,rifles,rifleWizard,matches,matchWizard,matchDashboard,calypso:calypsoScreen,liveStage,reports}[st.screen]||home)();goTop();requestAnimationFrame(goTop);setTimeout(goTop,30)}
 function saveCurrent(){try{if(st.screen==="liveStage")captureLive()}catch(e){}autosave()}
 function f(lbl,id,val,mode="text"){let im=mode==="numeric"?"numeric":mode==="decimal"?"decimal":"text",type=mode==="date"?"date":"text",cls=mode==="date"?"dateInput":"";return `<label>${lbl}<input class="${cls}" id="${id}" type="${type}" inputmode="${im}" autocomplete="off" value="${esc(val??"")}"></label>`}
 function ta(lbl,id,val){return `<label>${lbl}<textarea id="${id}">${esc(val??"")}</textarea></label>`}
@@ -486,6 +640,24 @@ function v(id){return document.getElementById(id)?.value??""}
 function bindAuto(cb){main.querySelectorAll("input,select,textarea").forEach(el=>{el.addEventListener("input",cb);el.addEventListener("change",cb)})}
 
 function hasReadyProfile(){return st.data.rifles.some(r=>(r.ammo||[]).some(a=>a.name&&a.bullet&&n(a.mv)>0&&(a.bcType||a.bc)));}
+function calypsoScreen(){
+ setBottom(false);ensureCalypsoSettings();
+ main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Standalone instrument</div><h2>CALYPSO LIVE</h2><div class="calLiveOnly">LIVE SENSOR VIEW • NO BALLISTIC CALCULATIONS</div></div><span class="tag ${calypsoRuntime.status==="connected"?"done":"ready"}">${calypsoRuntime.status==="connected"?"CONNECTED":"DEVICE"}</span></div>${calypsoStripHTML()}<div id="calypsoLivePanel"></div></div><div class="panel"><h3>Calypso Settings</h3><div class="grid two">${f("Reference bearing °","calRef",ensureCalypsoSettings().referenceBearingDeg,"numeric")}${f("Direction offset °","calOffset",ensureCalypsoSettings().directionOffsetDeg,"decimal")}<label>Live history<select id="calWindow"><option ${ensureCalypsoSettings().standaloneWindowSec===60?"selected":""} value="60">60 sec</option><option ${ensureCalypsoSettings().standaloneWindowSec===120?"selected":""} value="120">2 min</option><option ${ensureCalypsoSettings().standaloneWindowSec===300?"selected":""} value="300">5 min</option></select></label></div><div class="actions"><button class="btn secondary" id="saveCalSettings">SAVE SETTINGS</button><button class="btn outline" id="clearCalSession">CLEAR LIVE HISTORY</button></div><div class="note">This screen is deliberately isolated from WIND SIGHT calculations. It is for viewing and validating the Calypso sensor only.</div></div>`;
+ bindCalypsoStrip();autoConnectCalypso();renderCalypsoLivePanel();
+ saveCalSettings.onclick=()=>{const c=ensureCalypsoSettings(),r=n(v("calRef")),o=n(v("calOffset"));if(r===null||r<0||r>=360){alert("Reference bearing must be 0–359°.");return}c.referenceBearingDeg=norm(r);c.referenceConfigured=true;c.directionOffsetDeg=o||0;c.standaloneWindowSec=n(v("calWindow"))||120;writeNow();renderCalypsoLivePanel();refreshCalypsoStrip()};
+ clearCalSession.onclick=()=>{calypsoRuntime.samples=[];renderCalypsoLivePanel()};
+}
+function calypsoSpeedSvg(samples){
+ if(!samples?.length)return `<div class="note">Waiting for live samples…</div>`;
+ const W=600,H=145,p=18,min=Math.min(...samples.map(x=>x.mph)),max=Math.max(...samples.map(x=>x.mph)),span=Math.max(1,max-min),t0=samples[0].t,t1=samples[samples.length-1].t||t0+1;
+ const pts=samples.map(s=>`${p+(W-2*p)*(s.t-t0)/Math.max(1,t1-t0)},${H-p-(H-2*p)*(s.mph-min)/span}`).join(" ");
+ return `<svg class="calChart" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="#7fd5e9" stroke-width="3"/><line x1="${p}" y1="${H-p}" x2="${W-p}" y2="${H-p}" stroke="#31495c"/></svg>`;
+}
+function renderCalypsoLivePanel(){
+ const host=document.getElementById("calypsoLivePanel");if(!host)return;const cfg=ensureCalypsoSettings(),sec=n(cfg.standaloneWindowSec)||120,cut=Date.now()-sec*1000,samps=calypsoRuntime.samples.filter(x=>x.t>=cut),est=calypsoStateEstimate(),stats=calypsoStats(),dir=est?.now?.dir;
+ const trend=est?.trend||"WAITING",trendClass=trend==="BUILDING"?"liveTrendUp":trend==="DROPPING"?"liveTrendDown":"liveTrendStable";
+ host.innerHTML=`<div class="calStandaloneHero"><div class="cardhead"><div class="deviceState"><span class="deviceDot ${calypsoDotClass()}"></span><span>${esc(calypsoStatusText())}</span></div><div class="small">${esc(calypsoRuntime.model||cfg.name||"Calypso")}${calypsoRuntime.firmware?` • FW ${esc(calypsoRuntime.firmware)}`:""}</div></div><div class="calLiveBig">${est?Math.round(est.now.mph):"—"}<span style="font-size:18px"> mph</span></div><div class="calDirBig">${dir!=null?`${Math.round(dir)}° WIND FROM`:"DIRECTION REF REQUIRED"}</div><div class="calCompass"><span class="calCompassLabel calN">N</span><span class="calCompassLabel calE">E</span><span class="calCompassLabel calS">S</span><span class="calCompassLabel calW">W</span><div class="calNeedle" style="transform:rotate(${dir??0}deg);opacity:${dir==null?.18:1}"></div></div><div class="calPremiumGrid"><div class="calPremiumMetric"><div class="k">10 SEC AVG</div><div class="v">${est?.stats10?.mean!=null?est.stats10.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">30 SEC AVG</div><div class="v">${est?.stats30?.mean!=null?est.stats30.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">2 MIN AVG</div><div class="v">${est?.stats120?.mean!=null?est.stats120.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">MIN / MAX</div><div class="v">${stats?`${stats.min.toFixed(1)} / ${stats.max.toFixed(1)}`:"—"}</div></div><div class="calPremiumMetric"><div class="k">VOLATILITY</div><div class="v">${est?`${(est.ti*100).toFixed(0)}%`:"—"}</div></div><div class="calPremiumMetric"><div class="k">TREND</div><div class="v ${trendClass}">${trend}</div></div><div class="calPremiumMetric"><div class="k">DIRECTION STATE</div><div class="v">${est?.dirState||"—"}</div></div><div class="calPremiumMetric"><div class="k">BATTERY</div><div class="v">${calypsoRuntime.battery??"—"}%</div></div><div class="calPremiumMetric"><div class="k">SAMPLES</div><div class="v">${samps.length}</div></div><div class="calPremiumMetric"><div class="k">PROTOCOL</div><div class="v" style="font-size:13px">${esc(calypsoRuntime.protocolVariant||"—")}</div></div></div><h3 style="margin-top:16px">Live Speed History</h3>${calypsoSpeedSvg(samps)}<div class="telemetryNote">Raw live view only. No WIND SIGHT target or ballistic calculations run on this screen.</div></div>`;
+}
 function home(){
  setBottom(false);const recentMatches=st.data.matches.filter(m=>!m.archivedAt).slice().reverse().slice(0,4);
  main.innerHTML=`<div class="panel"><div class="kicker">Fast match access</div><h2>WIND SIGHT PRS</h2><p class="sub">${hasReadyProfile()?"Open a match or start a new one.":"Set up your first rifle + ammo combo before creating a match."}</p><div class="actions">${hasReadyProfile()?`<button class="btn" id="newMatch">+ NEW MATCH</button>`:`<button class="btn" id="setupFirst">SET UP FIRST COMBO →</button>`}<button class="btn secondary" id="profilesBtn">PROFILES</button></div></div><div class="panel"><div class="cardhead"><h3>Recent Matches</h3><button class="btn outline small" id="allMatches">VIEW ALL</button></div><div id="recent">${recentMatches.length?recentMatches.map(m=>`<button class="matchCardBtn recentOpen" data-m="${m.id}"><strong>${esc(m.name)}</strong><span class="small">${esc(m.date||"")} • ${m.stages?.length||0} stages • ${m.completedAt?"Complete":"Active"}</span></button>`).join(""):`<div class="note">No matches yet.</div>`}</div></div><div class="publisherFooter"><div class="small">PRODUCT PUBLISHER</div><img src="zealtech-transparent.png" alt="ZealTech"></div>`;
@@ -512,7 +684,7 @@ function rifles(){
  setBottom(false);const combos=profileCombos();
  main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Rifle + ammo combos</div><h2>Profiles</h2></div><button class="btn" id="addCombo">+ NEW COMBO</button></div>${calypsoStripHTML()}
  ${combos.length?combos.map(({r,a,incomplete})=>`<div class="comboCard" data-r="${r.id}" data-a="${a?.id||""}"><div class="comboTitle">${esc(r.name)}${a?` + ${esc(a.name)}`:" • SETUP INCOMPLETE"}</div><div class="comboMeta">${esc(r.cartridge||"")}${a?` • ${esc(a.bullet||"")} • ${esc(a.mv||"—")} ${esc(a.mvUnit||"fps")} • ${esc(a.bcType||"G7")} ${esc(a.bcValue||a.bc||"—")}<br>${a.currentCalibrationVersion?`Calibration v${a.currentCalibrationVersion} ✓`:`Calibration incomplete`}`:` • Add ammunition to complete this combo`}</div><div class="actions"><button class="btn secondary small editCombo">RIFLE / AMMO</button>${a?`<button class="btn outline small editWindSpeed">WIND SPEED</button><button class="btn outline small editWindAngle">WIND ANGLE</button><button class="btn outline small editTargetDof">TARGET DOF</button>`:""}<button class="btn danger small deleteCombo">DELETE PROFILE</button></div></div>`).join(""):`<div class="note">No rifle + ammo combos yet.</div>`}</div>`;
- addCombo.onclick=()=>{st.screen="rifleWizard";st.step=0;st.selectedRifle=null;st.selectedAmmo=null;render()};const cpb=document.getElementById("calypsoPairBtn");if(cpb)cpb.onclick=pairCalypso;
+ addCombo.onclick=()=>{st.screen="rifleWizard";st.step=0;st.selectedRifle=null;st.selectedAmmo=null;render()};bindCalypsoStrip();
  document.querySelectorAll(".comboCard").forEach(el=>{
    const openProfileStep=(step)=>{st.selectedRifle=el.dataset.r;st.selectedAmmo=(el.dataset.a&&el.dataset.a!=="undefined")?el.dataset.a:null;st.step=step;st.screen="rifleWizard";render()};
    el.querySelector(".editCombo").onclick=()=>openProfileStep(0);
@@ -532,7 +704,7 @@ function normalizeProfileData(r){
  r.zeroM=r.zeroM||"100";r.sightHeight=r.sightHeight||"";r.sightHeightUnit=r.sightHeightUnit||"cm";
  r.kestrelModel=r.kestrelModel||"Kestrel / Applied Ballistics";r.notes=r.notes||"";r.ammo=r.ammo||[];
  r.ammo.forEach(a=>{
-   a.name=a.name||"";a.bullet=a.bullet||"";a.weightGr=a.weightGr||"";a.mv=a.mv||"";a.mvUnit=a.mvUnit||"fps";a.mvSd=a.mvSd||"";a.precision=a.precision||"";a.precisionUnit=a.precisionUnit||"MOA";a.hPrecision=a.hPrecision||"";a.vPrecision=a.vPrecision||"";
+   a.name=a.name||"";a.bullet=a.bullet||"";a.weightGr=a.weightGr||"";a.mv=a.mv||"";a.mvUnit=a.mvUnit||"fps";a.mvSd=a.mvSd||"";a.precision=a.precision||"";a.precisionUnit=a.precisionUnit||"MOA";a.hPrecision=a.hPrecision||"";a.vPrecision=a.vPrecision||"";a.trajectorySensitivity=a.trajectorySensitivity||[];a.solverSens=a.solverSens||{windPer100m:"",elevPer10m:"",windPer10fps:"",elevPer10fps:"",elevPer100mDA:""};
    a.bcType=a.bcType||"G7";a.bcValue=a.bcValue||a.bc||"";a.bc=a.bcValue;a.lot=a.lot||"";a.notes=a.notes||"";
    a.currentCalibrationVersion=a.currentCalibrationVersion||0;a.calibrationVersions=a.calibrationVersions||[];
    loadAmmoWork(a);
@@ -617,7 +789,7 @@ function rifleWizard(){
  let a=null;
  if(st.step>=1 || st.selectedAmmo){
    a=st.selectedAmmo?r?.ammo.find(x=>x.id===st.selectedAmmo):(st._ad||loadDraft("ammo")||(st._ad={
-     id:uid("a"),name:"",bullet:"",weightGr:"",mv:"",mvUnit:"fps",mvSd:"",precision:"",precisionUnit:"MOA",hPrecision:"",vPrecision:"",bcType:"G7",bcValue:"",bc:"",lot:"",notes:"",currentCalibrationVersion:0,calibrationVersions:[],_work:{A:[],B:[],D:[]}
+     id:uid("a"),name:"",bullet:"",weightGr:"",mv:"",mvUnit:"fps",mvSd:"",precision:"",precisionUnit:"MOA",hPrecision:"",vPrecision:"",trajectorySensitivity:[],solverSens:{windPer100m:"",elevPer10m:"",windPer10fps:"",elevPer10fps:"",elevPer100mDA:""},bcType:"G7",bcValue:"",bc:"",lot:"",notes:"",currentCalibrationVersion:0,calibrationVersions:[],_work:{A:[],B:[],D:[]}
    }));
    if(!a && r?.ammo?.length){a=r.ammo[0];st.selectedAmmo=a.id;}
    loadAmmoWork(a);
@@ -657,7 +829,15 @@ function rifleWizard(){
      <div class="small">Optional. If blank, WIND SIGHT uses the single precision value above.</div>
      <div class="grid two">${f("Horizontal precision","aHPrecision",a.hPrecision,"decimal")}${f("Vertical precision","aVPrecision",a.vPrecision,"decimal")}</div>
    </details>
-   <div class="note">MV SD and precision are used only when supplied. WIND SIGHT does not invent them.</div>`;
+   <details class="fastSection"><summary>TRAJECTORY WIND SENSITIVITY</summary>
+     <div class="small">Optional solver-derived calibration. Enter near / mid / target influence factors if you have them; blank values use the interim model.</div>
+     <div class="grid three">${f("Near influence","aSensNear",a.trajectorySensitivity?.[0]?.value||"","decimal")}${f("Mid influence","aSensMid",a.trajectorySensitivity?.[1]?.value||"","decimal")}${f("Target influence","aSensTarget",a.trajectorySensitivity?.[2]?.value||"","decimal")}</div>
+   </details>
+   <details class="fastSection"><summary>SOLVER RESPONSE COEFFICIENTS</summary>
+     <div class="small">Optional. Enter only values derived by perturbing your ballistic solver. These replace interim vertical/range/MV proxies.</div>
+     <div class="grid two">${f("Wind Δ per +100m (mil)","aWind100",a.solverSens?.windPer100m||"","decimal")}${f("Elevation Δ per +10m range (mil)","aElev10m",a.solverSens?.elevPer10m||"","decimal")}${f("Wind Δ per +10fps MV (mil)","aWind10fps",a.solverSens?.windPer10fps||"","decimal")}${f("Elevation Δ per +10fps MV (mil)","aElev10fps",a.solverSens?.elevPer10fps||"","decimal")}${f("Elevation Δ per +100m DA (mil)","aElev100da",a.solverSens?.elevPer100mDA||"","decimal")}</div>
+   </details>
+   <div class="note">MV SD and precision are used only when supplied. Solver-derived coefficients are preferred; blank coefficients keep conservative interim proxies and reduce model confidence.</div>`;
  }else if(st.step===2){
    rw.innerHTML=calTableA(a);
  }else if(st.step===3){
@@ -712,7 +892,8 @@ function saveRifleWizard(r,a){
    r.zeroM=v("rZero");r.sightHeight=v("rSight");r.sightHeightUnit=v("rSightUnit")||"cm";r.kestrelModel=v("rKestrel")||"Kestrel / Applied Ballistics";r.notes=v("rNotes");
  }
  if(st.step===1&&a){
-   a.name=v("aName");a.bullet=v("aBullet");a.weightGr=v("aWeight");a.mv=v("aMv");a.mvUnit=v("aMvUnit")||"fps";a.mvSd=v("aMvSd");a.precision=v("aPrecision");a.precisionUnit=v("aPrecisionUnit")||"MOA";a.hPrecision=v("aHPrecision");a.vPrecision=v("aVPrecision");a.bcType=v("aBcType")||"G7";a.bcValue=v("aBc");a.bc=a.bcValue;a.lot=v("aLot");a.notes=v("aNotes");
+   a.name=v("aName");a.bullet=v("aBullet");a.weightGr=v("aWeight");a.mv=v("aMv");a.mvUnit=v("aMvUnit")||"fps";a.mvSd=v("aMvSd");a.precision=v("aPrecision");a.precisionUnit=v("aPrecisionUnit")||"MOA";a.hPrecision=v("aHPrecision");a.vPrecision=v("aVPrecision");{const sn=n(v("aSensNear")),sm=n(v("aSensMid")),stg=n(v("aSensTarget"));a.trajectorySensitivity=(sn!==null&&sm!==null&&stg!==null)?[{zone:"shooter",value:sn},{zone:"mid",value:sm},{zone:"target",value:stg}]:a.trajectorySensitivity||[]}
+ a.solverSens={windPer100m:v("aWind100"),elevPer10m:v("aElev10m"),windPer10fps:v("aWind10fps"),elevPer10fps:v("aElev10fps"),elevPer100mDA:v("aElev100da")};a.bcType=v("aBcType")||"G7";a.bcValue=v("aBc");a.bc=a.bcValue;a.lot=v("aLot");a.notes=v("aNotes");
  }
  if(st.step===2&&a){
    loadAmmoWork(a);
@@ -849,7 +1030,7 @@ function calTableD(a){
 }
 
 function deepClone(x){return JSON.parse(JSON.stringify(x))}
-function regenTargetIds(targets){return (targets||[]).map((t,i)=>({...deepClone(t),id:uid("t"),label:t.label||("T"+(i+1)),dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"}))}
+function regenTargetIds(targets){return (targets||[]).map((t,i)=>({...deepClone(t),id:uid("t"),label:t.label||("T"+(i+1)),dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L",holdQuality:"Unknown"}))}
 function duplicateStageRecord(s,index){
  const c=deepClone(s);
  c.id=uid("s");c.name=(s.name||("Stage "+(index+1)))+" Copy";c.createdAt=iso();c.liveStartedAt=null;c.completedAt=null;c.preShootSnapshot=null;c.preShootSolution=null;c.postStageSnapshot=null;c.revisionHistory=[];c.correctionMode=false;c.score="";c.postNotes="";
@@ -929,7 +1110,7 @@ function bindMatchCards(){
    el.querySelector(".permanentDelete")?.addEventListener("click",()=>permanentlyDeleteMatchById(id));
  });
 }
-function newStage(nm){return {id:uid("s"),name:nm,targets:[{id:uid("t"),label:"T1",distanceM:"",rangeQuality:"Match book",rangeUncM:"0",targetSizeUncPct:"0",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"}],wind:{min:"",avg:"",max:"",now:"",avgDir:"",nowDir:"",window:"10 min"},points:[{id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[]}],targetObs:[],targetTerrain:"Open / normal",intel:[],score:"",pointsAvailable:"",impacts:"",shots:"",preNotes:"",postNotes:"",createdAt:iso()}}
+function newStage(nm){return {id:uid("s"),name:nm,targets:[{id:uid("t"),label:"T1",distanceM:"",rangeQuality:"Match book",rangeUncM:"0",targetSizeUncPct:"0",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L",holdQuality:"Unknown"}],wind:{min:"",avg:"",max:"",now:"",avgDir:"",nowDir:"",window:"10 min"},points:[{id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[]}],targetObs:[],targetTerrain:"Open / normal",intel:[],score:"",pointsAvailable:"",impacts:"",shots:"",preNotes:"",postNotes:"",createdAt:iso()}}
 function matchWizard(){
  const m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):(st._md||loadDraft("match")||(st._md={id:uid("m"),name:"",date:new Date().toISOString().slice(0,10),venue:"",rifleId:"",ammoId:"",rifleSnapshot:null,ammoSnapshot:null,calibrationVersion:null,envTempUncC:"0",envPressureUncHpa:"0",envDaUncM:"0",ajResidualMil:"0",stages:[],createdAt:iso()}));
  setBottom(true,st.step===3?"DONE":"NEXT →");
@@ -948,7 +1129,7 @@ function matchWizard(){
  backBtn.onclick=()=>{saveMatch(m);if(st.step===0){st.screen="matches";render()}else{st.step--;render()}};
  nextBtn.onclick=()=>{saveMatch(m);if(!validateMatchStep(m)){alert("Complete the required match / stage fields before continuing.");return;}if(st.step<3){st.step++;render()}else{commitMatch(m);st.screen="matches";render()}}
 }
-function matchDashboard(){setBottom(false);const m=st.data.matches.find(x=>x.id===st.selectedMatch);if(!m){st.screen="matches";render();return}const r=st.data.rifles.find(x=>x.id===m.rifleId),a=r?.ammo.find(x=>x.id===m.ammoId);const done=m.stages.filter(s=>s.completedAt),pts=done.reduce((x,s)=>x+(n(s.score)||0),0),possible=done.reduce((x,s)=>x+(n(s.pointsAvailable)||0),0);main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Match dashboard</div><h2>${esc(m.name)}</h2><div class="small">${esc(m.date||"")} • ${esc(m.venue||"")}</div></div><span class="tag ${m.completedAt?"done":"live"}">${m.completedAt?"COMPLETE":"ACTIVE"}</span></div><div class="profileSummary"><strong>${esc(r?.name||m.rifleSnapshot?.name||"Rifle")} + ${esc(a?.name||m.ammoSnapshot?.name||"Ammo")}</strong><div class="small">${m.calibrationVersion?`CALIBRATED ✓ • v${m.calibrationVersion}`:"CALIBRATION INCOMPLETE ⚠ • Match setup allowed"}</div></div>${done.length?`<div class="grid two"><div><div class="small">POINTS SO FAR</div><div class="metric">${pts}/${possible||"—"}</div></div><div><div class="small">MATCH %</div><div class="metric">${possible?(100*pts/possible).toFixed(0)+"%":"—"}</div></div></div>`:""}</div><div class="panel"><div class="cardhead"><h3>Select Stage</h3><button class="btn outline small" id="editStages">EDIT STAGES</button></div>${m.stages.map((s,i)=>`<button class="stageSelect selectStage" data-s="${s.id}"><div class="cardhead"><div><div class="stageName">${i+1}. ${esc(s.name)}</div><div class="stageMeta">${s.targets.length} targets • ${s.targets.map(tt=>`${tt.distanceM}m ${tt.shape||""} ${targetSizeText(tt)}`).join(" • ")}</div></div><span class="tag ${s.completedAt?"done":s.liveStartedAt?"live":"ready"}">${s.completedAt?"COMPLETE":s.liveStartedAt?"RESUME":"READY"}</span></div></button>`).join("")}</div><div class="panel"><div class="actions"><button class="btn outline" id="saveExitDashboard">SAVE & EXIT</button></div><button class="btn outline" id="manageMatch">⋯ MATCH OPTIONS</button><div id="manageArea" class="hidden"><div class="managementActions"><button class="btn outline" id="duplicateDash">DUPLICATE</button><button class="btn outline" id="archiveDash">${m.archivedAt?"RESTORE":"ARCHIVE"}</button><button class="btn danger" id="deleteDash">DELETE MATCH</button></div></div></div>`;document.querySelectorAll(".selectStage").forEach(b=>b.onclick=()=>{st.selectedStage=b.dataset.s;st.liveStep=0;st.screen="liveStage";render()});editStages.onclick=()=>{st.screen="matchWizard";st.step=2;render()};saveExitDashboard.onclick=()=>{writeNow();st.selectedMatch=null;st.selectedStage=null;st.screen="matches";render()};manageMatch.onclick=()=>manageArea.classList.toggle("hidden");duplicateDash.onclick=()=>duplicateMatchById(m.id);archiveDash.onclick=()=>{m.archivedAt=m.archivedAt?null:iso();writeNow();render()};deleteDash.onclick=()=>{softDeleteMatchById(m.id);st.screen="matches";st.selectedMatch=null;render()}}
+function matchDashboard(){setBottom(false);const m=st.data.matches.find(x=>x.id===st.selectedMatch);if(!m){st.screen="matches";render();return}const r=m.rifleSnapshot||st.data.rifles.find(x=>x.id===m.rifleId),a=m.ammoSnapshot||r?.ammo?.find(x=>x.id===m.ammoId);const done=m.stages.filter(s=>s.completedAt),pts=done.reduce((x,s)=>x+(n(s.score)||0),0),possible=done.reduce((x,s)=>x+(n(s.pointsAvailable)||0),0);main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Match dashboard</div><h2>${esc(m.name)}</h2><div class="small">${esc(m.date||"")} • ${esc(m.venue||"")}</div></div><span class="tag ${m.completedAt?"done":"live"}">${m.completedAt?"COMPLETE":"ACTIVE"}</span></div><div class="profileSummary"><strong>${esc(r?.name||m.rifleSnapshot?.name||"Rifle")} + ${esc(a?.name||m.ammoSnapshot?.name||"Ammo")}</strong><div class="small">${m.calibrationVersion?`CALIBRATED ✓ • v${m.calibrationVersion}`:"CALIBRATION INCOMPLETE ⚠ • Match setup allowed"}</div></div>${done.length?`<div class="grid two"><div><div class="small">POINTS SO FAR</div><div class="metric">${pts}/${possible||"—"}</div></div><div><div class="small">MATCH %</div><div class="metric">${possible?(100*pts/possible).toFixed(0)+"%":"—"}</div></div></div>`:""}</div><div class="panel"><div class="cardhead"><h3>Select Stage</h3><button class="btn outline small" id="editStages">EDIT STAGES</button></div>${m.stages.map((s,i)=>`<button class="stageSelect selectStage" data-s="${s.id}"><div class="cardhead"><div><div class="stageName">${i+1}. ${esc(s.name)}</div><div class="stageMeta">${s.targets.length} targets • ${s.targets.map(tt=>`${tt.distanceM}m ${tt.shape||""} ${targetSizeText(tt)}`).join(" • ")}</div></div><span class="tag ${s.completedAt?"done":s.liveStartedAt?"live":"ready"}">${s.completedAt?"COMPLETE":s.liveStartedAt?"RESUME":"READY"}</span></div></button>`).join("")}</div><div class="panel"><div class="actions"><button class="btn outline" id="saveExitDashboard">SAVE & EXIT</button></div><button class="btn outline" id="manageMatch">⋯ MATCH OPTIONS</button><div id="manageArea" class="hidden"><div class="managementActions"><button class="btn outline" id="duplicateDash">DUPLICATE</button><button class="btn outline" id="archiveDash">${m.archivedAt?"RESTORE":"ARCHIVE"}</button><button class="btn danger" id="deleteDash">DELETE MATCH</button></div></div></div>`;document.querySelectorAll(".selectStage").forEach(b=>b.onclick=()=>{st.selectedStage=b.dataset.s;st.liveStep=0;st.screen="liveStage";render()});editStages.onclick=()=>{st.screen="matchWizard";st.step=2;render()};saveExitDashboard.onclick=()=>{writeNow();st.selectedMatch=null;st.selectedStage=null;st.screen="matches";render()};manageMatch.onclick=()=>manageArea.classList.toggle("hidden");duplicateDash.onclick=()=>duplicateMatchById(m.id);archiveDash.onclick=()=>{m.archivedAt=m.archivedAt?null:iso();writeNow();render()};deleteDash.onclick=()=>{softDeleteMatchById(m.id);st.screen="matches";st.selectedMatch=null;render()}}
 function fillAmmo(m){
  let rid=mRifle.value||m.rifleId||st.data.rifles[0]?.id,r=st.data.rifles.find(x=>x.id===rid);
  const ammo=(r?.ammo||[]).filter(a=>a.name&&a.bullet&&n(a.mv)>0&&(a.bcType||a.bc));
@@ -1005,7 +1186,7 @@ function renderStageSetup(m){stageSetup.innerHTML=m.stages.map((s,si)=>`<details
 
 window.removeStageSetup=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(!confirm("Delete this stage and all of its target setup data?"))return;m.stages.splice(si,1);renderStageSetup(m);bindAuto(()=>saveMatch(m))}
 window.removePreTarget=(si,ti)=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(m.stages[si].targets.length<=1)return;if(!confirm("Remove this target?"))return;m.stages[si].targets.splice(ti,1);m.stages[si].targets.forEach((t,i)=>{if(!t.label||/^T\d+$/.test(t.label))t.label="T"+(i+1)});renderStageSetup(m);bindAuto(()=>saveMatch(m))}
-window.addPreTarget=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(m.stages[si].targets.length>=MAX_TARGETS){alert(`Easy Mode supports up to ${MAX_TARGETS} targets per stage.`);return;}m.stages[si].targets.push({id:uid("t"),label:"T"+(m.stages[si].targets.length+1),distanceM:"",rangeQuality:"Match book",rangeUncM:"0",targetSizeUncPct:"0",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L"});renderStageSetup(m);bindAuto(()=>saveMatch(m))}
+window.addPreTarget=si=>{let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;saveMatch(m);if(m.stages[si].targets.length>=MAX_TARGETS){alert(`Easy Mode supports up to ${MAX_TARGETS} targets per stage.`);return;}m.stages[si].targets.push({id:uid("t"),label:"T"+(m.stages[si].targets.length+1),distanceM:"",rangeQuality:"Match book",rangeUncM:"0",targetSizeUncPct:"0",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L",holdQuality:"Unknown"});renderStageSetup(m);bindAuto(()=>saveMatch(m))}
 
 const behavior={
  "Long grass":[["Rattles only",5,5,"speed"],["Starts bending; direction visible",7,8,"speed+direction"],["Bent over / picked up straight",9,11,"speed+direction"],["Bent + oscillating up/down",12,13,"speed+direction"],["Cannot determine",null,null,"none"]],
@@ -1032,7 +1213,7 @@ function liveValidationFast(s,step){
    if(mi<0||av<0||ma<0||!(mi<=av&&av<=ma))return "Wind must satisfy MIN ≤ AVG ≤ MAX.";
  }
  if(step===3){for(const tt of s.targets){const lo=n(tt.kMin),hi=n(tt.kMax);if(lo===null||hi===null||lo<0||hi<0||lo>hi)return `Enter valid solver MIN/MAX holds for ${tt.label}.`}}
- if(step===4){const fz=fuse(s);if(!fz.valid)return fz.reason;if(s.targets.some(tt=>!opt(tt,fz)&&!sideFlipForTarget(tt,fz)))return "Complete target dimensions and solver holds before continuing."}
+ if(step===4){for(const tt of s.targets){if(!(n(tt.widthCm)>0&&n(tt.distanceM)>0&&n(tt.kMin)!==null&&n(tt.kMax)!==null))return `Complete target dimensions and solver holds for ${tt.label}.`}}
  return null;
 }
 
@@ -1059,19 +1240,26 @@ function timeDecayFactor(ts,halfLifeSec=180){
  return Math.pow(.5,age/halfLifeSec);
 }
 function trajectoryZoneWeights(tt){
- // Rifle/ammo-specific calibration is not yet sufficient to derive a true sensitivity kernel.
- // Use a normalized time-of-flight proxy from target distance as a transparent interim approximation.
+ const {a}=currentMatchAndAmmo();
+ const sens=a?.trajectorySensitivity;
+ if(Array.isArray(sens)&&sens.length>=3){
+   const sn=n(sens.find(x=>x.zone==="shooter")?.value),sm=n(sens.find(x=>x.zone==="mid")?.value),stg=n(sens.find(x=>x.zone==="target")?.value);
+   if(sn!==null&&sm!==null&&stg!==null&&sn+sm+stg>0){
+     const z=sn+sm+stg;return {shooter:sn/z,mid:sm/z,target:stg/z,source:"SOLVER"};
+   }
+ }
  const d=Math.max(1,n(tt.distanceM)||1);
- if(d<400)return {shooter:.45,mid:.35,target:.20};
- if(d<700)return {shooter:.38,mid:.37,target:.25};
- return {shooter:.32,mid:.38,target:.30};
+ if(d<400)return {shooter:.45,mid:.35,target:.20,source:"INTERIM"};
+ if(d<700)return {shooter:.38,mid:.37,target:.25,source:"INTERIM"};
+ return {shooter:.32,mid:.38,target:.30,source:"INTERIM"};
 }
 function evidenceDirectionSamples(s,tt){
  const base=[];
  const add=(dir,weight,sigma,kind,zone)=>{if(n(dir)===null)return;base.push({dir:norm(n(dir)),weight:weight,sigma:sigma,kind,zone})};
  // Shooter/global wind is WIND FROM directly.
- add(s.wind?.avgDir,1.0,10,"shooter","shooter");
- if(String(s.wind?.nowDir||"")!=="")add(s.wind.nowDir,.85,12,"shooter_now","shooter");
+ const cse=(s.wind?.source==="CALYPSO LIVE")?calypsoStateEstimate():null;
+ if(cse?.dirReferenced){add(cse.dir,1.25,Math.max(4,(1-cse.dirR)*45),"calypso_state","shooter");if(cse.now.dir!==null)add(cse.now.dir,.75,10,"calypso_now","shooter")}
+ else{add(s.wind?.avgDir,1.0,10,"shooter","shooter");if(String(s.wind?.nowDir||"")!=="")add(s.wind.nowDir,.85,12,"shooter_now","shooter")}
 
  // Visual observations are recorded as MOVING TO and must be converted to WIND FROM.
  (s.points||[]).forEach((pt,pi)=>(pt.obs||[]).forEach(o=>{
@@ -1102,11 +1290,13 @@ function fuseCircularDirection(s,tt){
  const dir=norm(Math.atan2(sy,sx)*180/Math.PI);
  return {dir,concentration:R,evidence:ev.length,conflict:1-R};
 }
+function targetDirectionState(s,tt){const f=fuseCircularDirection(s,tt),dof=n(tt.dof)||0;return {globalDir:f.dir,targetWD:norm(f.dir-dof),concentration:f.concentration,evidence:f.evidence,conflict:f.conflict}}
 function evidenceSpeedStats(s,tt){
  const vals=[];
  const add=(v,w,zone)=>{if(n(v)!==null&&n(v)>=0)vals.push({v:n(v),w,zone})};
- add(s.wind?.min,.6,"shooter");add(s.wind?.avg,1,"shooter");add(s.wind?.max,.6,"shooter");
- if(String(s.wind?.now||"")!=="")add(s.wind.now,.85,"shooter");
+ const cse=(s.wind?.source==="CALYPSO LIVE")?calypsoStateEstimate():null;
+ if(cse){add(Math.max(0,cse.speed-1.28*cse.sd),.7,"shooter");add(cse.speed,1.25,"shooter");add(cse.speed+1.28*cse.sd,.7,"shooter");add(cse.now.mph,.8,"shooter")}
+ else{add(s.wind?.min,.6,"shooter");add(s.wind?.avg,1,"shooter");add(s.wind?.max,.6,"shooter");if(String(s.wind?.now||"")!=="")add(s.wind.now,.85,"shooter")}
  // Behavioral observations only act as broad corroboration around current average;
  // they do not invent a speed absent a calibrated indicator-speed model.
  const avg=n(s.wind?.avg);
@@ -1134,41 +1324,32 @@ function evidenceSpeedStats(s,tt){
  return {mu,sigma,spread,count:vals.length};
 }
 function solverHoldAtWind(tt,speed,s){
- const lo=n(tt.kMin),hi=n(tt.kMax);
- if(lo===null||hi===null)return null;
+ const lo=n(tt.kMin),hi=n(tt.kMax);if(lo===null||hi===null)return null;
  const wmin=n(s.wind?.min),wmax=n(s.wind?.max),wavg=n(s.wind?.avg);
  if(wmin!==null&&wmax!==null&&wmax>wmin){
-   const u=clamp((speed-wmin)/(wmax-wmin),0,1);
-   return lerp(lo,hi,u);
+   const slope=(hi-lo)/(wmax-wmin);
+   // Local linear extrapolation preserves probability tails instead of artificially clamping them.
+   // Bound only catastrophic extrapolation to ±2 bracket widths beyond the calibrated bracket.
+   const raw=lo+(speed-wmin)*slope,span=Math.max(.1,Math.abs(hi-lo));
+   return clamp(raw,Math.min(lo,hi)-2*span,Math.max(lo,hi)+2*span);
  }
- if(wavg&&wavg>0){
-   const mid=(lo+hi)/2;
-   return Math.max(0,mid*(speed/wavg));
- }
+ if(wavg&&wavg>0){const mid=(lo+hi)/2;return Math.max(0,mid*(speed/wavg))}
  return (lo+hi)/2;
 }
-function monteCarloRequiredHolds(s,tt,N=6000){
- const dirF=fuseCircularDirection(s,tt),spd=evidenceSpeedStats(s,tt),dof=n(tt.dof)||0;
- const out=[];
- // Deterministic quasi-random sequence for repeatable UI and UAT.
- for(let i=1;i<=N;i++){
-   const u1=((i*0.6180339887498949)%1)||.5;
-   const u2=((i*0.7548776662466927)%1)||.5;
-   const u3=((i*0.5698402909980532)%1)||.5;
-   const z=Math.sqrt(-2*Math.log(Math.max(1e-9,u1)))*Math.cos(2*Math.PI*u2);
-   const speed=Math.max(0,spd.mu+z*spd.sigma);
-   const dirSigma=dirF.concentration>.8?8:dirF.concentration>.55?18:35;
-   const zd=Math.sqrt(-2*Math.log(Math.max(1e-9,u2)))*Math.cos(2*Math.PI*u3);
-   const wd=norm(dirF.dir+zd*dirSigma);
-   const rel=sdelta(wd,dof),fv=Math.abs(Math.sin(rel*Math.PI/180));
-   const h=solverHoldAtWind(tt,speed,s);
-   if(h===null)continue;
-   // Solver bracket is already a wind-hold truth layer; direction changes scale full-value contribution.
-   const req=h*fv;
-   out.push((rel>=0?1:-1)*req);
- }
- return {samples:out,dir:dirF,spd};
-}
+function calibWork(){const {a}=currentMatchAndAmmo();if(!a)return null;loadAmmoWork(a);return a._work||null}
+function interp1(xs,ys,x){const pts=xs.map((v,i)=>({x:n(v),y:n(ys[i])})).filter(p=>p.x!==null&&p.y!==null).sort((a,b)=>a.x-b.x);if(!pts.length)return null;if(pts.length===1)return pts[0].y;let p0=pts[0],p1=pts[1];if(x>=pts[pts.length-1].x){p0=pts[pts.length-2];p1=pts[pts.length-1]}else if(x>pts[0].x){for(let i=0;i<pts.length-1;i++)if(x>=pts[i].x&&x<=pts[i+1].x){p0=pts[i];p1=pts[i+1];break}}const u=(x-p0.x)/Math.max(1e-9,p1.x-p0.x);return lerp(p0.y,p1.y,u)}
+function calibAFullValueHold(distance,speed){const w=calibWork();if(!w?.A?.length)return null;const speeds=w.meta?.A?.speeds||[5,10,15],rows=[];w.A.forEach(r=>{const d=n(r[0]);if(d===null)return;const h=interp1(speeds,r.slice(1),speed);if(h!==null)rows.push([d,h])});return interp1(rows.map(x=>x[0]),rows.map(x=>x[1]),distance)}
+function calibBAngleHold(distance,angle){const w=calibWork();if(!w?.B?.length)return null;const ds=w.meta?.B?.distances||[500,900],angs=[],holds=[];w.B.forEach(r=>{const a=n(r[0]);if(a===null)return;const h=interp1(ds,r.slice(1),distance);if(h!==null){angs.push(a);holds.push(Math.abs(h))}});return interp1(angs,holds,angle)}
+function valueWindAngle(rel){const a=Math.abs(sdelta(rel,0));return a>90?180-a:a}
+function angleResponseFactor(distance,rel){const va=valueWindAngle(rel),cal=calibBAngleHold(distance,va),ref=calibBAngleHold(distance,90);if(cal!==null&&ref!==null&&Math.abs(ref)>.001)return Math.max(0,cal/ref);return Math.abs(Math.sin(va*Math.PI/180))}
+function dofValidationQuality(){const w=calibWork();if(!w?.D?.length)return {ok:false,mae:null};const meta=w.meta?.D||{stageWindFrom:90},errs=[];w.D.forEach(r=>{const dof=n(r[0]),wd=n(r[1]);if(dof===null||wd===null)return;errs.push(Math.abs(sdelta(wd,norm((n(meta.stageWindFrom)||90)-dof))))});if(!errs.length)return {ok:false,mae:null};const mae=errs.reduce((a,b)=>a+b,0)/errs.length;return {ok:mae<=5,mae}}
+function stageBaselineHoldAtSpeed(tt,speed,s){const lo=n(tt.kMin),hi=n(tt.kMax),wmin=n(s.wind?.min),wmax=n(s.wind?.max),wavg=n(s.wind?.avg);if(lo===null||hi===null)return null;if(wmin!==null&&wmax!==null&&wmax>wmin){const slope=(hi-lo)/(wmax-wmin),span=Math.max(.1,Math.abs(hi-lo));return clamp(lo+(speed-wmin)*slope,Math.min(lo,hi)-2*span,Math.max(lo,hi)+2*span)}if(wavg&&wavg>0)return Math.max(0,((lo+hi)/2)*(speed/wavg));return (lo+hi)/2}
+function preparedAngleCurve(distance){const w=calibWork();if(!w?.B?.length)return null;const ds=w.meta?.B?.distances||[500,900],pts=[];w.B.forEach(r=>{const a=n(r[0]);if(a===null)return;const h=interp1(ds,r.slice(1),distance);if(h!==null)pts.push([a,Math.abs(h)])});pts.sort((a,b)=>a[0]-b[0]);if(!pts.length)return null;const ref=interp1(pts.map(x=>x[0]),pts.map(x=>x[1]),90);if(!(ref>.001))return null;return {angles:pts.map(x=>x[0]),ratios:pts.map(x=>x[1]/ref)}}
+function preparedAngleFactor(curve,rel){const va=valueWindAngle(rel);if(curve){const x=interp1(curve.angles,curve.ratios,va);if(x!==null)return Math.max(0,x)}return Math.abs(Math.sin(va*Math.PI/180))}
+function preparedAAtDistance(distance){const w=calibWork();if(!w?.A?.length)return null;const speeds=w.meta?.A?.speeds||[5,10,15],holds=[];for(let c=0;c<speeds.length;c++){const ds=[],hs=[];w.A.forEach(r=>{const d=n(r[0]),h=n(r[c+1]);if(d!==null&&h!==null){ds.push(d);hs.push(h)}});holds.push(interp1(ds,hs,distance))}if(holds.every(x=>x===null))return null;return {speeds,holds}}
+function prepareHoldResponse(tt,s,baseGlobalDir){const d=n(tt.distanceM)||0,dof=n(tt.dof)||0,curve=preparedAngleCurve(d),aCurve=preparedAAtDistance(d),baseRel=sdelta(baseGlobalDir,dof),baseF=preparedAngleFactor(curve,baseRel);return {required(speed,sampleGlobalDir){const sampleRel=sdelta(sampleGlobalDir,dof),sampleF=preparedAngleFactor(curve,sampleRel);let mag;if(baseF>.12){const stage=stageBaselineHoldAtSpeed(tt,speed,s);if(stage===null)return null;mag=Math.abs(stage)*sampleF/baseF}else if(aCurve){const fv=interp1(aCurve.speeds,aCurve.holds,speed);if(fv===null)return null;mag=Math.abs(fv)*sampleF}else return null;return (sampleRel>=0?1:-1)*mag},baseF,curve,aCurve}}
+function requiredHoldForSample(tt,speed,sampleGlobalDir,baseGlobalDir,s){const dof=n(tt.dof)||0,sampleRel=sdelta(sampleGlobalDir,dof),baseRel=sdelta(baseGlobalDir,dof),sampleF=angleResponseFactor(n(tt.distanceM)||0,sampleRel),baseF=angleResponseFactor(n(tt.distanceM)||0,baseRel);let mag;if(baseF>.12){const stage=stageBaselineHoldAtSpeed(tt,speed,s);if(stage===null)return null;mag=Math.abs(stage)*sampleF/baseF}else{const fv=calibAFullValueHold(n(tt.distanceM)||0,speed);if(fv===null)return null;mag=Math.abs(fv)*sampleF}return (sampleRel>=0?1:-1)*mag}
+function monteCarloRequiredHolds(s,tt,N=6000){const dirF=fuseCircularDirection(s,tt),spd=evidenceSpeedStats(s,tt),baseGlobal=dirF.dir,response=prepareHoldResponse(tt,s,baseGlobal),out=[];let left=0,right=0,nearZero=0;for(let i=1;i<=N;i++){const u1=((i*.6180339887498949)%1)||.5,u2=((i*.7548776662466927)%1)||.5,u3=((i*.5698402909980532)%1)||.5,z=Math.sqrt(-2*Math.log(Math.max(1e-9,u1)))*Math.cos(2*Math.PI*u2),speed=Math.max(0,spd.mu+z*spd.sigma),dirSigma=dirF.concentration>.8?8:dirF.concentration>.55?18:35,zd=Math.sqrt(-2*Math.log(Math.max(1e-9,u2)))*Math.cos(2*Math.PI*u3),wd=norm(dirF.dir+zd*dirSigma),req=response.required(speed,wd);if(req===null)continue;out.push(req);if(Math.abs(req)<.025)nearZero++;else if(req<0)left++;else right++}const denom=Math.max(1,left+right);return {samples:out,dir:dirF,spd,side:{left:left/denom,right:right/denom,minor:Math.min(left,right)/denom,nearZero:nearZero/Math.max(1,out.length)},baseGlobal,response}}
 function probabilityInside(samples,holdSigned,targetWidthMil){
  if(!samples.length||!(targetWidthMil>0))return 0;
  const half=targetWidthMil/2;
@@ -1178,8 +1359,10 @@ function probabilityInside(samples,holdSigned,targetWidthMil){
 }
 
 function currentMatchAndAmmo(){
- const m=st.data.matches.find(x=>x.id===st.selectedMatch),r=m?st.data.rifles.find(x=>x.id===m.rifleId):null,a=r?.ammo?.find(x=>x.id===m?.ammoId);
- return {m,r,a};
+ const m=st.data.matches.find(x=>x.id===st.selectedMatch);if(!m)return {m:null,r:null,a:null};
+ const liveR=st.data.rifles.find(x=>x.id===m.rifleId),liveA=liveR?.ammo?.find(x=>x.id===m.ammoId);
+ const r=m.rifleSnapshot||liveR||null,a=m.ammoSnapshot||liveA||null;
+ if(a)loadAmmoWork(a);return {m,r,a};
 }
 function moaToMil(x){return x*0.290888}
 function precisionSigmaMil(a,axis){
@@ -1196,45 +1379,74 @@ function rangeSigmaM(tt){
  return 1;
 }
 function targetScaleSample(tt,z){const p=Math.max(0,n(tt.targetSizeUncPct)||0);return clamp(1+z*(p/100)/2,.8,1.2)}
-function mvVerticalSigmaMil(a,tt){
- const mv=n(a?.mv),sd=n(a?.mvSd),d=n(tt.distanceM);if(!(mv>0&&sd>0&&d>0))return 0;
- return (sd/mv)*(d/100)*.55;
-}
+function mvToFps(v,unit){const x=n(v);if(x===null)return null;return String(unit||"fps").toLowerCase()==="m/s"?x*3.280839895:x}
+function mvSdToFps(v,unit){return mvToFps(v,unit)}
+function mvVerticalSigmaMil(a,tt){const mv=mvToFps(a?.mv,a?.mvUnit),sd=mvSdToFps(a?.mvSd,a?.mvUnit),d=n(tt.distanceM);if(!(mv>0&&sd>0&&d>0))return 0;return (sd/mv)*(d/100)*.55}
 function rangeVerticalSigmaMil(tt){const d=n(tt.distanceM),rs=rangeSigmaM(tt);return d>0?(rs/d)*1000*.08:0}
-function envVerticalSigmaMil(m,tt){
- const d=Math.max(1,n(tt.distanceM)||1),temp=Math.max(0,n(m?.envTempUncC)||0),press=Math.max(0,n(m?.envPressureUncHpa)||0),da=Math.max(0,n(m?.envDaUncM)||0);
- return Math.sqrt((temp*.002*(d/500))**2+(press*.0008*(d/500))**2+(da*.000015*(d/500))**2);
-}
+function envVerticalSigmaMil(m,tt){const d=Math.max(1,n(tt.distanceM)||1),da=Math.max(0,n(m?.envDaUncM)||0);if(da>0)return da*.000015*(d/500);const temp=Math.max(0,n(m?.envTempUncC)||0),press=Math.max(0,n(m?.envPressureUncHpa)||0);return Math.sqrt((temp*.002*(d/500))**2+(press*.0008*(d/500))**2)}
 function ajSigmaMil(m){return Math.max(0,n(m?.ajResidualMil)||0)/2}
-function insideTarget2D(tt,x,y,scale){
- const d=n(tt.distanceM),w=n(tt.widthCm),h=n(tt.heightCm||tt.widthCm);if(!(d>0&&w>0))return false;
+function insideTarget2D(tt,x,y,scale,sampledRange){
+ const d=sampledRange||n(tt.distanceM),w=n(tt.widthCm),h=n(tt.heightCm||tt.widthCm);if(!(d>0&&w>0))return false;
  const wm=(w/100)/d*1000*scale,hm=((h>0?h:w)/100)/d*1000*scale,shape=tt.shape||"Round";
  if(shape==="Round"){const rx=wm/2,ry=hm/2;return (x*x)/(rx*rx)+(y*y)/(ry*ry)<=1}
  if(shape==="Diamond")return Math.abs(x)/(wm/2)+Math.abs(y)/(hm/2)<=1;
  return Math.abs(x)<=wm/2&&Math.abs(y)<=hm/2;
 }
 function simulateImpactSamplesV3(s,tt,N){
- const {m,a}=currentMatchAndAmmo(),wind=monteCarloRequiredHolds(s,tt,N),out=[];
- const hs=precisionSigmaMil(a,"h"),vs=precisionSigmaMil(a,"v"),mvs=mvVerticalSigmaMil(a,tt),rs=rangeVerticalSigmaMil(tt),es=envVerticalSigmaMil(m,tt),ajs=ajSigmaMil(m);
+ const {m,a}=currentMatchAndAmmo(),wind=monteCarloRequiredHolds(s,tt,N),out=[];const hs=precisionSigmaMil(a,"h"),vs=precisionSigmaMil(a,"v"),baseRange=n(tt.distanceM)||1,rangeSd=rangeSigmaM(tt),baseMv=mvToFps(a?.mv,a?.mvUnit),mvSd=mvSdToFps(a?.mvSd,a?.mvUnit)||0;
+ const sens=a?.solverSens||{},swR=n(sens.windPer100m),seR=n(sens.elevPer10m),swMV=n(sens.windPer10fps),seMV=n(sens.elevPer10fps),seDA=n(sens.elevPer100mDA),meanSpeed=wind.spd?.mu??n(s.wind?.avg)??0,calMinus=calibAFullValueHold(Math.max(1,baseRange-10),meanSpeed),calPlus=calibAFullValueHold(baseRange+10,meanSpeed),rangeWindSlope=(calMinus!==null&&calPlus!==null)?(calPlus-calMinus)/20:null;const proxyMvs=mvVerticalSigmaMil(a,tt),proxyRs=rangeVerticalSigmaMil(tt),proxyEs=envVerticalSigmaMil(m,tt),ajs=ajSigmaMil(m),daSd=Math.max(0,n(m?.envDaUncM)||0)/2;
  for(let i=0;i<wind.samples.length;i++){
    const u1=(((i+11)*.41421356237)%1)||.5,u2=(((i+17)*.73205080757)%1)||.5,u3=(((i+23)*.27182818284)%1)||.5,u4=(((i+31)*.14142135623)%1)||.5;
    const z1=Math.sqrt(-2*Math.log(Math.max(1e-9,u1)))*Math.cos(2*Math.PI*u2),z2=Math.sqrt(-2*Math.log(Math.max(1e-9,u2)))*Math.cos(2*Math.PI*u3),z3=Math.sqrt(-2*Math.log(Math.max(1e-9,u3)))*Math.cos(2*Math.PI*u4),z4=Math.sqrt(-2*Math.log(Math.max(1e-9,u4)))*Math.sin(2*Math.PI*u1);
-   out.push({requiredWind:wind.samples[i],xDisp:z1*hs,yDisp:z2*vs+z3*Math.sqrt(mvs*mvs+rs*rs+es*es)+z4*ajs,targetScale:targetScaleSample(tt,z4)});
+   const sampledRange=Math.max(1,baseRange+z3*rangeSd),rangeDelta=sampledRange-baseRange,sampledMv=baseMv>0?Math.max(1,baseMv+z4*mvSd):baseMv,mvDelta=baseMv>0?sampledMv-baseMv:0,daDelta=z2*daSd;
+   let reqWind=wind.samples[i],yBallistic=0;
+   if(swR!==null)reqWind+=swR*(rangeDelta/100);else if(rangeWindSlope!==null)reqWind+=rangeWindSlope*rangeDelta
+   if(swMV!==null)reqWind+=swMV*(mvDelta/10);
+   yBallistic+=(seR!==null?seR*(rangeDelta/10):z3*proxyRs)+(seMV!==null?seMV*(mvDelta/10):z3*proxyMvs)+(seDA!==null?seDA*(daDelta/100):z3*proxyEs);
+   out.push({requiredWind:reqWind,xDisp:z1*hs,yDisp:z2*vs+yBallistic+z4*ajs,targetScale:targetScaleSample(tt,z4),sampledRange});
  }
- return {samples:out,wind,components:{hs,vs,mvs,rs,es,ajs}};
+ return {samples:out,wind,components:{hs,vs,rangeSd,mvSd,coeffCoverage:[swR,seR,swMV,seMV,seDA].filter(x=>x!==null).length/5,ajs}};
 }
 function impactProbability2D(sim,tt,hold){
  if(!sim.samples.length)return 0;let hit=0;
- for(const x of sim.samples)if(insideTarget2D(tt,hold-x.requiredWind+x.xDisp,x.yDisp,x.targetScale))hit++;
+ for(const x of sim.samples)if(insideTarget2D(tt,hold-x.requiredWind+x.xDisp,x.yDisp,x.targetScale,x.sampledRange))hit++;
  return hit/sim.samples.length;
 }
-function optimizeImpactHoldV3(s,tt){
- const sim=simulateImpactSamplesV3(s,tt,10000);if(!sim.samples.length)return null;
+
+function matchBiasEstimate(tt){
+ const m=st.data.matches.find(x=>x.id===st.selectedMatch);if(!m)return {bias:0,weight:0,n:0};
+ const now=Date.now();let sw=0,sb=0,nc=0;
+ const signed=(mag,side)=>{const x=n(mag);if(x===null)return null;return side==="L"?-Math.abs(x):Math.abs(x)};
+ (m.stages||[]).forEach(s=>{
+   if(!s.completedAt)return;
+   (s.targets||[]).forEach(x=>{
+     if(x.id===tt.id)return;
+     const actual=signed(x.actualHold,x.holdSide),pred=signed(x.preShootPredictedHold,x.preShootPredictedSide||"R");
+     const q=x.holdQuality==="Confirmed"?1:(x.holdQuality==="Approximate"?.45:0);
+     if(actual===null||pred===null||q===0)return;
+     const ageH=Math.max(0,(now-new Date(s.completedAt).getTime())/3600000),rec=Math.exp(-ageH/6);
+     const dd=Math.abs((n(x.distanceM)||0)-(n(tt.distanceM)||0)),doff=Math.abs(sdelta(n(x.dof)||0,n(tt.dof)||0));
+     const sim=Math.exp(-dd/350)*Math.exp(-doff/75),w=rec*sim*q;if(w<.03)return;
+     sb+=w*(actual-pred);sw+=w;nc++;
+   });
+ });
+ return {bias:sw?sb/sw:0,weight:clamp(sw/2,0,1),n:nc};
+}
+
+function optimizeImpactHoldV4(s,tt,N=10000){
+ const sim=simulateImpactSamplesV3(s,tt,N);if(!sim.samples.length)return null;const mb=matchBiasEstimate(tt),shift=mb.bias*mb.weight;if(shift)sim.samples.forEach(x=>x.requiredWind+=shift);
  const req=sim.samples.map(x=>x.requiredWind),start=Math.floor((Math.min(...req)-.6)*10)/10,end=Math.ceil((Math.max(...req)+.6)*10)/10,c=[];
- for(let h=start;h<=end+1e-9;h+=.1){const hh=Number(h.toFixed(1));c.push({h:hh,p:impactProbability2D(sim,tt,hh)})}
- c.sort((a,b)=>b.p-a.p||Math.abs(a.h)-Math.abs(b.h));const best=c[0],rob=c.filter(x=>x.p>=best.p*.95).sort((a,b)=>a.h-b.h),wind=optimizeWindHoldV2(s,tt);
- let cs=wind?.confidenceScore??.4;const {a}=currentMatchAndAmmo();if(n(a?.mvSd)>0)cs+=.03;if(n(a?.precision)>0||n(a?.hPrecision)>0||n(a?.vPrecision)>0)cs+=.04;cs=clamp(cs,0,1);
- return {hold:Math.abs(best.h),side:best.h<0?"L":"R",modeledHit:best.p,windHit:wind?.windHit??best.p,confidence:cs>=.72?"HIGH":cs>=.48?"MEDIUM":"LOW",confidenceScore:cs,robustMin:Math.abs(rob[0]?.h??best.h),robustMax:Math.abs(rob[rob.length-1]?.h??best.h),robustSide:best.h<0?"L":"R",components:sim.components};
+ for(let h=start;h<=end+1e-9;h+=.1){const hh=Number(h.toFixed(1));c.push({h:hh,p:impactProbability2D(sim,tt,hh)})}c.sort((a,b)=>b.p-a.p||Math.abs(a.h)-Math.abs(b.h));const best=c[0],rob=c.filter(x=>x.p>=best.p*.95).sort((a,b)=>a.h-b.h),wind=optimizeWindHoldV2(s,tt),minor=sim.wind.side?.minor||0;
+ let cs=wind?.confidenceScore??.4;const {a}=currentMatchAndAmmo();if(n(a?.mvSd)>0)cs+=.03;if(n(a?.precision)>0||n(a?.hPrecision)>0||n(a?.vPrecision)>0)cs+=.04;const cov=sim.components.coeffCoverage||0;cs-=.06*(1-cov);const dq=dofValidationQuality();if(dq.mae!==null&&!dq.ok)cs-=.08;if(minor>.1)cs-=Math.min(.3,minor*.8);cs=clamp(cs,0,1);
+ return {engine:"AccuracyCore-4",signedHold:best.h,hold:Math.abs(best.h),side:best.h<0?"L":"R",modeledHit:best.p,windHit:wind?.windHit??best.p,confidence:cs>=.72?"HIGH":cs>=.48?"MEDIUM":"LOW",confidenceScore:cs,robustMin:Math.abs(rob[0]?.h??best.h),robustMax:Math.abs(rob[rob.length-1]?.h??best.h),robustSide:best.h<0?"L":"R",matchBias:mb.bias,matchBiasWeight:mb.weight,sideMinorProb:minor,sideAmbiguous:minor>=.15,candidates:c,components:sim.components,direction:targetDirectionState(s,tt)};
+}
+function solverTailFraction(s,mc){
+ const lo=n(s.wind?.min),hi=n(s.wind?.max);if(lo===null||hi===null||!mc?.model?.samples)return 0;
+ // Approximate from speed state assuming Gaussian; probability outside entered speed bracket.
+ const mu=mc.model.spd?.mu,sdv=mc.model.spd?.sigma;if(!(sdv>0))return 0;
+ const erf=x=>{const sign=x<0?-1:1;const a=Math.abs(x),tt=1/(1+.3275911*a),y=1-((((1.061405429*tt-1.453152027)*tt+1.421413741)*tt-.284496736)*tt+.254829592)*tt*Math.exp(-a*a);return sign*y};
+ const cdf=x=>.5*(1+erf((x-mu)/(sdv*Math.sqrt(2))));
+ return clamp(cdf(Math.min(lo,hi))+(1-cdf(Math.max(lo,hi))),0,1);
 }
 
 function optimizeWindHoldV2(s,tt){
@@ -1282,16 +1494,20 @@ function calibrationCompleteForMatch(s){
 function signedCross(angle,dof){return Math.sin(sdelta(angle,dof)*Math.PI/180)}
 function sideFlipForTarget(t,fz){const angles=fz.directionSamples||[fz.dir],signs=[];for(const a of angles){const c=signedCross(a,n(t.dof)||0);if(Math.abs(c)>=0.08)signs.push(Math.sign(c))}return signs.includes(1)&&signs.includes(-1)}
 function angleSensitivity(t,fz){const v=Math.abs(Math.sin(sdelta(fz.dir,n(t.dof)||0)*Math.PI/180));return v<0.5?"SENSITIVE":v<0.87?"MODERATE":"ROBUST"}
-function buildPreShootSolution(s){
- const fz=fuse(s);
- return {createdAt:iso(),wind:{low:fz.low,best:fz.best,high:fz.high,dir:fz.dir,quality:fz.quality},targets:s.targets.map(tt=>{
-   const r=opt(tt,fz),z=tWind(tt,fz),flip=sideFlipForTarget(tt,fz);if(r)ensureFireTargetState(tt,r,z);
-   return {targetId:tt.id,label:tt.label,distanceM:tt.distanceM,dof:tt.dof,expectedWD:z.expectedWD,sideFlip:flip,
-     recommendedHold:r&&!flip?r.bh:null,recommendedSide:r&&!flip?(z.rel>=0?"R":"L"):null,
-     selectedHold:r&&!flip?n(tt.selectedHold):null,selectedSide:r&&!flip?tt.selectedHoldSide:null,selectedSource:tt.selectedHoldSource||null,
-     impactScore:r&&!flip?windSightImpactScore(r):null,kMin:tt.kMin,kMax:tt.kMax,targetWidthMil:r?r.w:null};
- })};
+
+function buildCalypsoBlocks(samples,blockSec=30){
+ if(!samples?.length)return [];
+ const arr=[...samples].sort((a,b)=>a.t-b.t),start=Math.floor(arr[0].t/(blockSec*1000))*blockSec*1000,out=[];
+ for(let bs=start;bs<=arr[arr.length-1].t;bs+=blockSec*1000){
+   const x=arr.filter(s=>s.t>=bs&&s.t<bs+blockSec*1000);if(!x.length)continue;
+   const avg=x.reduce((a,b)=>a+b.mph,0)/x.length;
+   const sd=Math.sqrt(x.reduce((a,b)=>a+(b.mph-avg)*(b.mph-avg),0)/x.length);
+   out.push({start:bs,end:bs+blockSec*1000,avg:+avg.toFixed(2),sd:+sd.toFixed(2),min:+Math.min(...x.map(a=>a.mph)).toFixed(2),max:+Math.max(...x.map(a=>a.mph)).toFixed(2),dir:(()=>{const d=circularMeanDeg(x.map(a=>a.dir));return d===null?null:+d.toFixed(1)})(),n:x.length});
+ }
+ return out;
 }
+
+function buildPreShootSolution(s){return {engine:"AccuracyCore-4",createdAt:iso(),targets:s.targets.map(tt=>{const sol=optimizeImpactHoldV4(s,tt,10000),dir=targetDirectionState(s,tt);return {targetId:tt.id,label:tt.label,distanceM:tt.distanceM,dof:tt.dof,fusedGlobalDir:dir.globalDir,targetWD:dir.targetWD,hold:sol?.hold??null,side:sol?.side??null,modeledHit:sol?.modeledHit??null,windHit:sol?.windHit??null,confidence:sol?.confidence??null,confidenceScore:sol?.confidenceScore??null,robustMin:sol?.robustMin??null,robustMax:sol?.robustMax??null,sideAmbiguous:sol?.sideAmbiguous??false,sideMinorProb:sol?.sideMinorProb??0,matchBias:sol?.matchBias??0,matchBiasWeight:sol?.matchBiasWeight??0,components:sol?.components??null,calibrationD:dofValidationQuality(),kMin:tt.kMin,kMax:tt.kMax,targetWidthMil:targetDimsMil(tt)?.w??null}})}}
 function renderCompletedStage(m,s){setBottom(true,"BACK TO MATCH",false);main.innerHTML=`<div class="panel"><div class="kicker">Completed stage • locked record</div><h2>${esc(s.name)}</h2><div class="lockedPanel"><div class="listrow"><span>Completed</span><strong>${s.completedAt?new Date(s.completedAt).toLocaleString():"—"}</strong></div><div class="listrow"><span>Score</span><strong>${esc(s.score||"—")}/${esc(s.pointsAvailable||"—")}</strong></div>${s.targets.map(t=>`<div class="listrow"><span>${esc(t.label)} • ${esc(t.distanceM)} m</span><strong>${esc(t.actualHold||"—")} ${esc(t.holdSide||"")}</strong></div>`).join("")}<div class="note">${esc(s.postNotes||"No stage notes.")}</div></div><div class="actions"><button class="btn danger" id="correctStage">CORRECT POST-STAGE RECORD</button></div></div>`;correctStage.onclick=()=>{s.revisionHistory=s.revisionHistory||[];s.revisionHistory.push({createdAt:iso(),snapshot:JSON.parse(JSON.stringify(s.postStageSnapshot||s))});s.correctionMode=true;st.liveStep=5;render()};backBtn.onclick=()=>{st.screen="matchDashboard";render()}}
 
 
@@ -1309,11 +1525,11 @@ function stageTimerText(s){
 
 function liveStage(){
  const m=st.data.matches.find(x=>x.id===st.selectedMatch),s=m?.stages.find(x=>x.id===st.selectedStage);if(!s)return;
- ensureLive(s);if(s.completedAt&&!s.correctionMode){renderCompletedStage(m,s);return}
+ ensureLive(s);startCalypsoStageSession(s);if(s.completedAt&&!s.correctionMode){renderCompletedStage(m,s);return}
  if(!s.liveStartedAt)s.liveStartedAt=iso();startStageTimer(s);
  const STEPS=["DOF","WIND","DOWNRANGE","BALLISTICS","SHOOT","POST"];
  setBottom(true,st.liveStep===STEPS.length-1?"BACK TO MATCH":"NEXT →");
- main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Live stage • ${esc(m.name)}</div><h2>${esc(s.name)}</h2></div><div class="stageTimer" id="stageTimer">${stageTimerText(s)}</div></div>${calypsoStripHTML()}
+ main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Live stage • ${esc(m.name)}</div><h2>${esc(s.name)}</h2></div><div class="stageTimer" id="stageTimer">${stageTimerText(s)}</div></div>${calypsoStripHTML()}<div id="liveCommandHost"></div>
  <div class="stepbar liveStepsWrap" id="liveSteps">${STEPS.map((x,i)=>`<div class="step ${st.liveStep===i?"active":""}">${x}</div>`).join("")}</div><div id="live"></div><div class="matchSaveExit"><button class="btn outline" id="liveSaveExit">SAVE & EXIT MATCH</button></div></div>`;
  if(st.liveStep===0)renderDOF(s);
  if(st.liveStep===1)renderWind(s);
@@ -1321,10 +1537,10 @@ function liveStage(){
  if(st.liveStep===3)renderKestrel(s);
  if(st.liveStep===4)renderShoot(s);
  if(st.liveStep===5)renderPost(s);
- const cpb=document.getElementById("calypsoPairBtn");if(cpb)cpb.onclick=pairCalypso;autoConnectCalypso();
+ bindCalypsoStrip();autoConnectCalypso();renderLiveCommand(s);
  setTimeout(()=>document.querySelector("#liveSteps .active")?.scrollIntoView({behavior:"auto",inline:"center",block:"nearest"}),0);
  clearInterval(window.__stageTimerInterval);window.__stageTimerInterval=setInterval(()=>{const el=document.getElementById("stageTimer");if(el)el.textContent=stageTimerText(s);else clearInterval(window.__stageTimerInterval)},1000);
- liveSaveExit.onclick=()=>{captureLive();writeNow();st.selectedStage=null;st.selectedMatch=null;st.screen="matches";render()};
+ liveSaveExit.onclick=()=>{captureLive();flushCalypsoTelemetry();writeNow();st.selectedStage=null;st.selectedMatch=null;st.screen="matches";render()};
 
  backBtn.onclick=()=>{
    captureLive();
@@ -1334,6 +1550,7 @@ function liveStage(){
    captureLive();
    const err=liveValidationFast(s,st.liveStep);if(err){alert(err);return}
    if(st.liveStep===4&&!s.preShootSnapshot){
+     try{s.targets.forEach(tt=>{const ps=optimizeImpactHoldV4(s,tt,10000);if(ps){tt.preShootPredictedHold=ps.hold;tt.preShootPredictedSide=ps.side}})}catch(e){}
      s.preShootSolution=buildPreShootSolution(s);
      s.preShootSnapshot={createdAt:iso(),data:JSON.parse(JSON.stringify(s))};
      writeNow();
@@ -1372,7 +1589,14 @@ window.changeBehavior=(where,pi,oi,val)=>{captureLive();let s=getStage();s.downr
 window.changeQuality=(where,pi,oi,val)=>{captureLive();let s=getStage();s.downrangeOpen=where==="target"?"target":"points";let o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];o.quality=val;if(val==="Unknown")o.dir="";renderFastDownrange(s)}
 window.addIntel=()=>{captureLive();let s=getStage();s.downrangeOpen="intel";if(s.intel.length>=MAX_INTEL){alert(`Shooter Intel is capped at ${MAX_INTEL} reports per stage.`);return;}s.intel.push({target:s.targets[0]?.label||"T1",hold:""});renderFastDownrange(s)}
 
-function getBallisticSoftware(){const m=st.data.matches.find(x=>x.id===st.selectedMatch),r=st.data.rifles.find(x=>x.id===m?.rifleId);return r?.kestrelModel||m?.rifleSnapshot?.kestrelModel||"Ballistic software"}
+function getBallisticSoftware(){const {r}=currentMatchAndAmmo();return r?.kestrelModel||"Ballistic software"}
+
+function calypsoMeasuredTargetWD(tt){
+ const cfg=ensureCalypsoSettings(),stx=calypsoStats();
+ if(!cfg.referenceConfigured||!stx?.dirReferenced||stx.dir===null)return null;
+ return norm(stx.dir-(n(tt.dof)||0));
+}
+
 function renderKestrel(s){
  const fz=fuse(s);
  let content=!fz.valid
@@ -1381,16 +1605,7 @@ function renderKestrel(s){
  live.innerHTML=`<div class="cardhead"><div><h3>Ballistic Software</h3><div class="small">${esc(getBallisticSoftware())}</div></div><span class="tag live">${fz.quality}</span></div>${fz.valid?matchLearningHTML(s):""}${content}`;
  bindAuto(captureLive);
 }
-function kTargetHTML(t,i,fz){
- let z=tWind(t,fz);
- return `<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag ready">SOLVER</span></div>
- <div class="hero"><div class="small">BALLISTIC INPUT / VERIFY</div><div style="font-size:24px;font-weight:1000;margin-top:8px">DOF ${String(Math.round(norm(n(t.dof)||0))).padStart(3,"0")}°</div><div style="font-size:32px;font-weight:1000;color:var(--blue)">TARGET WIND DIRECTION ${String(Math.round(z.expectedWD)).padStart(3,"0")}°</div><div class="small">${clock(z.expectedWD)} • WIND FROM • GLOBAL WIND FROM − TARGET DOF</div></div>
- <div class="out3"><div class="obox"><div class="t">LOW WIND</div><div class="n">${fz.low.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox best"><div class="t">BEST WIND</div><div class="n">${fz.best.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox"><div class="t">HIGH WIND</div><div class="n">${fz.high.toFixed(0)}</div><div class="unit">mph</div></div></div>
- <div class="grid two">${f("Solver MIN hold","kmin_"+i,t.kMin,"decimal")}${f("Solver MAX hold","kmax_"+i,t.kMax,"decimal")}</div>
- ${fz.learnedBias!==null?`<div class="note">MATCH INTEL: recent actual working holds have trended ${fz.learnedBias>0?"ABOVE":"BELOW"} their Solver bracket midpoint. Sanity signal only; it does not alter this wind solution.</div>`:""}
- ${fz.conflicts?.length?`<div class="warn">${fz.conflicts.join("<br>")}</div>`:""}${fz.pathNotes?.length?`<div class="note">${fz.pathNotes.join("<br>")}</div>`:""}${sideFlipForTarget(t,fz)?`<div class="warn critical">SIDE FLIP RISK — observed/current directions cross the target bore line. Do not use a single-side Easy Mode single-side WIND SIGHT solution.</div>`:`<div class="note">ANGLE ${angleSensitivity(t,fz)}</div>`}
- <div class="note">Use the environmental LOW / BEST / HIGH wind speeds shown above with the target-specific DOF/WD. Full-value equivalent is analysis-only and is intentionally hidden in Easy Mode.</div></div>`;
-}
+function kTargetHTML(t,i,fz){const ds=targetDirectionState(getStage(),t),cwd=calypsoMeasuredTargetWD(t);return `<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag ready">SOLVER</span></div><div class="hero"><div class="small">BALLISTIC INPUT / VERIFY</div><div style="font-size:24px;font-weight:1000;margin-top:8px">DOF ${String(Math.round(norm(n(t.dof)||0))).padStart(3,"0")}°</div>${cwd!==null?`<div class="small" style="margin-top:8px">CALYPSO / MEASURED TARGET WD</div><div style="font-size:22px;font-weight:1000">${String(Math.round(cwd)).padStart(3,"0")}°</div>`:`<div class="small" style="margin-top:8px">CALYPSO TARGET WD — NOT REFERENCED</div>`}<div class="small" style="margin-top:8px">WIND SIGHT FUSED TARGET WD</div><div style="font-size:32px;font-weight:1000;color:var(--blue)">${String(Math.round(ds.targetWD)).padStart(3,"0")}°</div><div class="small">${clock(ds.targetWD)} • SAME DIRECTION STATE USED BY ACCURACY ENGINE</div></div><div class="out3"><div class="obox"><div class="t">LOW WIND</div><div class="n">${fz.low.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox best"><div class="t">BEST WIND</div><div class="n">${fz.best.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox"><div class="t">HIGH WIND</div><div class="n">${fz.high.toFixed(0)}</div><div class="unit">mph</div></div></div><div class="grid two">${f("Solver MIN hold","kmin_"+i,t.kMin,"decimal")}${f("Solver MAX hold","kmax_"+i,t.kMax,"decimal")}</div><div class="note">Enter solver holds using the FUSED Target WD shown above. WIND SIGHT treats these holds as already angle-corrected and does not apply the angle a second time.</div></div>`}
 function fuse(s){
  let mi=n(s.wind.min),av=n(s.wind.avg),ma=n(s.wind.max),dir=n(s.wind.avgDir);
  if(mi===null||av===null||ma===null||dir===null||mi<0||av<0||ma<0||!(mi<=av&&av<=ma)||!angleOK(dir))return {valid:false,reason:"Enter valid non-negative Calypso MIN / AVG / MAX and AVG WIND FROM.",quality:"WEAK"};
@@ -1435,138 +1650,28 @@ function tWind(t,f){let rel=sdelta(f.dir,+t.dof||0),factor=Math.abs(Math.sin(rel
 
 
 function hold1(x){const z=n(x);return z===null?"—":z.toFixed(1)}
-function signedHoldValue(mag,side){const z=n(mag);if(z===null)return null;return side==="L"?-Math.abs(z):Math.abs(z)}
-function signedToHold(x){const z=n(x);if(z===null)return {mag:null,side:"R"};return {mag:Math.abs(z),side:z<0?"L":"R"}}
-function ensureFireTargetState(tt,r,z){
- const solverSide=z?.rel>=0?"R":"L";
- tt.selectedHoldSource=tt.selectedHoldSource||"WIND SIGHT";
- tt.selectedHoldSide=tt.selectedHoldSide||solverSide;
- tt.missOffset=tt.missOffset||"";
- tt.missSide=tt.missSide||"L";
-
- // Dynamic presets must track recalculation. Manual/corrected holds must not be overwritten.
- if(tt.selectedHoldSource==="WIND SIGHT" || tt.selectedHold==null || tt.selectedHold===""){
-   tt.selectedHold=Number(r.bh.toFixed(1));tt.selectedHoldSide=solverSide;tt.selectedHoldSource="WIND SIGHT";
- }else if(tt.selectedHoldSource==="MIN"){
-   tt.selectedHold=Number(r.lo.toFixed(1));tt.selectedHoldSide=solverSide;
- }else if(tt.selectedHoldSource==="MAX"){
-   tt.selectedHold=Number(r.hi.toFixed(1));tt.selectedHoldSide=solverSide;
- }
-}
-function setFirePreset(targetId,preset){
- const s=getStage(),fz=fuse(s),tt=s.targets.find(x=>x.id===targetId);if(!tt)return;
- const r=opt(tt,fz),z=tWind(tt,fz);if(!r)return;
- const solverSide=z.rel>=0?"R":"L";
- if(preset==="MIN"){tt.selectedHold=Number(r.lo.toFixed(1));tt.selectedHoldSide=solverSide;tt.selectedHoldSource="MIN";}
- if(preset==="WIND"){tt.selectedHold=Number(r.bh.toFixed(1));tt.selectedHoldSide=solverSide;tt.selectedHoldSource="WIND SIGHT";}
- if(preset==="MAX"){tt.selectedHold=Number(r.hi.toFixed(1));tt.selectedHoldSide=solverSide;tt.selectedHoldSource="MAX";}
- autosave();renderShoot(s);
-}
-function setManualFireHold(targetId){
- const s=getStage(),tt=s.targets.find(x=>x.id===targetId);if(!tt)return;
- const mag=n(v(`manualHold_${targetId}`)),side=v(`manualSide_${targetId}`)||"R";
- if(mag===null||mag<0){alert("Enter a valid manual hold.");return;}
- tt.selectedHold=Number(mag.toFixed(1));tt.selectedHoldSide=side;tt.selectedHoldSource="MANUAL";
- autosave();renderShoot(s);
-}
-function resetFireHold(targetId){
- const s=getStage(),fz=fuse(s),tt=s.targets.find(x=>x.id===targetId);if(!tt)return;
- const r=opt(tt,fz),z=tWind(tt,fz);if(!r)return;
- tt.selectedHold=Number(r.bh.toFixed(1));tt.selectedHoldSide=z.rel>=0?"R":"L";tt.selectedHoldSource="WIND SIGHT";
- tt.missOffset="";tt.missSide="L";autosave();renderShoot(s);
-}
-function fireCorrectedHold(tt){
- const sel=signedHoldValue(tt.selectedHold,tt.selectedHoldSide),off=n(tt.missOffset);if(sel===null||off===null||off<=0)return null;
- const corrected=sel+(tt.missSide==="L"?off:-off);return signedToHold(corrected);
-}
-function updateFireCorrection(targetId){
- const s=getStage(),tt=s.targets.find(x=>x.id===targetId);if(!tt)return;
- tt.missOffset=normDec(v(`missOffset_${targetId}`));tt.missSide=v(`missSide_${targetId}`)||"L";autosave();
- const out=document.getElementById(`corrResult_${targetId}`);if(!out)return;
- const c=fireCorrectedHold(tt);
- out.innerHTML=c&&c.mag!==null?`<div class="correctionResult"><strong>IMPACT CORRECTION</strong><br>Observed impact ${hold1(tt.missOffset)} mil ${tt.missSide}. Mechanical correction: ${hold1(tt.missOffset)} mil ${tt.missSide==="L"?"RIGHT":"LEFT"}.<br><strong>Corrected hold: ${hold1(c.mag)} ${c.side}</strong><div class="actions"><button class="btn outline small" onclick="useCorrectedHold('${tt.id}')">USE ${hold1(c.mag)} ${c.side}</button></div><div class="fireQuickNote">This is an impact correction, not an automatic claim that wind caused the miss.</div></div>`:"";
-}
-function useCorrectedHold(targetId){
- const s=getStage(),tt=s.targets.find(x=>x.id===targetId);if(!tt)return;const c=fireCorrectedHold(tt);if(!c||c.mag===null)return;
- tt.selectedHold=Number(c.mag.toFixed(1));tt.selectedHoldSide=c.side;tt.selectedHoldSource="CORRECTED";autosave();renderShoot(s);
-}
-function targetVisualSVG(tt,r,z){
- const dm=targetDimsMil(tt);if(!dm||!r)return `<div class="note">Target visual unavailable until target dimensions and solver holds are complete.</div>`;
- ensureFireTargetState(tt,r,z);
- const selected=n(tt.selectedHold),side=tt.selectedHoldSide||"R",signedSel=signedHoldValue(selected,side),solverSign=z.rel>=0?1:-1;
- const req=[solverSign*r.lo,solverSign*r.mode,solverSign*r.hi],sel=signedSel??(solverSign*r.bh),errors=req.map(x=>sel-x);
- let span=Math.max(dm.w*.70,...errors.map(x=>Math.abs(x))*1.15,.35),scale=220/span,cx=300,cy=110,tx=dm.w*scale,ty=Math.min(120,dm.h*scale);
- const x=e=>cx+e*scale,shape=tt.shape||"Round";
- let target="";
- if(shape==="Round")target=`<ellipse cx="${cx}" cy="${cy}" rx="${Math.max(5,tx/2)}" ry="${Math.max(5,ty/2)}" fill="#0d2534" stroke="#dce8f0" stroke-width="3"/>`;
- else if(shape==="Diamond")target=`<polygon points="${cx},${cy-ty/2} ${cx+tx/2},${cy} ${cx},${cy+ty/2} ${cx-tx/2},${cy}" fill="#0d2534" stroke="#dce8f0" stroke-width="3"/>`;
- else target=`<rect x="${cx-tx/2}" y="${cy-ty/2}" width="${Math.max(8,tx)}" height="${Math.max(8,ty)}" rx="${shape.includes("IPSC")?14:2}" fill="#0d2534" stroke="#dce8f0" stroke-width="3"/>`;
-
- // Safe hold window is represented as a translucent band of selected-hold values.
- let safeBand="";
- if(r.safe){
-   const s1=solverSign*r.sl,s2=solverSign*r.sh;
-   const err1=s1-(solverSign*r.mode),err2=s2-(solverSign*r.mode);
-   const left=Math.min(x(err1),x(err2)),right=Math.max(x(err1),x(err2));
-   safeBand=`<rect x="${left}" y="${cy-ty/2-13}" width="${Math.max(3,right-left)}" height="${ty+26}" fill="#1f9abf" opacity=".16"/><text x="${(left+right)/2}" y="${cy+ty/2+25}" text-anchor="middle" fill="#7fd5e9" font-size="10">SAFE HOLD WINDOW ${hold1(r.sl)}–${hold1(r.sh)} ${solverSign>0?"R":"L"}</text>`;
- }
-
- const dots=[["MIN",errors[0],cy+30,"#8fa4b7"],["BEST",errors[1],cy,"#7fd5e9"],["MAX",errors[2],cy-30,"#8fa4b7"]]
-   .map(d=>`<circle cx="${x(d[1])}" cy="${d[2]}" r="7" fill="${d[3]}"/><text x="${x(d[1])}" y="${d[2]-11}" text-anchor="middle" fill="${d[3]}" font-size="11" font-weight="700">${d[0]}</text>`).join("");
- return `<div class="targetVisualWrap"><svg class="targetVisual" viewBox="0 0 600 220" role="img" aria-label="Target wind window visual"><line x1="35" y1="${cy}" x2="565" y2="${cy}" stroke="#31495c"/><line x1="${cx}" y1="${cy-75}" x2="${cx}" y2="${cy+75}" stroke="#587489" stroke-dasharray="5 5"/>${safeBand}${target}${dots}<text x="300" y="22" text-anchor="middle" fill="#e8f0f5" font-size="14" font-weight="700">CHOSEN HOLD ${hold1(selected)} ${side} • ${esc(tt.selectedHoldSource||"SELECTED")}</text><text x="300" y="208" text-anchor="middle" fill="#9eb1c4" font-size="11">Predicted horizontal impact positions at MIN / BEST / MAX modeled wind.</text></svg></div>`;
-}
-
-function loadTargetVisual(targetId,details){
- if(!details?.open)return;const host=document.getElementById(`targetVisual_${targetId}`);if(!host||host.dataset.loaded==="1")return;
- try{const s=getStage(),fz=fuse(s),tt=s.targets.find(x=>x.id===targetId),r=tt?opt(tt,fz):null,z=tt?tWind(tt,fz):null;host.innerHTML=(tt&&r&&z)?targetVisualSVG(tt,r,z):`<div class="note">Target visual unavailable.</div>`}
- catch(e){console.error("Target visual error",e);host.innerHTML=`<div class="warn">Target visual could not be rendered. Numerical FIRE data remains valid.</div>`}
- host.dataset.loaded="1";
-}
-
 function renderShoot(s){
  try{
    const fz=fuse(s);
    if(!fz.valid){live.innerHTML=`<div class="bad">${fz.reason}</div><div class="note">Go back to WIND / BALLISTICS and complete required values.</div>`;return}
-   const rows=s.targets.map(tt=>({tt,sol:optimizeImpactHoldV3(s,tt),fallback:opt(tt,fz),z:tWind(tt,fz),flip:sideFlipForTarget(tt,fz)}));
-   live.innerHTML=`<div class="cardhead"><div><h3>SHOOT</h3><div class="small">Probabilistic Impact Engine</div></div><span class="tag live">${fz.quality}</span></div>
-   ${rows.map(x=>shootResultV2(x.tt,x.sol,x.fallback,x.z,x.flip)).join("")}
-   <div class="card"><h3>Stage Card</h3><div class="stagecard">${rows.map(x=>stageLineV2(x.tt,x.sol,x.fallback,x.z,x.flip)).join("")}</div></div>`;
+   const rows=s.targets.map(tt=>({tt,sol:optimizeImpactHoldV4(s,tt,10000),fallback:(n(tt.kMin)!==null&&n(tt.kMax)!==null&&n(tt.widthCm)>0&&n(tt.distanceM)>0),z:targetDirectionState(s,tt)}));
+   live.innerHTML=`<div class="cardhead"><div><h3>SHOOT</h3><div class="small">Accuracy Core 4</div></div><span class="tag live">${fz.quality}</span></div>
+   ${rows.map(x=>shootResultV2(x.tt,x.sol,x.fallback,x.z)).join("")}
+   <div class="card"><h3>Stage Card</h3><div class="stagecard">${rows.map(x=>stageLineV2(x.tt,x.sol,x.fallback,x.z)).join("")}</div></div>`;
  }catch(e){
    console.error("SHOOT v2 render error",e);
    live.innerHTML=`<div class="shootError"><strong>SHOOT could not render.</strong><br>${esc(e?.message||"Unknown rendering error")}<br><span class="small">Stage data remains saved.</span></div>`;
  }
 }
-function shootResultV2(tt,sol,fallback,z,flip){
- if(flip)return `<div class="warn"><strong>${esc(tt.label)} • SIDE FLIP RISK</strong><br>Re-check wind direction before shooting.</div>`;
- if(!fallback)return `<div class="note">${esc(tt.label)}: solver MIN/MAX holds and target width required.</div>`;
- if(!sol){
-   const side=z.rel>=0?"R":"L";
-   return `<div class="shootCompact"><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootHold">${hold1(fallback.bh)} ${side}<small>WIND SIGHT HOLD • FALLBACK</small></div></div>`;
- }
- const dims=targetDimsMil(tt),miss=suggestedMissCorrection(tt),confClass=sol.confidence==="HIGH"?"confHigh":sol.confidence==="MEDIUM"?"confMed":"confLow";
- const lo=Math.min(n(tt.kMin)||0,n(tt.kMax)||0),hi=Math.max(n(tt.kMin)||0,n(tt.kMax)||0);
- return `<div class="shootCompact">
-   <div class="shootTop"><div><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootMeta">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div></div><span class="tag done">V2</span></div>
-   <div class="shootHold">${hold1(sol.hold)} ${sol.side}<small>WIND SIGHT HOLD</small></div>
-   <div class="wsHoldBand">
-     <div><span>MIN</span><strong>${hold1(lo)} ${sol.side}</strong></div>
-     <div class="rec"><span>WIND SIGHT</span><strong>${hold1(sol.hold)} ${sol.side}</strong></div>
-     <div><span>MAX</span><strong>${hold1(hi)} ${sol.side}</strong></div>
-   </div>
-   <div class="wsMetricGrid">
-     <div class="wsMetric"><div class="k">MODELED HIT</div><div class="v">${Math.round(sol.modeledHit*100)}%</div><div class="fastHint">Wind-only ${Math.round(sol.windHit*100)}%</div></div>
-     <div class="wsMetric"><div class="k">CONFIDENCE</div><div class="v ${confClass}">${sol.confidence}</div></div>
-     <div class="wsMetric"><div class="k">ROBUST HOLD</div><div class="v">${hold1(sol.robustMin)}–${hold1(sol.robustMax)} ${sol.robustSide}</div></div>
-     <div class="wsMetric"><div class="k">MISS CORRECTION</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div>${dims?`<div class="fastHint">${dims.w.toFixed(1)} mil target width</div>`:""}</div>
-   </div>
- </div>`;
+function shootResultV2(tt,sol,fallback,z){if(sol?.sideAmbiguous)return `<div class="warn"><strong>${esc(tt.label)} • SIDE AMBIGUOUS</strong><br>${Math.round((sol.sideMinorProb||0)*100)}% of modeled wind correction lies on the opposite side. Re-check wind direction before shooting.</div>`;if(!fallback)return `<div class="note">${esc(tt.label)}: solver MIN/MAX holds and target width required.</div>`;if(!sol){return `<div class="shootCompact"><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootHold">—<small>WIND SIGHT HOLD UNAVAILABLE</small></div></div>`}const dims=targetDimsMil(tt),miss=suggestedMissCorrection(tt),confClass=sol.confidence==="HIGH"?"confHigh":sol.confidence==="MEDIUM"?"confMed":"confLow",lo=Math.min(n(tt.kMin)||0,n(tt.kMax)||0),hi=Math.max(n(tt.kMin)||0,n(tt.kMax)||0);return `<div class="shootCompact"><div class="shootTop"><div><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootMeta">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div></div><span class="tag done">CORE 4</span></div><div class="shootHold">${hold1(sol.hold)} ${sol.side}<small>WIND SIGHT HOLD</small></div><div class="wsHoldBand"><div><span>MIN</span><strong>${hold1(lo)} ${sol.side}</strong></div><div class="rec"><span>WIND SIGHT</span><strong>${hold1(sol.hold)} ${sol.side}</strong></div><div><span>MAX</span><strong>${hold1(hi)} ${sol.side}</strong></div></div><div class="wsMetricGrid"><div class="wsMetric"><div class="k">MODELED HIT</div><div class="v">${Math.round(sol.modeledHit*100)}%</div><div class="fastHint">Wind-only ${Math.round(sol.windHit*100)}%${sol.matchBiasWeight>0?` • Match learn ${sol.matchBias>=0?"+":""}${sol.matchBias.toFixed(1)} mil`:""}</div></div><div class="wsMetric"><div class="k">CONFIDENCE</div><div class="v ${confClass}">${sol.confidence}</div></div><div class="wsMetric"><div class="k">ROBUST HOLD</div><div class="v">${hold1(sol.robustMin)}–${hold1(sol.robustMax)} ${sol.robustSide}</div></div><div class="wsMetric"><div class="k">MISS CORRECTION</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div>${dims?`<div class="fastHint">${dims.w.toFixed(1)} mil target width</div>`:""}</div></div></div>`}
+function stageLineV2(tt,sol,fallback,z){if(sol?.sideAmbiguous)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><div class="hold">SIDE?</div><div class="meta">Recheck wind direction</div></div>`;if(sol)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m • ${esc(targetSizeText(tt))}</strong><div class="hold">${hold1(sol.hold)} ${sol.side}</div><div class="meta">Modeled Hit ${Math.round(sol.modeledHit*100)}% • ${sol.confidence} • Robust ${hold1(sol.robustMin)}–${hold1(sol.robustMax)} ${sol.robustSide}</div></div>`;return `<div class="stageLine"><strong>${esc(tt.label)}</strong><div class="hold">—</div><div class="meta">Solver holds required</div></div>`}
+
+function suggestedMissCorrection(tt){
+ const dm=targetDimsMil(tt);
+ if(!dm||!(dm.w>0))return null;
+ return Number((dm.w*0.75).toFixed(1));
 }
-function stageLineV2(tt,sol,fallback,z,flip){
- if(flip)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><div class="hold">SIDE FLIP</div><div class="meta">Recheck wind side</div></div>`;
- if(sol)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m • ${esc(targetSizeText(tt))}</strong><div class="hold">${hold1(sol.hold)} ${sol.side}</div><div class="meta">Modeled Hit ${Math.round(sol.modeledHit*100)}% • ${sol.confidence} • Robust ${hold1(sol.robustMin)}–${hold1(sol.robustMax)} ${sol.robustSide}</div></div>`;
- if(fallback){const side=z.rel>=0?"R":"L";return `<div class="stageLine"><strong>${esc(tt.label)}</strong><div class="hold">${hold1(fallback.bh)} ${side}</div><div class="meta">Fallback model</div></div>`}
- return `<div class="stageLine"><strong>${esc(tt.label)}</strong><div class="hold">—</div><div class="meta">Solver holds required</div></div>`;
-}
+
 function targetDimsMil(tt){
  const d=n(tt.distanceM),w=n(tt.widthCm),h=n(tt.heightCm||tt.widthCm);
  if(!(d>0&&w>0))return null;
@@ -1593,36 +1698,20 @@ function whyOptimalHold(tt,r,fz){
 }
 
 function widthMil(t){let d=n(t.distanceM),w=n(t.widthCm);return d&&w?((w/100)/d)*1000:null}
-function triCDF(x,a,m,b){if(x<=a)return 0;if(x>=b)return 1;if(b<=a)return x>=b?1:0;if(m<=a+1e-9)return 1-Math.pow((b-x)/(b-a),2);if(m>=b-1e-9)return Math.pow((x-a)/(b-a),2);return x<=m?Math.pow(x-a,2)/((b-a)*(m-a)):1-Math.pow(b-x,2)/((b-a)*(b-m))}
-function opt(t,f){let lo=n(t.kMin),hi=n(t.kMax),w=widthMil(t);if(lo===null||hi===null||hi<lo||!w)return null;let z=tWind(t,f),den=z.high-z.low,mode=den>1e-9?lo+(z.best-z.low)/den*(hi-lo):(lo+hi)/2;mode=Math.max(lo,Math.min(hi,mode));let bh=lo,bp=-1;for(let h=lo-w/2;h<=hi+w/2;h+=.001){let p=triCDF(h+w/2,lo,mode,hi)-triCDF(h-w/2,lo,mode,hi);if(p>bp){bp=p;bh=h}}let sl=hi-w/2,sh=lo+w/2;return {lo,hi,w,mode,bh,bp:Math.max(0,Math.min(1,bp)),safe:sl<=sh,sl,sh}}
-function shootHTML(t,f){if(sideFlipForTarget(t,f))return `<div class="card critical"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag live">SIDE FLIP</span></div><div class="warn">Wind evidence crosses the bore line. Easy Mode will not issue a single-side optimal hold or Shot Index. Recheck current direction and use the Solver bracket deliberately.</div></div>`;let r=opt(t,f);if(!r)return `<div class="note">${esc(t.label)}: enter valid solver MIN/MAX holds and target width.</div>`;let ints=getStage().intel.filter(x=>x.target===t.label&&x.hold!=="").map(x=>n(x.hold)).filter(x=>x!==null),iw=ints.length&&(Math.max(...ints)<r.lo||Math.min(...ints)>r.hi);return `<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag done">WIND HIT</span></div><div class="hero"><div class="small">OPTIMAL WIND HOLD</div><div class="big">${r.bh.toFixed(1)} ${tWind(t,f).rel>=0?"R":"L"}</div><div class="unit">mil</div></div><div class="listrow"><span>Solver bracket</span><strong>${r.lo.toFixed(1)}–${r.hi.toFixed(1)}</strong></div><div class="listrow"><span>WIND HIT</span><strong>${(r.bp*100).toFixed(0)}%</strong></div><div class="listrow"><span>Safe hold window</span><strong>${r.safe?r.sl.toFixed(1)+"–"+r.sh.toFixed(1):"NONE"}</strong></div>${ints.length?`<div class="${iw?"warn":"note"}">Shooter Intel: ${ints.map(x=>x.toFixed(1)).join(" / ")}${iw?" • outside model bracket":""}</div>`:""}<div class="small" style="margin-top:8px">Shape stored: ${esc(t.shape)}. WIND SIGHT Shot Index is horizontal-wind-only; full 2D shape dispersion remains Advanced Mode.</div></div>`}
-function stageLine(t,f){if(sideFlipForTarget(t,f))return `<div class="stageLine"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><div class="hold">FLIP</div><div class="meta">Recheck wind side / Kestrel</div></div>`;let r=opt(t,f);return `<div class="stageLine"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><div class="hold">${r?r.bh.toFixed(1)+" "+(tWind(t,f).rel>=0?"R":"L"):"—"}</div><div class="meta">${r?`Bracket ${r.lo.toFixed(1)}–${r.hi.toFixed(1)} • Shot Index ${(r.bp*100).toFixed(0)}%`:"Solver holds required"}</div></div>`}
-
 function matchLearningStats(currentStage){
  const m=st.data.matches.find(x=>x.id===st.selectedMatch);if(!m)return null;let total=0,inside=0,errs=[];
- (m.stages||[]).filter(s=>s.completedAt&&s.id!==currentStage.id).forEach(s=>{const sol=s.preShootSolution;if(!sol)return;s.targets.forEach(tt=>{const act=n(tt.actualHold),lo=n(tt.kMin),hi=n(tt.kMax),ps=sol.targets?.find(x=>x.targetId===tt.id||x.label===tt.label);if(act!==null&&lo!==null&&hi!==null){total++;const sideOK=!ps?.recommendedSide||tt.holdSide===ps.recommendedSide;if(sideOK&&act>=Math.min(lo,hi)&&act<=Math.max(lo,hi))inside++}if(ps&&ps.recommendedHold!==null&&act!==null){const aa=(tt.holdSide==="R"?1:-1)*act,pp=(ps.recommendedSide==="R"?1:-1)*ps.recommendedHold;errs.push(aa-pp)}})});
+ (m.stages||[]).filter(s=>s.completedAt&&s.id!==currentStage.id).forEach(s=>{const sol=s.preShootSolution;if(!sol)return;s.targets.forEach(tt=>{const act=n(tt.actualHold),lo=n(tt.kMin),hi=n(tt.kMax),ps=sol.targets?.find(x=>x.targetId===tt.id||x.label===tt.label);if(act!==null&&lo!==null&&hi!==null){total++;const sideOK=!ps?.side||tt.holdSide===ps.side;if(sideOK&&act>=Math.min(lo,hi)&&act<=Math.max(lo,hi))inside++}if(ps&&ps.hold!==null&&act!==null){const aa=(tt.holdSide==="R"?1:-1)*act,pp=(ps.side==="R"?1:-1)*ps.hold;errs.push(aa-pp)}})});
  if(!total&&!errs.length)return null;return {total,inside,bias:errs.length?errs.reduce((a,b)=>a+b,0)/errs.length:null};
 }
 function matchLearningHTML(s){const x=matchLearningStats(s);if(!x)return `<div class="note">MATCH LEARNING: no completed stages yet.</div>`;return `<div class="note"><strong>MATCH LEARNING</strong><br>${x.total?`${x.inside}/${x.total} previous actual holds were inside their predicted bracket.`:""}${x.bias!==null?` Average actual hold has been ${x.bias>=0?"+":""}${x.bias.toFixed(1)} mil versus recommendation.`:""}<br><span class="small">Advisory only; it does not silently change this solution.</span></div>`}
-function inferActualCondition(stage,tt){
- const act=n(tt.actualHold),lo=n(tt.kMin),hi=n(tt.kMax);if(act===null||lo===null||hi===null||hi===lo||!stage.preShootSolution)return null;
- const ps=stage.preShootSolution.targets?.find(x=>x.targetId===tt.id||x.label===tt.label);if(!ps)return null;
- const wf=stage.preShootSolution.wind;if(!wf)return null;
- const rel0=sdelta(wf.dir,n(tt.dof)||0),expectedSide=rel0>=0?"R":"L";
- if(tt.holdSide&&expectedSide&&tt.holdSide!==expectedSide)return {confidence:"LOW",reason:"Actual hold side differs from the modeled wind side; a unique inferred condition is not defensible."};
- const factor=Math.abs(Math.sin(rel0*Math.PI/180));if(factor<.08)return {confidence:"LOW",reason:"Wind is near the bore line; speed/angle inference is unstable."};
- const pos=(act-lo)/(hi-lo),fv=(wf.low*factor)+pos*((wf.high-wf.low)*factor),env=fv/factor;
- const best=Math.max(wf.best,.001),ratio=Math.min(1,Math.abs(fv)/best),phi=Math.asin(ratio)*180/Math.PI,sign=rel0>=0?1:-1,dof=n(tt.dof)||0;
- const angleA=norm(dof+sign*phi),angleB=norm(dof+sign*(180-phi));
- return {fv,envAtModeledAngle:env,modeledAngle:wf.dir,possibleAngles:[angleA,angleB],speedForAngles:best,confidence:(pos>=0&&pos<=1)?"MODERATE":"LOW"};
-}
+function inferActualCondition(stage,tt){const act=n(tt.actualHold),lo=n(tt.kMin),hi=n(tt.kMax);if(act===null||lo===null||hi===null||hi===lo||!stage.preShootSolution)return null;const ps=stage.preShootSolution.targets?.find(x=>x.targetId===tt.id||x.label===tt.label);if(!ps)return null;const windLow=n(stage.wind?.min),windHigh=n(stage.wind?.max),windBest=n(stage.wind?.avg);if(windLow===null||windHigh===null||windHigh===windLow)return null;const pos=(act-lo)/(hi-lo),env=windLow+pos*(windHigh-windLow),sideOK=!ps.side||tt.holdSide===ps.side;if(!sideOK)return {confidence:"LOW",reason:"Final working hold is on the opposite side from the frozen pre-shoot prediction; a unique wind inference is not defensible."};return {envAtModeledAngle:env,modeledAngle:ps.fusedGlobalDir??null,confidence:(pos>=0&&pos<=1)?"MODERATE":"LOW",reason:null}}
 function renderPost(s){
  live.innerHTML=`<div class="cardhead"><div><h3>Post-stage</h3><div class="small">Record the final working hold and score</div></div><span class="tag done">LEARNING</span></div>
  ${s.targets.map((tt,i)=>{const est=inferActualCondition(s,tt);return `<div class="targetCard"><div class="targetHeader"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><span class="tag ready">TARGET ${i+1}</span></div>
  
- <div class="grid two">${f("Final working hold","act_"+i,tt.actualHold,"decimal")}<label>Side<select id="side_${i}"><option ${tt.holdSide==="L"?"selected":""}>L</option><option ${tt.holdSide==="R"?"selected":""}>R</option></select></label></div>
+ <div class="grid two">${f("Final working hold","act_"+i,tt.actualHold,"decimal")}<label>Side<select id="side_${i}"><option ${tt.holdSide==="L"?"selected":""}>L</option><option ${tt.holdSide==="R"?"selected":""}>R</option></select></label><label>Working hold quality<select id="holdQ_${i}"><option ${tt.holdQuality==="Unknown"?"selected":""}>Unknown</option><option ${tt.holdQuality==="Approximate"?"selected":""}>Approximate</option><option ${tt.holdQuality==="Confirmed"?"selected":""}>Confirmed</option></select></label></div>
  ${tt.missOffset?`<div class="note">Recorded impact correction: ${hold1(tt.missOffset)} mil ${tt.missSide}.</div>`:""}
- ${est?est.reason?`<div class="warn"><strong>INFERRED WIND</strong><br>${esc(est.reason)}</div>`:`<div class="note"><strong>INFERRED CONDITION — ESTIMATE ONLY</strong><br>At modeled direction ${Math.round(est.modeledAngle)}°: ~${est.envAtModeledAngle.toFixed(1)} mph environmental wind.<br>At modeled BEST speed ${est.speedForAngles.toFixed(1)} mph, equivalent WIND FROM angles are approximately ${Math.round(est.possibleAngles[0])}° or ${Math.round(est.possibleAngles[1])}°.<br>FV-equivalent ${est.fv.toFixed(1)} mph • Confidence ${est.confidence}.</div>`:""}</div>`}).join("")}
+ ${est?est.reason?`<div class="warn"><strong>INFERRED WIND</strong><br>${esc(est.reason)}</div>`:`<div class="note"><strong>INFERRED CONDITION — ESTIMATE ONLY</strong><br>At the frozen pre-shoot direction ${est.modeledAngle!=null?Math.round(est.modeledAngle)+"°":"—"}: approximately ${est.envAtModeledAngle.toFixed(1)} mph environmental wind equivalent • Confidence ${est.confidence}.<br><span class="small">This does not uniquely reconstruct the downrange wind field.</span></div>`:""}</div>`}).join("")}
  <div class="actions"><button class="btn outline" id="inferBtn">CALCULATE INFERRED WIND</button></div>
  <div class="grid two">${f("Score / impacts","score",s.score,"numeric")}${f("Points possible","pts",s.pointsAvailable,"numeric")}</div>
  ${ta("Stage notes","postNotes",s.postNotes)}
@@ -1630,7 +1719,7 @@ function renderPost(s){
  bindAuto(captureLive);
  inferBtn.onclick=()=>{captureLive();renderPost(s)};
  completeStage.textContent=s.correctionMode?"SAVE CORRECTION":"MARK STAGE COMPLETE";
- completeStage.onclick=()=>{captureLive();if(!validPost(s))return;if(!s.preShootSnapshot){alert("Pre-shoot snapshot missing. Return to FIRE before completing this stage.");return;}const wasCorrection=!!s.completedAt;if(!s.completedAt)s.completedAt=iso();else s.correctedAt=iso();s.correctionMode=false;s.calypsoTelemetry=calypsoRuntime.samples.slice(-500).map(x=>({t:x.t,mph:+x.mph.toFixed(2),dir:+x.dir.toFixed(1),rawDir:+x.rawDir.toFixed(1)}));s.postStageSnapshot={createdAt:iso(),data:JSON.parse(JSON.stringify(s))};const mm=st.data.matches.find(x=>x.id===st.selectedMatch);if(wasCorrection&&mm?.completedAt){mm.revisionHistory=mm.revisionHistory||[];if(mm.finalSnapshot)mm.revisionHistory.push({createdAt:iso(),snapshot:mm.finalSnapshot});mm.correctedAt=iso();const copy=JSON.parse(JSON.stringify(mm));delete copy.finalSnapshot;mm.finalSnapshot=copy;}writeNow();st.screen="matchDashboard";render()};
+ completeStage.onclick=()=>{captureLive();if(!validPost(s))return;if(!s.preShootSnapshot){alert("Pre-shoot snapshot missing. Return to FIRE before completing this stage.");return;}const wasCorrection=!!s.completedAt;if(!s.completedAt)s.completedAt=iso();else s.correctedAt=iso();s.correctionMode=false;flushCalypsoTelemetry();s.calypsoTelemetryStored=true;s.postStageSnapshot={createdAt:iso(),data:JSON.parse(JSON.stringify(s))};const mm=st.data.matches.find(x=>x.id===st.selectedMatch);if(wasCorrection&&mm?.completedAt){mm.revisionHistory=mm.revisionHistory||[];if(mm.finalSnapshot)mm.revisionHistory.push({createdAt:iso(),snapshot:mm.finalSnapshot});mm.correctedAt=iso();const copy=JSON.parse(JSON.stringify(mm));delete copy.finalSnapshot;mm.finalSnapshot=copy;}writeNow();st.screen="matchDashboard";render()};
 }
 function validPost(s){
  let sc=n(s.score),pa=n(s.pointsAvailable),msg=[];
@@ -1657,7 +1746,7 @@ function captureLive(){
  }
  if(st.liveStep===3)s.targets.forEach((tt,i)=>{tt.kMin=normDec(v("kmin_"+i));tt.kMax=normDec(v("kmax_"+i))});
  if(st.liveStep===5){
-   s.targets.forEach((tt,i)=>{tt.actualHold=normDec(v("act_"+i));tt.holdSide=v("side_"+i)});
+   s.targets.forEach((tt,i)=>{tt.actualHold=normDec(v("act_"+i));tt.holdSide=v("side_"+i);tt.holdQuality=v("holdQ_"+i)||tt.holdQuality||"Unknown"});
    s.score=v("score");s.pointsAvailable=v("pts");s.postNotes=v("postNotes");
  }
  s.lastModifiedAt=iso();autosave();
@@ -1673,8 +1762,8 @@ function unwrapAngles(values){
 }
 
 function svgLine(values,minV,maxV,label){const w=600,h=160,p=24;if(!values.length)return `<div class="note">No ${label} data yet.</div>`;if(maxV===minV)maxV=minV+1;const pts=values.map((vv,i)=>{const x=p+(w-2*p)*(values.length===1?.5:i/(values.length-1)),y=h-p-(h-2*p)*(vv-minV)/(maxV-minV);return `${x.toFixed(1)},${y.toFixed(1)}`}).join(" ");return `<svg class="reportChart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="#009abf" stroke-width="4"/></svg><div class="reportLegend">${label}: ${values.map(vv=>Number(vv).toFixed(1)).join(" • ")}</div>`}
-function reportStageCapture(s){let total=0,inside=0;const sol=s.preShootSolution;(s.targets||[]).forEach(tt=>{const a=n(tt.actualHold),lo=n(tt.kMin),hi=n(tt.kMax),ps=sol?.targets?.find(x=>x.targetId===tt.id||x.label===tt.label);if(a!==null&&lo!==null&&hi!==null){total++;const sideOK=!ps?.recommendedSide||tt.holdSide===ps.recommendedSide;if(sideOK&&a>=Math.min(lo,hi)&&a<=Math.max(lo,hi))inside++}});return {total,inside,pct:total?100*inside/total:null}}
-function reports(){setBottom(false);const matches=st.data.matches.filter(m=>!m.archivedAt);main.innerHTML=`<div class="panel"><div class="kicker">Match analytics</div><h2>Reports</h2><div id="rep"></div></div>`;if(!matches.length){rep.innerHTML=`<div class="note">No match history yet.</div>`;return}rep.innerHTML=matches.slice().reverse().map(m=>{const done=m.stages.filter(s=>s.completedAt),score=done.reduce((x,s)=>x+(n(s.score)||0),0),avail=done.reduce((x,s)=>x+(n(s.pointsAvailable)||0),0);let bt=0,bi=0,errs=[];done.forEach(s=>{const c=reportStageCapture(s);bt+=c.total;bi+=c.inside;const sol=s.preShootSolution;if(sol)s.targets.forEach(tt=>{const ps=sol.targets?.find(x=>x.targetId===tt.id||x.label===tt.label),aa=n(tt.actualHold);if(ps&&aa!==null&&ps.recommendedHold!==null){const as=(tt.holdSide==="R"?1:-1)*aa,pr=(ps.recommendedSide==="R"?1:-1)*ps.recommendedHold;errs.push(Math.abs(as-pr))}})});const cap=bt?100*bi/bt:null,mae=errs.length?errs.reduce((a,b)=>a+b,0)/errs.length:null,windAvg=done.map(s=>n(s.wind?.avg)).filter(x=>x!==null),windDir=done.map(s=>n(s.wind?.avgDir)).filter(x=>x!==null),windDirPlot=unwrapAngles(windDir),stagePct=done.map(s=>n(s.pointsAvailable)>0?100*n(s.score)/n(s.pointsAvailable):0);return `<div class="card"><div class="cardhead"><div><strong>${esc(m.name)}</strong><div class="small">${done.length}/${m.stages.length} stages complete</div></div><span class="tag done">${avail?(100*score/avail).toFixed(1)+"%":"—"}</span></div><div class="grid four"><div><div class="small">TOTAL POINTS</div><div class="metric">${score}/${avail||"—"}</div></div><div><div class="small">WIND BRACKET CAPTURE</div><div class="metric">${cap!==null?cap.toFixed(0)+"%":"—"}</div></div><div><div class="small">MEAN HOLD ERROR</div><div class="metric">${mae!==null?mae.toFixed(1):"—"}</div><div class="small">mil</div></div><div><div class="small">AVG WIND</div><div class="metric">${windAvg.length?(windAvg.reduce((a,b)=>a+b,0)/windAvg.length).toFixed(1):"—"}</div><div class="small">mph</div></div></div><div class="note"><strong>WIND BRACKET CAPTURE</strong> = percentage of actual working holds that fell inside the pre-stage MIN–MAX solver hold bracket.</div><h3 style="margin-top:18px">Wind Speed Through Match</h3>${svgLine(windAvg,windAvg.length?Math.min(...windAvg):0,windAvg.length?Math.max(...windAvg):1,"AVG mph")}<h3 style="margin-top:18px">Wind Direction Through Match</h3>${svgLine(windDirPlot,windDirPlot.length?Math.min(...windDirPlot):0,windDirPlot.length?Math.max(...windDirPlot):360,"WIND FROM ° (unwrapped for continuity)")}<h3 style="margin-top:18px">Stage Score %</h3>${svgLine(stagePct,0,100,"Stage %")}<div class="matchSectionTitle">Stage Summary</div>${done.map(s=>{const c=reportStageCapture(s);return `<div class="listrow"><span>${esc(s.name)} • ${esc(s.wind?.avg||"—")} mph @ ${esc(s.wind?.avgDir||"—")}°</span><strong>${esc(s.score||"—")}/${esc(s.pointsAvailable||"—")} ${c.pct!==null?`• bracket ${c.pct.toFixed(0)}%`:""}</strong></div>`}).join("")||`<div class="note">No completed stages.</div>`}</div>`}).join("")}
+function reportStageCapture(s){let total=0,inside=0;const sol=s.preShootSolution;(s.targets||[]).forEach(tt=>{const a=n(tt.actualHold),lo=n(tt.kMin),hi=n(tt.kMax),ps=sol?.targets?.find(x=>x.targetId===tt.id||x.label===tt.label);if(a!==null&&lo!==null&&hi!==null){total++;const sideOK=!ps?.side||tt.holdSide===ps.side;if(sideOK&&a>=Math.min(lo,hi)&&a<=Math.max(lo,hi))inside++}});return {total,inside,pct:total?100*inside/total:null}}
+function reports(){setBottom(false);const matches=st.data.matches.filter(m=>!m.archivedAt);main.innerHTML=`<div class="panel"><div class="kicker">Match analytics</div><h2>Reports</h2><div id="rep"></div></div>`;if(!matches.length){rep.innerHTML=`<div class="note">No match history yet.</div>`;return}rep.innerHTML=matches.slice().reverse().map(m=>{const done=m.stages.filter(s=>s.completedAt),score=done.reduce((x,s)=>x+(n(s.score)||0),0),avail=done.reduce((x,s)=>x+(n(s.pointsAvailable)||0),0);let bt=0,bi=0,errs=[];done.forEach(s=>{const c=reportStageCapture(s);bt+=c.total;bi+=c.inside;const sol=s.preShootSolution;if(sol)s.targets.forEach(tt=>{const ps=sol.targets?.find(x=>x.targetId===tt.id||x.label===tt.label),aa=n(tt.actualHold);if(ps&&aa!==null&&ps.hold!==null){const as=(tt.holdSide==="R"?1:-1)*aa,pr=(ps.side==="R"?1:-1)*ps.hold;errs.push(Math.abs(as-pr))}})});const cap=bt?100*bi/bt:null,mae=errs.length?errs.reduce((a,b)=>a+b,0)/errs.length:null,windAvg=done.map(s=>n(s.wind?.avg)).filter(x=>x!==null),windDir=done.map(s=>n(s.wind?.avgDir)).filter(x=>x!==null),windDirPlot=unwrapAngles(windDir),stagePct=done.map(s=>n(s.pointsAvailable)>0?100*n(s.score)/n(s.pointsAvailable):0);return `<div class="card"><div class="cardhead"><div><strong>${esc(m.name)}</strong><div class="small">${done.length}/${m.stages.length} stages complete</div></div><span class="tag done">${avail?(100*score/avail).toFixed(1)+"%":"—"}</span></div><div class="grid four"><div><div class="small">TOTAL POINTS</div><div class="metric">${score}/${avail||"—"}</div></div><div><div class="small">WIND BRACKET CAPTURE</div><div class="metric">${cap!==null?cap.toFixed(0)+"%":"—"}</div></div><div><div class="small">MEAN HOLD ERROR</div><div class="metric">${mae!==null?mae.toFixed(1):"—"}</div><div class="small">mil</div></div><div><div class="small">AVG WIND</div><div class="metric">${windAvg.length?(windAvg.reduce((a,b)=>a+b,0)/windAvg.length).toFixed(1):"—"}</div><div class="small">mph</div></div></div><div class="note"><strong>WIND BRACKET CAPTURE</strong> = percentage of actual working holds that fell inside the pre-stage MIN–MAX solver hold bracket.</div><h3 style="margin-top:18px">Wind Speed Through Match</h3>${svgLine(windAvg,windAvg.length?Math.min(...windAvg):0,windAvg.length?Math.max(...windAvg):1,"AVG mph")}<h3 style="margin-top:18px">Wind Direction Through Match</h3>${svgLine(windDirPlot,windDirPlot.length?Math.min(...windDirPlot):0,windDirPlot.length?Math.max(...windDirPlot):360,"WIND FROM ° (unwrapped for continuity)")}<h3 style="margin-top:18px">Stage Score %</h3>${svgLine(stagePct,0,100,"Stage %")}<div class="matchSectionTitle">Stage Summary</div>${done.map(s=>{const c=reportStageCapture(s);return `<div class="listrow"><span>${esc(s.name)} • ${esc(s.wind?.avg||"—")} mph @ ${esc(s.wind?.avgDir||"—")}°</span><strong>${esc(s.score||"—")}/${esc(s.pointsAvailable||"—")} ${c.pct!==null?`• bracket ${c.pct.toFixed(0)}%`:""}</strong></div>`}).join("")||`<div class="note">No completed stages.</div>`}</div>`}).join("")}
 function openWheelField(id,title){let el=document.getElementById(id);wheelCtx={type:"field",id,title};openWheel(el?.value||0,title)}
 function openObsWheel(where,pi,oi){captureLive();let s=getStage();s.downrangeOpen=where==="target"?"target":"points";let o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];wheelCtx={type:"obs",where,pi,oi,title:"INDICATOR MOVING TO"};openWheel(o.dir||0,"INDICATOR MOVING TO")}
 function openWheel(val,title){wheelTitle.textContent=title;setTimeout(positionTicks,0);document.body.classList.add("modal-open");overlay.classList.remove("hidden");setWheel(n(val)||0)}

@@ -1,5 +1,5 @@
-WIND SIGHT PRS v3.5.0 — Calypso Live Beta
+WIND SIGHT PRS v3.7.0 — Accuracy Core + Calypso Instrument
 
-Adds documented Calypso Ultrasonic Portable Mini/Solar BLE adapter, pairing/reconnect state, live wind/battery/device data, stage auto-reconnect, green connected indicator, rolling telemetry and direct wind input.
+Major scientific consistency and performance correction release. Calibration A/B/D is connected to the prediction engine, double wind-angle application is removed, frozen match snapshots are authoritative, Monte Carlo L/R ambiguity and distribution-based match learning are used, live calculations are accelerated, telemetry is separated to IndexedDB, and a standalone premium Calypso-only instrument screen is added.
 
-Important: Web Bluetooth is not available in iPhone Safari/Home-Screen PWA. Native iOS CoreBluetooth is required for real iPhone live feed.
+See UAT_REPORT_v3.7.0.txt.
