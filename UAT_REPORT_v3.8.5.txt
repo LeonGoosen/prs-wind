@@ -1,0 +1,46 @@
+WIND SIGHT PRS v3.8.5 — BLUEFY / CALYPSO MINI UAT
+
+BASELINE
+PASS — v3.8.4 used as current web-app baseline; v3.9.0 packaging branch not used to overwrite newer SHOOT/Range Card behavior.
+
+SIMULATED PROTOCOL TESTS
+PASS — Mini 0x180D/0x2A39 sample: 39 02 CE 00 09 => 5.69 m/s, 206°, 90%
+PASS — Mini 0x2A39 short packet rejected
+PASS — Mini impossible direction rejected
+PASS — Environmental 0x2A72 speed sample => 5.69 m/s
+PASS — Environmental 0x2A73 direction sample 78 50 => 206°
+PASS — Environmental 0x2A73 direction sample F8 75 => 302°
+PASS — Legacy CUPS sample retained => 5.69 m/s, 206°, 3343 mV
+PASS — Legacy malformed battery rejected
+PASS — Chooser cancellation classification
+PASS — No-matching-device classification where browser error text distinguishes it
+PASS — Permission-denied classification
+PASS — GATT connection-failure classification
+
+SIMULATED LIVE PIPELINE
+PASS — 0x2A39 handler delivers decoded speed/direction into live ingest path
+PASS — 0x181A speed + direction handlers deliver decoded measurements into live ingest path
+PASS — malformed packet does not enter live ingest path
+PASS — legacy CUPS handler still enters live ingest path
+
+STATIC / REGRESSION DIAGNOSTICS
+PASS — 28/28 checks (see tests/static_regression_report.txt)
+PASS — JavaScript syntax check (`node --check`)
+PASS — Storage key preserved: windSightPRS
+PASS — IndexedDB preserved: windSightPRSDB
+PASS — Schema version preserved
+PASS — v3.8.4 Range Card / SHOOT functionality retained
+PASS — one-decimal wind-hold helper retained
+PASS — native BLE path retained
+PASS — disconnect listener and reconnect path retained
+PASS — connected-without-readings and stale-reading diagnostics present
+PASS — copyable diagnostics present
+
+PHYSICAL HARDWARE TESTS
+NOT RUN — Bluefy picker discovery on user's iPhone
+NOT RUN — physical GATT connection to user's Calypso Mini
+NOT RUN — firmware/model read from user's device
+NOT RUN — live notification cadence and packet format on user's firmware
+NOT RUN — comparison against Anemotracker live speed/direction/battery
+
+No hardware-success claim is made until the physical tests above pass.

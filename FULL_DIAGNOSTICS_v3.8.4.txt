@@ -1,0 +1,23 @@
+FULL DIAGNOSTICS — WIND SIGHT PRS v3.8.4
+
+BUILD BASE:
+- Source: v3.8.3 Calypso Browser UX Fix
+- Output: v3.8.4 Shoot Range Card Diagnostics
+
+UI / UX CHANGES VERIFIED:
+[PASS] Range Card restored inside SHOOT render pipeline
+[PASS] SHOOT retains highlighted CALL box
+[PASS] GONG metric now displays angular size in mils
+[PASS] Solver MIN–MAX data is surfaced inside the SHOOT info area
+[PASS] CORRECTION metric placed in top info row
+[PASS] WIND HIT % and CONFIDENCE placed in bottom info row
+[PASS] ROBUST metric removed from active SHOOT card
+[PASS] Visible app version updated to v3.8.4
+
+STATIC VALIDATION:
+[PASS] index.html updated without malformed replacements
+[PASS] Inline script extracted and passed node --check parse validation
+
+NOTES:
+- This pass focused on the SHOOT screen cleanup and restoration of the Range Card, per latest instruction.
+- Calypso native-app/browser limitation messaging remains unchanged from v3.8.3.

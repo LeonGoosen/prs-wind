@@ -1,0 +1,32 @@
+WIND SIGHT PRS v3.8.5 — STATIC / REGRESSION DIAGNOSTICS
+
+PASS — Visible version v3.8.5
+PASS — Broad discovery uses acceptAllDevices
+PASS — Broad discovery retains user chooser
+PASS — Strict scan retained
+PASS — Mini 180D/2A39 supported
+PASS — Mini Environmental 181A/2A72/2A73 supported
+PASS — Battery 180F/2A19 supported
+PASS — Device Info 180A identity verification
+PASS — Unsupported device guard present
+PASS — Legacy CUPS fallback retained
+PASS — Cancellation diagnostic
+PASS — No matching diagnostic
+PASS — Permission diagnostic
+PASS — Connection failure diagnostic
+PASS — Connected-no-readings diagnostic
+PASS — Stale-reading diagnostic
+PASS — Disconnect handler present
+PASS — Reconnect path retained
+PASS — Copyable diagnostics present
+PASS — Direction remains gated by reference
+PASS — Manual/native BLE functionality retained
+PASS — Wind hold one decimal helper retained
+PASS — Shoot range card preserved
+PASS — Storage DBKEY unchanged
+PASS — IndexedDB name unchanged
+PASS — Schema version unchanged
+PASS — Service worker cache bumped
+PASS — Package version bumped
+
+RESULT: 28 PASS / 0 FAIL
