@@ -1,0 +1,52 @@
+WIND SIGHT PRS v3.8.6 — CALYPSO CALIBRATION UAT
+
+SIMULATED PROTOCOL REGRESSION
+12 PASS / 0 FAIL
+- Mini 180D/2A39 documented sample
+- malformed Mini packets
+- Environmental Sensing speed/direction
+- legacy CUPS fallback
+- chooser cancellation/no match/permission/connect failure
+
+SIMULATED LIVE PIPELINE REGRESSION
+4 PASS / 0 FAIL
+- Mini combined handler
+- Environmental handlers
+- malformed packet rejection
+- CUPS handler
+
+CALIBRATION ENGINE SIMULATION
+10 PASS / 0 FAIL
+- insufficient-data state
+- offset-only behavior for insufficient/narrow dataset
+- marginal classification
+- bounded regression behavior
+- validated wide clean dataset
+- circular direction offset across 0/360
+- residual-based rejection
+- calibration application formula
+- calibration-off behavior
+
+STATIC / STORAGE / UI REGRESSION
+25 PASS / 0 FAIL
+- visible version 3.8.6
+- calibration panel and explicit enable
+- raw speed retention
+- WDOT Mini AB identity + strict filter
+- existing Mini / Environmental / CUPS support retained
+- manual reference/settings retained
+- Range Card retained
+- one-decimal hold formatter retained
+- localStorage / IndexedDB identifiers unchanged
+- navigation preserved
+- service-worker cache bumped
+- package version bumped
+
+JAVASCRIPT SYNTAX
+PASS — node --check
+
+TOTAL AUTOMATED / SIMULATED CHECKS: 51 PASS / 0 FAIL
+
+PHYSICAL HARDWARE STATUS
+NOT YET PASSED.
+The user's WDOT-93D48C Mini AB has been discovered in Bluefy, but its actual wind-data GATT service/characteristic is still not physically identified. v3.8.6 recognizes WDOT identity and exposes it in strict discovery, but it deliberately does not interpret unknown packets.

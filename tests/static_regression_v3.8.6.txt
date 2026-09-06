@@ -1,0 +1,29 @@
+WIND SIGHT PRS v3.8.6 — STATIC / REGRESSION DIAGNOSTICS
+
+PASS — visible version 3.8.6
+PASS — APP_VERSION 3.8.6
+PASS — calibration panel
+PASS — calibration default off
+PASS — explicit enable button
+PASS — speed correction applied only enabled
+PASS — direction calibration applied only enabled
+PASS — raw speed retained
+PASS — damping recorded only
+PASS — quality states
+PASS — WDOT identity
+PASS — WDOT strict discovery
+PASS — old Mini support preserved
+PASS — legacy CUPS preserved
+PASS — manual Calypso settings preserved
+PASS — Range Card preserved
+PASS — hold formatting 1 decimal
+PASS — storage constant DBKEY preserved
+PASS — storage constant IDB_NAME preserved
+PASS — storage constant IDB_STORE preserved
+PASS — storage constant IDB_KEY preserved
+PASS — storage constant IDB_TELEMETRY preserved
+PASS — core navigation preserved
+PASS — cache bumped
+PASS — package bumped
+
+RESULT: 25 PASS / 0 FAIL

@@ -1,8 +1,8 @@
 {
   "name": "wind-sight-prs",
-  "version": "3.8.5",
+  "version": "3.8.6",
   "private": true,
-  "description": "WIND SIGHT PRS by ZealTech \u2014 Bluefy + Calypso Mini Web BLE build",
+  "description": "WIND SIGHT PRS by ZealTech \u2014 Bluefy + Calypso Mini Web BLE + calibration build",
   "scripts": {
     "cap:sync": "npx cap sync",
     "cap:ios": "npx cap open ios",

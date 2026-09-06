@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.8.5 Bluefy Calypso Mini</title>
+<title>WIND SIGHT PRS by ZealTech — v3.8.6 Calypso Calibration</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -238,6 +238,13 @@ html,body{touch-action:manipulation}
 .lockBadge{font-size:10px;font-weight:1000;padding:4px 7px;border-radius:999px;background:#123343;color:#9be8f7}
 
 .calypsoWarn{font-size:10px;color:#f1c36b;font-weight:900;margin-top:4px}
+.calibrationStatus{border:1px solid #29435a;border-radius:13px;padding:11px 12px;background:#07131f;margin-top:10px}
+.calibrationStatus .big{font-size:20px;font-weight:1000;margin-top:3px}
+.calTrial{border-top:1px solid #18283a;padding:10px 0}.calTrial:first-child{border-top:0}
+.calTrialGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.calTrialGrid div{font-size:11px;color:#9fb1c4}.calTrialGrid strong{display:block;color:#fff;font-size:14px;margin-top:2px}
+.calRaw{font-size:10px;color:#7f93a7;margin-top:4px}
+
 .refGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .telemetryNote{font-size:10px;color:#8fa4b7;margin-top:4px}
 .qualityConfirmed{color:#74d59b}.qualityApprox{color:#f1c36b}.qualityUnknown{color:#8fa4b7}
@@ -265,7 +272,7 @@ html,body{touch-action:manipulation}
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.8.5</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>MATCH WIND INTELLIGENCE • v3.8.6</small></div></div>
   <div class="save" id="saveState">Saved</div>
 </div>
 <nav id="nav"></nav>
@@ -380,7 +387,7 @@ function navItems(){return [["home","HOME"],["matches","MATCHES"],["calypso","CA
 function renderNav(){nav.innerHTML="";navItems().forEach(([k,l])=>{let b=document.createElement("button");b.className="navbtn"+(st.screen===k?" active":"");b.textContent=l;b.onclick=()=>{saveCurrent();st.screen=k;st.step=0;render()};nav.appendChild(b)})}
 function setBottom(show=true,nextLabel="NEXT →",nextVisible=true){bottom.style.display=show?"block":"none";nextBtn.textContent=nextLabel;nextBtn.style.visibility=nextVisible?"visible":"hidden"}
 
-const APP_VERSION="3.8.5";
+const APP_VERSION="3.8.6";
 const CALYPSO={
  // Calypso Ultrasonic Portable Solar & Mini developer-manual profile (firmware family 2.x+).
  MINI_DATA_SERVICE:"0000180d-0000-1000-8000-00805f9b34fb",
@@ -436,7 +443,10 @@ function calypsoDiagnosticsText(){
   `Characteristics used: ${(d.characteristics||[]).join(", ")||"—"}`,
   `Last packet: ${d.packetLength==null?"—":d.packetLength+" bytes"}${d.packetHex?` • ${d.packetHex}`:""}`,
   `Reading age: ${fresh==null?"no readings":`${Math.round(fresh/100)/10}s`}`,
-  `Direction reference: ${cfg.referenceConfigured?"SET":"NOT SET"}`
+  `Direction reference: ${cfg.referenceConfigured?"SET":"NOT SET"}`,
+  `Calibration: ${cfg.calibration?.enabled?"APPLIED":"OFF"} • ${cfg.calibration?.status||"INSUFFICIENT DATA"}`,
+  `Calibration speed: x${Number(cfg.calibration?.speedScale||1).toFixed(4)} ${Number(cfg.calibration?.speedOffsetMph||0)>=0?"+":""}${Number(cfg.calibration?.speedOffsetMph||0).toFixed(2)} mph`,
+  `Calibration direction: ${Number(cfg.calibration?.directionOffsetDeg||0)>=0?"+":""}${Number(cfg.calibration?.directionOffsetDeg||0).toFixed(1)}°`
  ].join("\n");
 }
 function ensureCalypsoWatchdog(){
@@ -453,6 +463,8 @@ function ensureCalypsoSettings(){
  st.data.settings=st.data.settings||{};
  st.data.settings.calypso=st.data.settings.calypso||{enabled:true,paired:false,name:"",directionOffsetDeg:0,referenceConfigured:false,referenceBearingDeg:0,protocolVerified:false,sampleWindowSec:30,predictionHz:1,deviceId:"",standaloneWindowSec:120};
  const c=st.data.settings.calypso;
+ c.calibration=c.calibration||{enabled:false,speedScale:1,speedOffsetMph:0,directionOffsetDeg:0,status:"INSUFFICIENT DATA",referenceDevice:"Kestrel",dampingSetting:"",trials:[],lastCalculatedAt:null,rmseMph:null,directionResidualDeg:null};
+ if(!Array.isArray(c.calibration.trials))c.calibration.trials=[];if(n(c.calibration.speedScale)===null)c.calibration.speedScale=1;if(n(c.calibration.speedOffsetMph)===null)c.calibration.speedOffsetMph=0;if(n(c.calibration.directionOffsetDeg)===null)c.calibration.directionOffsetDeg=0;
  if(c.referenceConfigured==null)c.referenceConfigured=false;
  if(c.referenceBearingDeg==null)c.referenceBearingDeg=0;
  if(c.protocolVerified==null)c.protocolVerified=false;
@@ -608,9 +620,12 @@ function applyCalypsoToStage(){
 }
 function ingestCalypsoReading(speedMps,rawDir,batteryMv=null,meta={}){
  const sp=n(speedMps),rd=n(rawDir);if(sp===null||sp<0||sp>100)return;
- const cfg=ensureCalypsoSettings();
- calypsoRuntime._speedMps=sp;calypsoRuntime._dirRaw=rd;
- calypsoRuntime._dir=rd===null?null:(cfg.referenceConfigured?norm(rd+(n(cfg.referenceBearingDeg)||0)+(n(cfg.directionOffsetDeg)||0)):null);
+ const cfg=ensureCalypsoSettings(),cal=cfg.calibration||{};
+ calypsoRuntime._speedMpsRaw=sp;calypsoRuntime._dirRaw=rd;
+ const rawMph=calypsoMpsToMph(sp),calMph=cal.enabled?Math.max(0,rawMph*(n(cal.speedScale)||1)+(n(cal.speedOffsetMph)||0)):rawMph;
+ calypsoRuntime._speedMps=calMph/2.2369362921;
+ const calDirOffset=cal.enabled?(n(cal.directionOffsetDeg)||0):0;
+ calypsoRuntime._dir=rd===null?null:(cfg.referenceConfigured?norm(rd+(n(cfg.referenceBearingDeg)||0)+(n(cfg.directionOffsetDeg)||0)+calDirOffset):null);
  if(n(batteryMv)!==null)calypsoRuntime.batteryMv=n(batteryMv);
  if(meta.deviceName)calypsoRuntime.model=meta.deviceName;if(meta.firmware)calypsoRuntime.firmware=meta.firmware;
  calypsoRuntime.lastSeen=Date.now();pushCalypsoSample();
@@ -657,8 +672,8 @@ async function readCalypsoIdentity(server,device){
  const info=await tryService(server,CALYPSO.SERVICE_INFO);let manufacturer="",model="",firmware="";
  if(info){manufacturer=await readTextChar(info,CALYPSO.CHAR_MANUFACTURER);model=await readTextChar(info,CALYPSO.CHAR_MODEL);firmware=await readTextChar(info,CALYPSO.CHAR_FW)}
  calypsoRuntime.manufacturer=manufacturer;calypsoRuntime.model=model||device?.name||calypsoRuntime.model;calypsoRuntime.firmware=firmware;
- const nm=String(device?.name||"");const verified=/calypso/i.test(manufacturer)||/^up10$/i.test(model)||/calypso|ultrasonic|up10/i.test(nm);
- const basis=/calypso/i.test(manufacturer)?"manufacturer":/^up10$/i.test(model)?"model UP10":/calypso|ultrasonic|up10/i.test(nm)?"device name":"none";
+ const nm=String(device?.name||"");const verified=/calypso/i.test(manufacturer)||/^up10$/i.test(model)||/calypso|ultrasonic|up10|^wdot-/i.test(nm);
+ const basis=/calypso/i.test(manufacturer)?"manufacturer":/^up10$/i.test(model)?"model UP10":/calypso|ultrasonic|up10|^wdot-/i.test(nm)?(/^wdot-/i.test(nm)?"device name WDOT (Mini AB family)":"device name"):"none";
  calDiag({identityVerified:verified,identityBasis:basis});return {verified,manufacturer,model,firmware,basis};
 }
 async function availableKnownServices(server){
@@ -723,7 +738,7 @@ async function connectCalypsoDevice(device,manual=false){
 function calypsoBleCapability(){const native=!!nativeCalypsoBridge(),web=!!navigator.bluetooth;return {native,web,available:native||web}}
 function bluefyLikely(){return !!navigator.bluetooth&&!nativeCalypsoBridge()&&/iphone|ipad|ipod/i.test(navigator.userAgent||"")}
 async function requestCalypsoDevice(mode="broad"){
- const opts=mode==="strict"?{filters:[{services:[CALYPSO.MINI_ENV_SERVICE]},{services:[CALYPSO.MINI_DATA_SERVICE]},{services:[CALYPSO.LEGACY_SERVICE]},{namePrefix:"Calypso"},{namePrefix:"ULTRASONIC"}],optionalServices:CALYPSO.OPTIONAL_SERVICES}:{acceptAllDevices:true,optionalServices:CALYPSO.OPTIONAL_SERVICES};
+ const opts=mode==="strict"?{filters:[{services:[CALYPSO.MINI_ENV_SERVICE]},{services:[CALYPSO.MINI_DATA_SERVICE]},{services:[CALYPSO.LEGACY_SERVICE]},{namePrefix:"Calypso"},{namePrefix:"ULTRASONIC"},{namePrefix:"WDOT-"}],optionalServices:CALYPSO.OPTIONAL_SERVICES}:{acceptAllDevices:true,optionalServices:CALYPSO.OPTIONAL_SERVICES};
  calDiag({stage:"chooser_open",code:"CHOOSER_OPEN",message:mode==="broad"?"Broad BLE chooser opened. Select only your Calypso instrument.":"Filtered Calypso chooser opened.",pairMode:mode});
  return navigator.bluetooth.requestDevice(opts);
 }
@@ -779,12 +794,38 @@ function v(id){return document.getElementById(id)?.value??""}
 function bindAuto(cb){main.querySelectorAll("input,select,textarea").forEach(el=>{el.addEventListener("input",cb);el.addEventListener("change",cb)})}
 
 function hasReadyProfile(){return st.data.rifles.some(r=>(r.ammo||[]).some(a=>a.name&&a.bullet&&n(a.mv)>0&&(a.bcType||a.bc)));}
+function signedAngleDelta(a,b){let d=norm(a-b);return d>180?d-360:d}
+function calypsoCalibrationResult(){
+ const c=ensureCalypsoSettings().calibration,t=(c.trials||[]).filter(x=>n(x.calMph)!==null&&n(x.refMph)!==null&&n(x.calMph)>=0&&n(x.refMph)>=0);
+ if(!t.length)return {status:"INSUFFICIENT DATA",scale:1,offset:0,dirOffset:0,rmse:null,dirResidual:null,count:0,span:0};
+ const xs=t.map(x=>n(x.calMph)),ys=t.map(x=>n(x.refMph)),span=Math.max(...xs)-Math.min(...xs);let scale=1,offset=ys.reduce((a,y,i)=>a+(y-xs[i]),0)/t.length;
+ if(t.length>=3&&span>=3){const mx=xs.reduce((a,b)=>a+b,0)/xs.length,my=ys.reduce((a,b)=>a+b,0)/ys.length,den=xs.reduce((a,x)=>a+(x-mx)*(x-mx),0);if(den>0){scale=xs.reduce((a,x,i)=>a+(x-mx)*(ys[i]-my),0)/den;offset=my-scale*mx}if(!(scale>.8&&scale<1.2)){scale=1;offset=ys.reduce((a,y,i)=>a+(y-xs[i]),0)/t.length}}
+ const err=t.map((x,i)=>ys[i]-(scale*xs[i]+offset)),rmse=Math.sqrt(err.reduce((a,e)=>a+e*e,0)/err.length);
+ const dt=t.filter(x=>n(x.calDir)!==null&&n(x.refDir)!==null),deltas=dt.map(x=>signedAngleDelta(n(x.refDir),n(x.calDir))),dirOffset=deltas.length?signedAngleDelta(circularMeanDeg(deltas.map(d=>norm(d))),0):0;
+ const dirResidual=deltas.length?Math.sqrt(deltas.reduce((a,d)=>{const e=signedAngleDelta(d,dirOffset);return a+e*e},0)/deltas.length):null;
+ let status="INSUFFICIENT DATA";if(t.length>=5&&span>=5&&rmse<=.5&&(dirResidual==null||dirResidual<=5))status="VALIDATED";else if(t.length>=3)status="MARGINAL";
+ return {status,scale,offset,dirOffset,rmse,dirResidual,count:t.length,span};
+}
+function calculateCalypsoCalibration(){const cfg=ensureCalypsoSettings(),c=cfg.calibration,r=calypsoCalibrationResult();c.speedScale=r.scale;c.speedOffsetMph=r.offset;c.directionOffsetDeg=r.dirOffset;c.status=r.status;c.rmseMph=r.rmse;c.directionResidualDeg=r.dirResidual;c.lastCalculatedAt=iso();if(r.status==="INSUFFICIENT DATA")c.enabled=false;writeNow();return r}
+function addCalibrationTrial(){
+ const c=ensureCalypsoSettings().calibration,cm=n(v("calTrialCalMph")),rm=n(v("calTrialRefMph")),cd=n(v("calTrialCalDir")),rd=n(v("calTrialRefDir")),dur=n(v("calTrialDuration"));
+ if(cm===null||rm===null||cm<0||rm<0){alert("Enter both Calypso and reference average wind speeds.");return}
+ if((cd!==null&&(cd<0||cd>=360))||(rd!==null&&(rd<0||rd>=360))){alert("Direction values must be 0–359° or left blank.");return}
+ c.referenceDevice=v("calReferenceDevice")||"Kestrel";c.dampingSetting=v("calDamping")||"";c.trials.push({id:uid("cal"),createdAt:iso(),calMph:cm,refMph:rm,calDir:cd,refDir:rd,durationSec:dur||60,damping:c.dampingSetting});calculateCalypsoCalibration();render();
+}
+function deleteCalibrationTrial(id){const c=ensureCalypsoSettings().calibration;c.trials=(c.trials||[]).filter(x=>x.id!==id);calculateCalypsoCalibration();render()}
+function calibrationPanelHTML(){
+ const c=ensureCalypsoSettings().calibration,r=calypsoCalibrationResult(),on=!!c.enabled,cls=r.status==="VALIDATED"?"done":r.status==="MARGINAL"?"ready":"";
+ const trials=(c.trials||[]).map((x,i)=>`<div class="calTrial"><div class="cardhead"><strong>Trial ${i+1}</strong><button class="btn danger small delCalTrial" data-id="${esc(x.id)}">DELETE</button></div><div class="calTrialGrid"><div>CALYPSO AVG<strong>${Number(x.calMph).toFixed(1)} mph</strong></div><div>${esc(c.referenceDevice||"Reference")} AVG<strong>${Number(x.refMph).toFixed(1)} mph</strong></div><div>CALYPSO DIR<strong>${n(x.calDir)!==null?Math.round(x.calDir)+"°":"—"}</strong></div><div>REFERENCE DIR<strong>${n(x.refDir)!==null?Math.round(x.refDir)+"°":"—"}</strong></div></div><div class="calRaw">${x.durationSec||60}s • Damping ${esc(x.damping||"not recorded")}</div></div>`).join("");
+ return `<div class="panel"><div class="cardhead"><div><div class="kicker">Sensor validation</div><h3>CALYPSO CALIBRATION</h3></div><span class="tag ${cls}">${esc(r.status)}</span></div><div class="note">Compare side-by-side averages against a reference instrument. Damping is recorded as test context; it is not used to force the sensors to match. Calibration is only applied when you explicitly enable it.</div><div class="grid two">${f("Reference instrument","calReferenceDevice",c.referenceDevice||"Kestrel")}${f("Anemotracker damping setting","calDamping",c.dampingSetting||"")}${f("Calypso avg mph","calTrialCalMph","","decimal")}${f("Reference avg mph","calTrialRefMph","","decimal")}${f("Calypso direction ° (optional)","calTrialCalDir","","decimal")}${f("Reference direction ° (optional)","calTrialRefDir","","decimal")}${f("Interval seconds","calTrialDuration","60","numeric")}</div><div class="actions"><button class="btn secondary" id="addCalTrial">ADD TRIAL</button></div><div class="calibrationStatus"><div class="small">CALCULATED CORRECTION • ${r.count} TRIAL${r.count===1?"":"S"} • SPEED SPAN ${r.span.toFixed(1)} mph</div><div class="big">Speed ×${r.scale.toFixed(4)} ${r.offset>=0?"+":""}${r.offset.toFixed(2)} mph</div><div class="small">Direction ${r.dirOffset>=0?"+":""}${r.dirOffset.toFixed(1)}°${r.rmse!=null?` • Speed RMSE ${r.rmse.toFixed(2)} mph`:""}${r.dirResidual!=null?` • Direction residual ${r.dirResidual.toFixed(1)}°`:""}</div></div><div class="actions"><button class="btn ${on?"danger":""}" id="toggleCalibration" ${r.status==="INSUFFICIENT DATA"&&!on?"disabled":""}>${on?"DISABLE CALIBRATION":"ENABLE CALIBRATION"}</button><button class="btn outline" id="recalcCalibration">RECALCULATE</button></div>${trials||`<div class="note">No calibration trials saved yet. Use several wind conditions rather than one reading.</div>`}</div>`;
+}
 function calypsoScreen(){
  setBottom(false);ensureCalypsoSettings();
- main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Standalone instrument</div><h2>CALYPSO LIVE</h2><div class="calLiveOnly">LIVE SENSOR VIEW • NO BALLISTIC CALCULATIONS</div></div><span class="tag ${calypsoRuntime.status==="connected"?"done":"ready"}">${calypsoRuntime.status==="connected"?"CONNECTED":"DEVICE"}</span></div>${calypsoStripHTML()}<div id="calypsoLivePanel"></div></div><div class="panel"><h3>Calypso Settings</h3><div class="grid two">${f("Reference bearing °","calRef",ensureCalypsoSettings().referenceBearingDeg,"numeric")}${f("Direction offset °","calOffset",ensureCalypsoSettings().directionOffsetDeg,"decimal")}<label>Live history<select id="calWindow"><option ${ensureCalypsoSettings().standaloneWindowSec===60?"selected":""} value="60">60 sec</option><option ${ensureCalypsoSettings().standaloneWindowSec===120?"selected":""} value="120">2 min</option><option ${ensureCalypsoSettings().standaloneWindowSec===300?"selected":""} value="300">5 min</option></select></label></div><div class="actions"><button class="btn secondary" id="saveCalSettings">SAVE SETTINGS</button><button class="btn outline" id="clearCalSession">CLEAR LIVE HISTORY</button></div><div class="note">This screen is deliberately isolated from WIND SIGHT calculations. Web BLE now supports the documented Ultrasonic Portable Mini/Solar 0x180D/0x2A39 profile, the 0x181A Environmental Sensing profile, and the older CUPS 4.0 custom UUID as a fallback. Unknown devices are never decoded as Calypso data.</div></div><div class="panel"><div class="cardhead"><div><div class="kicker">Connection diagnostics</div><h3>CALYPSO / BLUEFY</h3></div><span class="tag ready">v${APP_VERSION}</span></div><pre id="calDiag" style="white-space:pre-wrap;word-break:break-word;font-size:11px;color:#9fb1c4;background:#07131f;border:1px solid #243b50;border-radius:12px;padding:12px">${esc(calypsoDiagnosticsText())}</pre><div class="actions"><button class="btn outline" id="copyCalDiag">COPY DIAGNOSTICS</button><button class="btn outline" id="refreshCalDiag">REFRESH</button></div></div>`;
+ main.innerHTML=`<div class="panel"><div class="cardhead"><div><div class="kicker">Standalone instrument</div><h2>CALYPSO LIVE</h2><div class="calLiveOnly">LIVE SENSOR VIEW • NO BALLISTIC CALCULATIONS</div></div><span class="tag ${calypsoRuntime.status==="connected"?"done":"ready"}">${calypsoRuntime.status==="connected"?"CONNECTED":"DEVICE"}</span></div>${calypsoStripHTML()}<div id="calypsoLivePanel"></div></div><div class="panel"><h3>Calypso Settings</h3><div class="grid two">${f("Reference bearing °","calRef",ensureCalypsoSettings().referenceBearingDeg,"numeric")}${f("Direction offset °","calOffset",ensureCalypsoSettings().directionOffsetDeg,"decimal")}<label>Live history<select id="calWindow"><option ${ensureCalypsoSettings().standaloneWindowSec===60?"selected":""} value="60">60 sec</option><option ${ensureCalypsoSettings().standaloneWindowSec===120?"selected":""} value="120">2 min</option><option ${ensureCalypsoSettings().standaloneWindowSec===300?"selected":""} value="300">5 min</option></select></label></div><div class="actions"><button class="btn secondary" id="saveCalSettings">SAVE SETTINGS</button><button class="btn outline" id="clearCalSession">CLEAR LIVE HISTORY</button></div><div class="note">This screen is deliberately isolated from WIND SIGHT calculations. Web BLE now supports the documented Ultrasonic Portable Mini/Solar 0x180D/0x2A39 profile, the 0x181A Environmental Sensing profile, and the older CUPS 4.0 custom UUID as a fallback. Unknown devices are never decoded as Calypso data.</div></div>${calibrationPanelHTML()}<div class="panel"><div class="cardhead"><div><div class="kicker">Connection diagnostics</div><h3>CALYPSO / BLUEFY</h3></div><span class="tag ready">v${APP_VERSION}</span></div><pre id="calDiag" style="white-space:pre-wrap;word-break:break-word;font-size:11px;color:#9fb1c4;background:#07131f;border:1px solid #243b50;border-radius:12px;padding:12px">${esc(calypsoDiagnosticsText())}</pre><div class="actions"><button class="btn outline" id="copyCalDiag">COPY DIAGNOSTICS</button><button class="btn outline" id="refreshCalDiag">REFRESH</button></div></div>`;
  bindCalypsoStrip();autoConnectCalypso();renderCalypsoLivePanel();
  saveCalSettings.onclick=()=>{const c=ensureCalypsoSettings(),r=n(v("calRef")),o=n(v("calOffset"));if(r===null||r<0||r>=360){alert("Reference bearing must be 0–359°.");return}c.referenceBearingDeg=norm(r);c.referenceConfigured=true;c.directionOffsetDeg=o||0;c.standaloneWindowSec=n(v("calWindow"))||120;writeNow();renderCalypsoLivePanel();refreshCalypsoStrip()};
  clearCalSession.onclick=()=>{calypsoRuntime.samples=[];renderCalypsoLivePanel()};
+ document.getElementById("addCalTrial")?.addEventListener("click",addCalibrationTrial);document.getElementById("recalcCalibration")?.addEventListener("click",()=>{calculateCalypsoCalibration();render()});document.getElementById("toggleCalibration")?.addEventListener("click",()=>{const c=ensureCalypsoSettings().calibration,r=calypsoCalibrationResult();if(!c.enabled&&r.status==="INSUFFICIENT DATA"){alert("Add at least 3 valid comparison trials before enabling calibration.");return}c.enabled=!c.enabled;writeNow();render()});document.querySelectorAll(".delCalTrial").forEach(b=>b.onclick=()=>deleteCalibrationTrial(b.dataset.id));
  const cpd=document.getElementById("copyCalDiag"),rfd=document.getElementById("refreshCalDiag");if(cpd)cpd.onclick=async()=>{const txt=calypsoDiagnosticsText();try{await navigator.clipboard.writeText(txt);cpd.textContent="COPIED ✓";setTimeout(()=>cpd.textContent="COPY DIAGNOSTICS",1200)}catch(e){prompt("Copy diagnostics:",txt)}};if(rfd)rfd.onclick=()=>{const el=document.getElementById("calDiag");if(el)el.textContent=calypsoDiagnosticsText()};
 }
 function calypsoSpeedSvg(samples){
@@ -796,7 +837,7 @@ function calypsoSpeedSvg(samples){
 function renderCalypsoLivePanel(){
  const host=document.getElementById("calypsoLivePanel");if(!host)return;const cfg=ensureCalypsoSettings(),sec=n(cfg.standaloneWindowSec)||120,cut=Date.now()-sec*1000,samps=calypsoRuntime.samples.filter(x=>x.t>=cut),est=calypsoStateEstimate(),stats=calypsoStats(),dir=est?.now?.dir;
  const trend=est?.trend||"WAITING",trendClass=trend==="BUILDING"?"liveTrendUp":trend==="DROPPING"?"liveTrendDown":"liveTrendStable";
- host.innerHTML=`<div class="calStandaloneHero"><div class="cardhead"><div class="deviceState"><span class="deviceDot ${calypsoDotClass()}"></span><span>${esc(calypsoStatusText())}</span></div><div class="small">${esc(calypsoRuntime.model||cfg.name||"Calypso")}${calypsoRuntime.firmware?` • FW ${esc(calypsoRuntime.firmware)}`:""}</div></div><div class="calLiveBig">${est?Math.round(est.now.mph):"—"}<span style="font-size:18px"> mph</span></div><div class="calDirBig">${dir!=null?`${Math.round(dir)}° WIND FROM`:"DIRECTION REF REQUIRED"}</div><div class="calCompass"><span class="calCompassLabel calN">N</span><span class="calCompassLabel calE">E</span><span class="calCompassLabel calS">S</span><span class="calCompassLabel calW">W</span><div class="calNeedle" style="transform:rotate(${dir??0}deg);opacity:${dir==null?.18:1}"></div></div><div class="calPremiumGrid"><div class="calPremiumMetric"><div class="k">10 SEC AVG</div><div class="v">${est?.stats10?.mean!=null?est.stats10.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">30 SEC AVG</div><div class="v">${est?.stats30?.mean!=null?est.stats30.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">2 MIN AVG</div><div class="v">${est?.stats120?.mean!=null?est.stats120.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">MIN / MAX</div><div class="v">${stats?`${stats.min.toFixed(1)} / ${stats.max.toFixed(1)}`:"—"}</div></div><div class="calPremiumMetric"><div class="k">VOLATILITY</div><div class="v">${est?`${(est.ti*100).toFixed(0)}%`:"—"}</div></div><div class="calPremiumMetric"><div class="k">TREND</div><div class="v ${trendClass}">${trend}</div></div><div class="calPremiumMetric"><div class="k">DIRECTION STATE</div><div class="v">${est?.dirState||"—"}</div></div><div class="calPremiumMetric"><div class="k">BATTERY</div><div class="v">${calypsoRuntime.battery!=null?calypsoRuntime.battery+"%":calypsoRuntime.batteryMv!=null?Math.round(calypsoRuntime.batteryMv)+" mV":"—"}</div></div><div class="calPremiumMetric"><div class="k">SAMPLES</div><div class="v">${samps.length}</div></div><div class="calPremiumMetric"><div class="k">PROTOCOL</div><div class="v" style="font-size:13px">${esc(calypsoRuntime.protocolVariant||"—")}</div></div></div><h3 style="margin-top:16px">Live Speed History</h3>${calypsoSpeedSvg(samps)}<div class="telemetryNote">Raw live view only. No WIND SIGHT target or ballistic calculations run on this screen.</div></div>`;
+ host.innerHTML=`<div class="calStandaloneHero"><div class="cardhead"><div class="deviceState"><span class="deviceDot ${calypsoDotClass()}"></span><span>${esc(calypsoStatusText())}</span></div><div class="small">${esc(calypsoRuntime.model||cfg.name||"Calypso")}${calypsoRuntime.firmware?` • FW ${esc(calypsoRuntime.firmware)}`:""}</div></div><div class="calLiveBig">${est?Math.round(est.now.mph):"—"}<span style="font-size:18px"> mph</span></div><div class="calDirBig">${dir!=null?`${Math.round(dir)}° WIND FROM`:"DIRECTION REF REQUIRED"}</div><div class="calCompass"><span class="calCompassLabel calN">N</span><span class="calCompassLabel calE">E</span><span class="calCompassLabel calS">S</span><span class="calCompassLabel calW">W</span><div class="calNeedle" style="transform:rotate(${dir??0}deg);opacity:${dir==null?.18:1}"></div></div><div class="calPremiumGrid"><div class="calPremiumMetric"><div class="k">10 SEC AVG</div><div class="v">${est?.stats10?.mean!=null?est.stats10.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">30 SEC AVG</div><div class="v">${est?.stats30?.mean!=null?est.stats30.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">2 MIN AVG</div><div class="v">${est?.stats120?.mean!=null?est.stats120.mean.toFixed(1):"—"} mph</div></div><div class="calPremiumMetric"><div class="k">MIN / MAX</div><div class="v">${stats?`${stats.min.toFixed(1)} / ${stats.max.toFixed(1)}`:"—"}</div></div><div class="calPremiumMetric"><div class="k">VOLATILITY</div><div class="v">${est?`${(est.ti*100).toFixed(0)}%`:"—"}</div></div><div class="calPremiumMetric"><div class="k">TREND</div><div class="v ${trendClass}">${trend}</div></div><div class="calPremiumMetric"><div class="k">DIRECTION STATE</div><div class="v">${est?.dirState||"—"}</div></div><div class="calPremiumMetric"><div class="k">BATTERY</div><div class="v">${calypsoRuntime.battery!=null?calypsoRuntime.battery+"%":calypsoRuntime.batteryMv!=null?Math.round(calypsoRuntime.batteryMv)+" mV":"—"}</div></div><div class="calPremiumMetric"><div class="k">SAMPLES</div><div class="v">${samps.length}</div></div><div class="calPremiumMetric"><div class="k">PROTOCOL</div><div class="v" style="font-size:13px">${esc(calypsoRuntime.protocolVariant||"—")}</div></div></div><h3 style="margin-top:16px">Live Speed History</h3>${calypsoSpeedSvg(samps)}<div class="telemetryNote">Live sensor view. ${cfg.calibration?.enabled?`Calibration applied • raw sensor values retained in diagnostics/runtime.`:`Calibration off • raw sensor values used.`} No WIND SIGHT target or ballistic calculations run on this screen.</div></div>`;
 }
 function home(){
  setBottom(false);const recentMatches=st.data.matches.filter(m=>!m.archivedAt).slice().reverse().slice(0,4);
