@@ -1,6 +1,0 @@
-{
-  "appId": "com.zealtech.windsightprs",
-  "appName": "WIND SIGHT PRS",
-  "webDir": ".",
-  "server": { "iosScheme": "capacitor", "androidScheme": "https" }
-}
