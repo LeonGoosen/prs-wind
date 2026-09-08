@@ -1,6 +1,6 @@
 {
   "name": "wind-sight-prs",
-  "version": "3.8.10",
+  "version": "3.8.11",
   "private": true,
-  "description": "WIND SIGHT PRS by ZealTech \u2014 Competition Core Reliability. Static offline-first app; no build step required."
+  "description": "WIND SIGHT PRS by ZealTech \u2014 Competition Core Input Stability. Targeted user-feedback fixes; probability-distribution assumptions unchanged."
 }

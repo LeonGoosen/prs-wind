@@ -1,0 +1,597 @@
+{
+  "version": "3.8.11",
+  "scope": "Input/UI corrections; probability model review remains open",
+  "candidate_index_sha256": "eb994e11c2f4a35f50980580b4ba74ba1f0b141d4b66433d451bcc3a2530f1ee",
+  "regression": {
+    "label": "feedback3811_final",
+    "candidate_index_sha256": "eb994e11c2f4a35f50980580b4ba74ba1f0b141d4b66433d451bcc3a2530f1ee",
+    "candidate_unchanged": true,
+    "suites": [
+      {
+        "suite": "core_browser",
+        "status": "PASS",
+        "checks": 29,
+        "passed": 29,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 13.2
+      },
+      {
+        "suite": "reliability_browser",
+        "status": "PASS",
+        "checks": 14,
+        "passed": 14,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 8.39
+      },
+      {
+        "suite": "storage",
+        "status": "PASS",
+        "checks": 26,
+        "passed": 26,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 1.48
+      },
+      {
+        "suite": "reliability_unit",
+        "status": "PASS",
+        "checks": 15,
+        "passed": 15,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 1.22
+      },
+      {
+        "suite": "service_worker",
+        "status": "PASS",
+        "checks": 8,
+        "passed": 8,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 0.07
+      },
+      {
+        "suite": "static",
+        "status": "PASS",
+        "checks": 15,
+        "passed": 15,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 0.92
+      },
+      {
+        "suite": "engine_regression",
+        "status": "PASS",
+        "checks": 14,
+        "passed": 14,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 40.35
+      },
+      {
+        "suite": "extended_workflows",
+        "status": "PASS",
+        "checks": 10,
+        "passed": 10,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 18.93
+      },
+      {
+        "suite": "adversarial_workflows",
+        "status": "PASS",
+        "checks": 9,
+        "passed": 9,
+        "failed": 0,
+        "excluded_baseline_reproductions": [
+          {
+            "name": "A01 v388 draft produced by normal UI retains ammo changes after simulated reopen",
+            "status": "FAIL",
+            "detail": {
+              "error": "{'version': 'v388', 'entered': {'mv': '2999', 'name': 'AFTER'}, 'savedAmmo': {'id': 'a_sdcent_mtsw2is6', 'name': 'BEFORE', 'bullet': 'TEST', 'weightGr': '', 'mv': '2800', 'mvUnit': 'fps', 'mvSd': '', 'precision': '', 'precisionUnit': 'MOA', 'hPrecision': '', 'vPrecision': '', 'trajectorySensitivity': [], 'solverSens': {'windPer100m': '', 'elevPer10m': '', 'windPer10fps': '', 'elevPer10fps': '', 'elevPer100mDA': ''}, 'bcType': 'G7', 'bcValue': '.270', 'bc': '.270', 'lot': '', 'notes': '', 'currentCalibrationVersion': 0, 'calibrationVersions': [], '_work': {'A': [[300, '', '', ''], [400, '', '', ''], [500, '', '', ''], [600, '', '', ''], [700, '', '', ''], [800, '', '', ''], [900, '', '', '']], 'B': [[15, '', ''], [30, '', ''], [45, '', ''], [60, '', ''], [75, '', ''], [90, '', '']], 'D': [[0, '', '', ''], [30, '', '', ''], [60, '', '', ''], [120, '', '', ''], [180, '', '', ''], [240, '', '', ''], [330, '', '', '']], 'meta': {'A': {'speeds': [5, 10, 15]}, 'B': {'speed': 10, 'distances': [500, 900]}, 'D': {'distance': 700, 'stageWindFrom': 90, 'ws1': 8, 'ws2': 12}}, 'sides': {'A': {}, 'B': {}, 'D': {}}}}, 'status': {'blocked': False, 'warning': ''}}",
+              "traceback": "Traceback (most recent call last):\n  File \"/mnt/data/ws_feedback/regression/scripts/real_support.py\", line 14, in run\n    d=fn();return self.add(name,True,{'elapsed_ms':round(1000*(time.perf_counter()-start)), 'evidence':d})\n  File \"/mnt/data/ws_feedback/regression/scripts/adversarial_ui.py\", line 17, in draft_flow\n    check(details['savedAmmo']['mv']=='2999' and details['savedAmmo']['name']=='AFTER',details)\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/mnt/data/ws_feedback/regression/scripts/real_support.py\", line 19, in check\n    if not x:raise AssertionError(msg)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: {'version': 'v388', 'entered': {'mv': '2999', 'name': 'AFTER'}, 'savedAmmo': {'id': 'a_sdcent_mtsw2is6', 'name': 'BEFORE', 'bullet': 'TEST', 'weightGr': '', 'mv': '2800', 'mvUnit': 'fps', 'mvSd': '', 'precision': '', 'precisionUnit': 'MOA', 'hPrecision': '', 'vPrecision': '', 'trajectorySensitivity': [], 'solverSens': {'windPer100m': '', 'elevPer10m': '', 'windPer10fps': '', 'elevPer10fps': '', 'elevPer100mDA': ''}, 'bcType': 'G7', 'bcValue': '.270', 'bc': '.270', 'lot': '', 'notes': '', 'currentCalibrationVersion': 0, 'calibrationVersions': [], '_work': {'A': [[300, '', '', ''], [400, '', '', ''], [500, '', '', ''], [600, '', '', ''], [700, '', '', ''], [800, '', '', ''], [900, '', '', '']], 'B': [[15, '', ''], [30, '', ''], [45, '', ''], [60, '', ''], [75, '', ''], [90, '', '']], 'D': [[0, '', '', ''], [30, '', '', ''], [60, '', '', ''], [120, '', '', ''], [180, '', '', ''], [240, '', '', ''], [330, '', '', '']], 'meta': {'A': {'speeds': [5, 10, 15]}, 'B': {'speed': 10, 'distances': [500, 900]}, 'D': {'distance': 700, 'stageWindFrom': 90, 'ws1': 8, 'ws2': 12}}, 'sides': {'A': {}, 'B': {}, 'D': {}}}}, 'status': {'blocked': False, 'warning': ''}}\n"
+            }
+          }
+        ],
+        "failures": [],
+        "exit": 0,
+        "seconds": 24.3
+      },
+      {
+        "suite": "schema",
+        "status": "PASS",
+        "checks": 8,
+        "passed": 8,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 0.07
+      },
+      {
+        "suite": "independent_engine",
+        "status": "PASS",
+        "checks": 12,
+        "passed": 12,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 4.18
+      },
+      {
+        "suite": "layout_capacity",
+        "status": "PASS",
+        "checks": 8,
+        "passed": 8,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 13.97
+      },
+      {
+        "suite": "backup_roundtrip",
+        "status": "PASS",
+        "checks": 1,
+        "passed": 1,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 5.05
+      },
+      {
+        "suite": "deeper_workflows",
+        "status": "PASS",
+        "checks": 14,
+        "passed": 14,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 23.11
+      },
+      {
+        "suite": "portable_inputs",
+        "status": "PASS",
+        "checks": 4,
+        "passed": 4,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 9.19
+      },
+      {
+        "suite": "deeper_data",
+        "status": "PASS",
+        "checks": 9,
+        "passed": 9,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 0.12
+      },
+      {
+        "suite": "numeric_adversarial",
+        "status": "PASS",
+        "checks": 16,
+        "passed": 16,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 7.17
+      },
+      {
+        "suite": "supplied_v389_regression",
+        "status": "PASS",
+        "checks": 1,
+        "passed": 1,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 18.97
+      },
+      {
+        "suite": "history_observations",
+        "status": "PASS",
+        "checks": 4,
+        "passed": 4,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 11.88
+      },
+      {
+        "suite": "recovery_contract",
+        "status": "PASS",
+        "checks": 3,
+        "passed": 3,
+        "failed": 0,
+        "excluded_baseline_reproductions": [],
+        "failures": [],
+        "exit": 0,
+        "seconds": 0.22
+      }
+    ],
+    "checks": 220,
+    "passed": 220,
+    "failed": 0,
+    "acceptance": true
+  },
+  "targeted_feedback": [
+    {
+      "name": "Reproduce baseline autosave header movement at 375px",
+      "status": "PASS",
+      "detail": {
+        "baseline_header_px": [
+          107,
+          129,
+          107
+        ]
+      }
+    },
+    {
+      "name": "Stable header and field position across autosave at 221 viewport widths",
+      "status": "PASS",
+      "detail": {
+        "widths_tested": 221,
+        "max_header_or_field_shift_px": 0
+      }
+    },
+    {
+      "name": "Real DOM per-character typing preserves focus, node, position and saved text",
+      "status": "PASS",
+      "detail": {
+        "samples": 60,
+        "field_top_px": 614,
+        "focus_and_node_retained": true,
+        "saved": "123"
+      }
+    },
+    {
+      "name": "Confirmed hides both uncertainty inputs and suppresses their model contribution; Estimated restores saved values",
+      "status": "PASS",
+      "detail": {
+        "before": {
+          "target": {
+            "id": "t1",
+            "label": "T1",
+            "distanceM": "600",
+            "rangeQuality": "Estimated",
+            "rangeUncM": "9",
+            "targetSizeUncPct": "20",
+            "shape": "Round",
+            "widthCm": "30",
+            "heightCm": "30",
+            "dof": "0",
+            "kMin": "0.4",
+            "kMax": "1.2",
+            "actualHold": "",
+            "holdSide": "R",
+            "holdQuality": "Unknown"
+          },
+          "rangeSigma": 4.5,
+          "scales": [
+            0.8,
+            1,
+            1.2
+          ],
+          "hidden": [
+            false,
+            false
+          ],
+          "disabled": [
+            false,
+            false
+          ]
+        },
+        "confirmed": {
+          "target": {
+            "id": "t1",
+            "label": "T1",
+            "distanceM": "600",
+            "rangeQuality": "LRF / confirmed",
+            "rangeUncM": "9",
+            "targetSizeUncPct": "20",
+            "shape": "Round",
+            "widthCm": "30",
+            "heightCm": "30",
+            "dof": "0",
+            "kMin": "0.4",
+            "kMax": "1.2",
+            "actualHold": "",
+            "holdSide": "R",
+            "holdQuality": "Unknown"
+          },
+          "rangeSigma": 0,
+          "scales": [
+            1,
+            1,
+            1
+          ],
+          "hidden": [
+            true,
+            true
+          ],
+          "disabled": [
+            true,
+            true
+          ]
+        },
+        "restored": {
+          "target": {
+            "id": "t1",
+            "label": "T1",
+            "distanceM": "600",
+            "rangeQuality": "Estimated",
+            "rangeUncM": "9",
+            "targetSizeUncPct": "20",
+            "shape": "Round",
+            "widthCm": "30",
+            "heightCm": "30",
+            "dof": "0",
+            "kMin": "0.4",
+            "kMax": "1.2",
+            "actualHold": "",
+            "holdSide": "R",
+            "holdQuality": "Unknown"
+          },
+          "rangeSigma": 4.5,
+          "scales": [
+            0.8,
+            1,
+            1.2
+          ],
+          "hidden": [
+            false,
+            false
+          ],
+          "disabled": [
+            false,
+            false
+          ]
+        }
+      }
+    },
+    {
+      "name": "Previously saved Confirmed target ignores retained estimated uncertainty at startup",
+      "status": "PASS",
+      "detail": {
+        "target": {
+          "id": "t1",
+          "label": "T1",
+          "distanceM": "600",
+          "rangeQuality": "LRF / confirmed",
+          "rangeUncM": "9",
+          "targetSizeUncPct": "20",
+          "shape": "Round",
+          "widthCm": "30",
+          "heightCm": "30",
+          "dof": "0",
+          "kMin": "0.4",
+          "kMax": "1.2",
+          "actualHold": "",
+          "holdSide": "R",
+          "holdQuality": "Unknown"
+        },
+        "rangeSigma": 0,
+        "scales": [
+          1,
+          1,
+          1
+        ],
+        "hidden": [
+          true,
+          true
+        ],
+        "disabled": [
+          true,
+          true
+        ]
+      }
+    },
+    {
+      "name": "Existing unconfirmed fixture output remains exactly equal to v3.8.10",
+      "status": "PASS",
+      "detail": {
+        "Match_book_fixture_exact_engine_equality": true
+      }
+    },
+    {
+      "name": "Confirmed geometry changes impact uncertainty only, not the wind distribution or call",
+      "status": "PASS",
+      "detail": {
+        "before": {
+          "hold": 0.8,
+          "windHit": 0.6167142857142857,
+          "impact": 0.5842,
+          "rangeSd": 0.5
+        },
+        "after": {
+          "hold": 0.8,
+          "windHit": 0.6167142857142857,
+          "impact": 0.6078,
+          "rangeSd": 0
+        }
+      }
+    },
+    {
+      "name": "Explicit added observations are auto-ticked, incomplete defaults inactive, entered observations active and opt-out respected",
+      "status": "PASS",
+      "detail": {
+        "automatic_placeholder": {
+          "o": {
+            "id": "o_7atjcn_mtsvxjha",
+            "indicator": "Long grass",
+            "behavior": 0,
+            "quality": "Unknown",
+            "dir": "",
+            "enabled": false
+          },
+          "active": false
+        },
+        "new_point_observation": {
+          "o": {
+            "id": "o_8vo5if_mtsvxjlp",
+            "indicator": "Long grass",
+            "behavior": 0,
+            "quality": "Unknown",
+            "dir": "",
+            "enabled": true
+          },
+          "active": false,
+          "checked": true
+        },
+        "new_target_observation": {
+          "enabled": true,
+          "checked": true,
+          "active": false
+        },
+        "saved": {
+          "id": "o_b4s6vs_mtsvxjqa",
+          "indicator": "Long grass",
+          "behavior": 1,
+          "quality": "Clear",
+          "dir": "",
+          "enabled": true
+        }
+      }
+    },
+    {
+      "name": "Explicit Add Point also auto-ticks its initial observation",
+      "status": "PASS",
+      "detail": {
+        "o": {
+          "id": "o_7qjsk2_mtsvxkkg",
+          "indicator": "Long grass",
+          "behavior": 0,
+          "quality": "Unknown",
+          "dir": "",
+          "enabled": true
+        },
+        "checked": true
+      }
+    },
+    {
+      "name": "Adding an untouched auto-ticked row does not change WIND HIT",
+      "status": "PASS",
+      "detail": {
+        "before": 0.6167142857142857,
+        "after": 0.6167142857142857,
+        "blank_add_did_not_invent_evidence": true
+      }
+    },
+    {
+      "name": "Thirty UI route/viewport combinations render without errors or horizontal overflow",
+      "status": "PASS",
+      "detail": {
+        "widths": [
+          320,
+          375,
+          390,
+          768,
+          1440
+        ],
+        "routes_each": 6,
+        "errors": 0,
+        "horizontal_document_overflow": 0
+      }
+    },
+    {
+      "name": "Independent centred geometry, uniform 80%, triangular 93.333%, normal 49.501% examples",
+      "status": "PASS",
+      "detail": {
+        "assumed_full_target_width_mil": 0.4,
+        "hold_min": 0.3,
+        "call": 0.6,
+        "hold_max": 0.8,
+        "center_hit_interval": [
+          0.39999999999999997,
+          0.8
+        ],
+        "uniform_probability": 0.8000000000000002,
+        "triangular_probability_mode_0_6": 0.9333333333333333,
+        "normal_probability_mean_0_6_sd_0_3": 0.49501492490615423,
+        "normal_is_not_hard_bounded": true
+      }
+    },
+    {
+      "name": "Offset aiming translates a 0.4-mil interval; it does not enlarge it",
+      "status": "PASS",
+      "detail": [
+        {
+          "aim_offset": 0,
+          "effective": 0.6,
+          "interval": [
+            0.39999999999999997,
+            0.8
+          ]
+        },
+        {
+          "aim_offset": -0.1,
+          "effective": 0.5,
+          "interval": [
+            0.3,
+            0.7
+          ]
+        },
+        {
+          "aim_offset": -0.2,
+          "effective": 0.39999999999999997,
+          "interval": [
+            0.19999999999999996,
+            0.6
+          ]
+        }
+      ]
+    },
+    {
+      "name": "No Gaussian-to-triangular/uniform switch or probability uplift inserted in solver code",
+      "status": "PASS",
+      "detail": {
+        "unchanged_math_functions": [
+          "evidenceSpeedStats",
+          "monteCarloRequiredHolds",
+          "probabilityInside",
+          "stageBaselineHoldAtSpeed",
+          "prepareHoldResponse",
+          "simulateImpactSamplesV3",
+          "impactProbability2D",
+          "optimizeWindHoldV3",
+          "optimizeShootSolutionV5",
+          "insideTarget2D"
+        ],
+        "intentional_geometry_helpers_changed": [
+          "rangeSigmaM",
+          "targetScaleSample"
+        ]
+      }
+    }
+  ],
+  "native_phone_acceptance": false,
+  "reported_user_scenario_verified": false
+}

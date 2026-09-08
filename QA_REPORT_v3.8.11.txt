@@ -1,0 +1,220 @@
+WIND SIGHT PRS — v3.8.11 INPUT STABILITY
+User feedback corrections and probability-model review
+Prepared for Leon Goosen / ZealTech
+Date: 8 September 2026
+
+RELEASE SCOPE AND LIMITS
+========================
+This build fixes the three explicit input/UI requests: autosave-induced screen
+movement, Confirmed target-geometry uncertainty controls, and automatic USE
+selection on an explicitly added observation. It is NOT a declaration that the
+existing model's WIND HIT or IMPACT percentages are empirically calibrated.
+The reported 0.3 MIN / 0.6 CALL / 0.8 MAX / 0.4-mil gong scenario has not been
+reproduced using the user's actual saved stage: that data was not supplied.
+Do not interpret this report as verification of the reported 50% / 32% result.
+
+BASELINE AND PROVENANCE
+=======================
+Baseline: WIND_SIGHT_PRS_v3.8.10_Competition_Core.zip, supplied in this thread.
+Baseline index.html SHA256: da213c177def18f87f05f6cee9592c499217ee6f9d2a4d92f6ca8bc7b2747af9
+Candidate index.html SHA256: eb994e11c2f4a35f50980580b4ba74ba1f0b141d4b66433d451bcc3a2530f1ee
+Schema remains 4. localStorage key windSightPRS and the existing IndexedDB
+name, version, stores and record keys remain unchanged. Branding PNGs, manifest
+and the read-only backup helper remain byte-identical to the tested baseline.
+No live website, DNS, browser data or production account was modified.
+
+1. REPRODUCIBLE INPUT BOUNCE
+============================
+At a 375px-wide Chromium viewport, the v3.8.10 header heights during normal
+saving states were:
+  Saving...                       107px
+  Saved locally / checking mirror 129px
+  Saved / 2 copies                107px
+The variable-width status text squeezed the adjacent brand, changing line
+wrapping and therefore moving the content below the sticky header by 22px.
+This happened on ordinary autosave transitions, without a route change.
+
+Correction: reserve a fixed 92px by 42px footprint for the saving control.
+The complete status is retained in its title; storage error/recovery notices
+still show in full. No field is replaced to implement this correction.
+
+Targeted result: all 221 integer viewport widths from 280 to 500px showed zero
+header-height or input-top change between those three saving states. A real
+Chromium DOM typing test sampled focus, element identity and field position
+60 times during slow per-character typing and asynchronous saving. They stayed
+stable and the typed value survived the simulated save.
+
+This reproduces and corrects one concrete cause. It does not prove that every
+physical Safari keyboard/visual-viewport interaction is resolved. The actual
+competition phone still needs the same typing check.
+
+2. CONFIRMED RANGE / SIZE
+=========================
+Choosing LRF / confirmed now hides and disables both Range uncertainty and
+Target-size uncertainty. A short note makes the model interpretation explicit:
+the entered range and size are treated as fixed geometry.
+
+Previously entered uncertainty values are retained for switching back to an
+unconfirmed quality; they are not silently discarded. While Confirmed is active:
+  rangeSigmaM(target) = 0
+  targetScaleSample(target, any sample) = 1
+The former implicit 0.5m confirmed-range standard deviation is no longer applied.
+An explicit old uncertainty value no longer takes precedence over Confirmed.
+
+This removes modeled uncertainty, not physical measurement error in the real
+world. It does not remove wind variability, rifle dispersion, muzzle-velocity
+variation or other independently enabled terms. WIND HIT and the wind call do
+not change solely because of this flag; the secondary IMPACT estimate can.
+Estimated and Match book behavior remains unchanged.
+
+3. EXPLICITLY ADDED OBSERVATIONS
+===============================
++ OBSERVATION, + TARGET OBSERVATION and the initial row of + ADD POINT now
+create a row with USE already checked. An unknown, untouched default still
+contributes no evidence. Choosing an observed behaviour/quality activates the
+row without an additional checkbox action. A user can still untick USE.
+
+A placeholder created merely by opening the screen remains inactive. Existing
+saved observations are not blanket-enabled or reinterpreted. This preserves
+the earlier protection against inventing a Long grass observation.
+
+4. MATHEMATICAL REVIEW OF THE REPORTED EXAMPLE
+=============================================
+Assumptions for this section only:
+- 0.4 is the full angular width/diameter in mil, not radius and not metres.
+- The 0.3, 0.6 and 0.8 holds are on the same side.
+- Ignore vertical and other aiming/dispersion errors initially.
+- H is the actually required signed correction, C the net applied correction.
+
+A horizontal hit requires |H - C| <= 0.4/2 = 0.2.
+With C = 0.6, the covered required-hold interval is [0.4, 0.8].
+The entered MIN/MAX interval is [0.3, 0.8]. Its width is 0.5; the covered part
+is 0.4 wide. The interval [0.3, 0.4) is not covered by that centred correction.
+
+GEOMETRIC COVERAGE IS NOT AUTOMATICALLY PROBABILITY
+- Uniform H over [0.3, 0.8]: P(hit horizontally) = 0.4/0.5 = 80%.
+- Triangular H over [0.3, 0.8], mode 0.6: P(hit horizontally) =
+  1 - (0.4-0.3)^2 / ((0.8-0.3)*(0.6-0.3)) = 93.333333...%.
+- Illustrative normal H, mean 0.6 and SD 0.3: P(|H-0.6| <= 0.2) =
+  erf(0.2/(0.3*sqrt(2))) = 49.50149249...%.
+  That normal example has tails outside the entered interval; it is NOT the
+  hard-bounded assumption and is NOT claimed as the user's actual distribution.
+
+A selected CALL is an optimizer output, not proof that it is the mode of a
+triangular wind distribution. The triangular calculation is an explicitly
+labelled illustration, not a model fitted from the four reported numbers.
+Those numbers alone identify neither the probability distribution nor the
+joint two-dimensional impact distribution.
+
+EDGE AIMING
+Using positive correction to the right for this example, define A as the aim
+point relative to target centre (negative means left), and D = +0.6 dialled.
+Then C = D + A and the accepted H interval is [C-0.2, C+0.2].
+  A =  0.0 (centre): C = +0.6, accepted H from +0.4 to +0.8.
+  A = -0.1 (inside left): C = +0.5, accepted H from +0.3 to +0.7.
+  A = -0.2 (left rim): C = +0.4, accepted H from +0.2 to +0.6.
+Mirror the signs for the opposite convention/wind correction side.
+Moving the aim point translates the interval; it never increases its width.
+Being 0.1 inside the left rim gives 0.3 of plate to the right and 0.1 to the
+left: it reallocates the available width rather than creating extra width.
+
+A fixed 0.4-wide interval cannot guarantee coverage of the entire 0.5-wide
+entered bracket. A probability near 100% can nevertheless be plausible when
+almost all actual wind probability is in the covered window. That conclusion
+requires evidence about the distribution or a well-observed shot-time condition.
+P(horizontal hit | H is in [0.4,0.8], no other error) is 100% in the ideal
+centre-line model; it must not be substituted for the unconditional hit rate.
+
+ROUND TARGET / IMPACT
+For a round 0.4-mil gong with fixed geometry, the two-dimensional criterion is:
+  (C - H + E_x)^2 + E_y^2 <= 0.2^2.
+At vertical offset 0.1 mil, the available horizontal chord is
+2*sqrt(0.2^2 - 0.1^2) = 0.346410... mil, not the full 0.4.
+A lower IMPACT percentage can therefore be legitimate, but it must be derived
+from defensible dispersion, vertical-error and covariance assumptions.
+It cannot be determined from MIN/CALL/MAX and target diameter alone.
+
+5. WHAT THE EXISTING SOURCE ACTUALLY DOES
+=========================================
+evidenceSpeedStats uses heuristic weighted MIN/AVG/MAX evidence and a Gaussian
+speed approximation, with a minimum speed SD of 0.6 mph. These summary values
+are not a raw measured time-series histogram.
+monteCarloRequiredHolds adds angular scatter: 8, 18 or 35 degrees depending on
+its concentration score. The 8-degree floor can apply even to a single
+consistent entered direction.
+stageBaselineHoldAtSpeed extrapolates outside the MIN/MAX anchors, with a
+broad safety cap of two bracket spans beyond each endpoint. MIN/MAX on the
+screen therefore are NOT hard limits of the sampled wind-hold distribution.
+
+simulateImpactSamplesV3 adds horizontal/vertical group dispersion, range,
+muzzle-velocity, environmental and optional aerodynamic-jump terms. Where
+solver-derived sensitivities are absent it uses proxy formulae. Several of
+those proxy vertical terms reuse the same z3 sample, which imposes correlation
+rather than estimating it from the user's measurements. This is a material
+modeling assumption to review, not a demonstrated calibration of actual hit rate.
+Group-width to sigma conversion also depends on an assumed full-width / 4
+mapping; that is not a universal conversion from any measured group size.
+
+These mechanisms explain how percentages can be below geometric bracket
+coverage. They do NOT validate the user's exact 50% / 32% report. No probability
+has been multiplied upward, clamped to 80/100%, or replaced with an unstated
+uniform/triangular model in this build.
+
+Core probability and wind-response functions were source-compared unchanged:
+  evidenceSpeedStats, monteCarloRequiredHolds, probabilityInside,
+  stageBaselineHoldAtSpeed, prepareHoldResponse, simulateImpactSamplesV3,
+  impactProbability2D, optimizeWindHoldV3, optimizeShootSolutionV5,
+  insideTarget2D.
+Intentional probability-related changes are limited to the two Confirmed
+geometry helpers and their validation/UI interpretation described above.
+
+6. TEST SUMMARY
+===============
+Existing regression suite: 220 named checks/groups, 220 passed,
+0 failed. Test expectations for visible/exported version metadata were
+updated from 3.8.10 to 3.8.11; behavioral assertions were not relaxed.
+The earlier run with outdated version assertions is retained internally and
+failed only those three old-version assertions. A complete rerun passed with
+the corrected version expectations on identical application code.
+
+New targeted suite: 14 named checks/groups, all passed. One is an expected
+baseline-defect reproduction; the others exercise the new behavior, an explicit
+unchanged-math comparison, and independent analytic examples. Do not count the
+221-width sweep as 221 separate product features or imply these tests establish
+measured hit-probability calibration.
+
+Browser interactions used actual Chromium rendering with a documented simulated
+localStorage/IndexedDB/service-worker boundary. No native iPhone, Safari keyboard,
+real hosted update, offline installation, force-quit durability or Files download
+handoff was tested. Regression equality does not validate the probability model.
+
+7. SOURCE LOCATIONS (index.html)
+===============================
+render: v3.8.10 line 406; v3.8.11 line 410
+storageStatus: v3.8.10 line 1932; v3.8.11 line 1948
+newObs: v3.8.10 line 1036; v3.8.11 line 1052
+ensureLive: v3.8.10 line 1037; v3.8.11 line 1053
+observationActive: v3.8.10 line 1032; v3.8.11 line 1048
+rangeSigmaM: v3.8.10 line 1240; v3.8.11 line 1256
+targetScaleSample: v3.8.10 line 1246; v3.8.11 line 1262
+evidenceSpeedStats: v3.8.10 line 1161; v3.8.11 line 1177
+monteCarloRequiredHolds: v3.8.10 line 1217; v3.8.11 line 1233
+stageBaselineHoldAtSpeed: v3.8.10 line 1211; v3.8.11 line 1227
+simulateImpactSamplesV3: v3.8.10 line 1260; v3.8.11 line 1276
+impactProbability2D: v3.8.10 line 1275; v3.8.11 line 1291
+precisionSigmaMil: v3.8.10 line 1233; v3.8.11 line 1249
+mvVerticalSigmaMil: v3.8.10 line 1249; v3.8.11 line 1265
+rangeVerticalSigmaMil: v3.8.10 line 1250; v3.8.11 line 1266
+envVerticalSigmaMil: v3.8.10 line 1251; v3.8.11 line 1267
+
+8. NEXT EVIDENCE FOR THE PROBABILITY QUESTION
+===========================================
+Use the full JSON backup containing the reported stage, with its target geometry,
+manual wind inputs, directions/DOF, rifle/ammo snapshot, dispersion/MV inputs,
+solver sensitivities, downrange observations and historical corrections. These
+are needed to isolate how the actual 50% / 32% result was produced. Reconstructing
+other inputs until a synthetic scenario happens to match is not verification.
+
+Mathematical reference basis: NIST e-Handbook uniform and normal distributions;
+MathWorks official triangular-distribution documentation; BIPM JCGM 101:2008
+propagation of distributions; NIST TN 1297 covariance/uncertainty propagation.

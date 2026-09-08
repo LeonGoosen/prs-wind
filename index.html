@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.8.10 Competition Core — Reliability</title>
+<title>WIND SIGHT PRS by ZealTech — v3.8.11 Competition Core — Input Stability</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -241,6 +241,10 @@ html,body{touch-action:manipulation}
 .calChart{width:100%;height:145px;display:block;border:1px solid #243b50;border-radius:13px;background:#08131f;margin-top:9px}
 @media(max-width:390px){.calLiveBig{font-size:46px}.calDirBig{font-size:29px}.calPremiumGrid{grid-template-columns:1fr 1fr}}
 .storageButton{background:none;border:0;text-align:right;max-width:140px;padding:0;line-height:1.35;min-height:36px;flex-shrink:1}.brandrow>div{min-width:0}.brandrow .brand{font-size:18px}#storageNotice,#updateNotice{margin:10px 14px 0;overflow-wrap:anywhere}.brandStrip img{background:transparent;padding:0}@media(max-width:360px){.brandrow .brand{font-size:16px}.brand small{font-size:8px}.storageButton{font-size:10px;max-width:95px}}
+/* v3.8.11: autosave must not resize the brand row while a field has focus. */
+.storageButton{flex:0 0 92px;width:92px;max-width:92px;height:42px;min-height:42px;padding:0;font-size:10px;line-height:1.35;overflow:hidden;overflow-wrap:anywhere}
+.brandrow>div{flex:1 1 0;min-width:0}
+.rangeConfirmedNote{grid-column:1/-1;font-size:11px;line-height:1.4;color:var(--muted)}
  .observationEnable{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:12px}.observationEnable input{width:auto;margin:0}
 </style>
 </head>
@@ -248,7 +252,7 @@ html,body{touch-action:manipulation}
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>COMPETITION CORE • v3.8.10</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>COMPETITION CORE • v3.8.11</small></div></div>
   <button class="save storageButton" id="saveState" type="button" onclick="if(protection.ready){saveCurrent();st.screen='dataProtection';render()}">Checking data…</button>
 </div>
 <nav id="nav"></nav>
@@ -326,7 +330,7 @@ function navItems(){return [["home","HOME"],["matches","MATCHES"],["rifles","PRO
 function renderNav(){nav.innerHTML="";navItems().forEach(([k,l])=>{let b=document.createElement("button");b.className="navbtn"+(st.screen===k?" active":"");b.textContent=l;b.onclick=()=>{if(protection.blocked){st.screen="dataProtection";st.step=0;render();return;}saveCurrent();st.screen=k;st.step=0;render()};nav.appendChild(b)})}
 function setBottom(show=true,nextLabel="NEXT →",nextVisible=true){bottom.style.display=show?"block":"none";nextBtn.textContent=nextLabel;nextBtn.style.visibility=nextVisible?"visible":"hidden"}
 
-const APP_VERSION="3.8.10";
+const APP_VERSION="3.8.11";
 
 
 
@@ -991,12 +995,24 @@ function validateMatchStep(m){
 function commitMatch(m){if(!canMutateData())return;let i=st.data.matches.findIndex(x=>x.id===m.id);if(i>=0)st.data.matches[i]=m;else st.data.matches.push(m);st._md=null;clearDraft("match");writeNow()}
 
 function needsHeight(shape){return shape==="Rectangle"||shape==="IPSC / Silhouette"||shape==="Custom"}
+function targetGeometryConfirmed(t){return t?.rangeQuality==="LRF / confirmed";}
+function targetUncertaintyFields(t,si,ti){
+ const fixed=targetGeometryConfirmed(t),key=si+"_"+ti;
+ return `<div id="rangeUncWrap_${key}" class="${fixed?"hidden":""}">${f("Range uncertainty ±m","tru_"+key,t.rangeUncM??"0","decimal")}</div><div id="sizeUncWrap_${key}" class="${fixed?"hidden":""}">${f("Target-size uncertainty %","tsu_"+key,t.targetSizeUncPct??"0","decimal")}</div><div id="rangeFixed_${key}" class="rangeConfirmedNote ${fixed?"":"hidden"}">Confirmed: entered range and target size are treated as fixed. Change range quality to include measurement uncertainty.</div>`;
+}
+function syncRangeCertainty(si,ti){
+ const key=si+"_"+ti,fixed=v("trq_"+key)==="LRF / confirmed";
+ for(const prefix of ["rangeUncWrap_","sizeUncWrap_"]){const el=document.getElementById(prefix+key);if(el)el.classList.toggle("hidden",fixed);}
+ const note=document.getElementById("rangeFixed_"+key);if(note)note.classList.toggle("hidden",!fixed);
+ // Retain saved estimated values for switching back; hidden values are not applied.
+ for(const prefix of ["tru_","tsu_"]){const el=document.getElementById(prefix+key);if(el)el.disabled=fixed;}
+}
 function syncShapeDims(si,ti){
  const sh=v(`ts_${si}_${ti}`),w=document.getElementById(`tw_${si}_${ti}`),h=document.getElementById(`th_${si}_${ti}`),hw=document.getElementById(`heightWrap_${si}_${ti}`);
  if(!needsHeight(sh)){if(w&&h)h.value=w.value; if(hw)hw.classList.add("hidden")}else if(hw)hw.classList.remove("hidden");
 }
 
-function renderStageSetup(m){stageSetup.innerHTML=m.stages.map((s,si)=>`<details class="stageBuilder" ${si===m.stages.length-1?"open":""}><summary>STAGE ${si+1}: ${esc(s.name||("Stage "+(si+1)))} <span class="summaryPill">${s.targets.length} target${s.targets.length===1?"":"s"}</span><div class="small" style="margin-top:5px">${s.targets.map(tt=>`${esc(tt.label)} ${esc(tt.distanceM||"—")}m • ${esc(tt.shape||"")} • ${esc(targetSizeText(tt))}`).join("<br>")}</div></summary><div class="managementActions"><button class="btn danger small" onclick="removeStageSetup(${si})">DELETE STAGE</button></div>${f("Stage name","sn_"+si,s.name)}${s.targets.map((tr,ti)=>`<div class="targetCard"><div class="targetHeader"><strong>TARGET ${ti+1}</strong>${s.targets.length>1?`<button class="btn danger small" onclick="removePreTarget(${si},${ti})">REMOVE</button>`:""}</div><div class="grid two">${f("Target label","tl_"+si+"_"+ti,tr.label)}${f("Distance (m)","td_"+si+"_"+ti,inputFieldValue(tr,"distanceM"),"numeric")}<label>Range quality<select id="trq_${si}_${ti}">${["Match book","LRF / confirmed","Estimated"].map(x=>`<option ${x===(tr.rangeQuality||"Match book")?"selected":""}>${x}</option>`).join("")}</select></label>${f("Range uncertainty ±m","tru_"+si+"_"+ti,tr.rangeUncM??"0","decimal")}${f("Target-size uncertainty %","tsu_"+si+"_"+ti,tr.targetSizeUncPct??"0","decimal")}<label>Shape<select id="ts_${si}_${ti}" onchange="syncShapeDims(${si},${ti})">${["Round","Square","Rectangle","Diamond","IPSC / Silhouette","Custom"].map(x=>`<option ${x===tr.shape?"selected":""}>${x}</option>`).join("")}</select></label>${f("Width / diameter cm","tw_"+si+"_"+ti,inputFieldValue(tr,"widthCm"),"decimal")}<div id="heightWrap_${si}_${ti}" class="${needsHeight(tr.shape)?"":"hidden"}">${f("Height cm","th_"+si+"_"+ti,inputFieldValue(tr,"heightCm")||inputFieldValue(tr,"widthCm"),"decimal")}</div></div></div>`).join("")}<button class="btn secondary small" onclick="addPreTarget(${si})">+ ADD TARGET TO STAGE ${si+1}</button></details>`).join("");m.stages.forEach((s,si)=>{const field=document.getElementById("sn_"+si);if(field)field.dataset.stageId=s.id;s.targets.forEach((tr,ti)=>{const el=document.getElementById("tl_"+si+"_"+ti);if(el)el.dataset.targetId=tr.id;syncShapeDims(si,ti)});if(s.completedAt){const box=stageSetup.querySelectorAll(".stageBuilder")[si];box?.querySelectorAll("input,select,textarea,button").forEach(el=>el.disabled=true);const note=document.createElement("div");note.className="note";note.textContent="Completed stage: geometry is locked. Use the post-stage correction workflow for holds and scores; duplicate the match for a new setup.";box?.appendChild(note);}})}
+function renderStageSetup(m){stageSetup.innerHTML=m.stages.map((s,si)=>`<details class="stageBuilder" ${si===m.stages.length-1?"open":""}><summary>STAGE ${si+1}: ${esc(s.name||("Stage "+(si+1)))} <span class="summaryPill">${s.targets.length} target${s.targets.length===1?"":"s"}</span><div class="small" style="margin-top:5px">${s.targets.map(tt=>`${esc(tt.label)} ${esc(tt.distanceM||"—")}m • ${esc(tt.shape||"")} • ${esc(targetSizeText(tt))}`).join("<br>")}</div></summary><div class="managementActions"><button class="btn danger small" onclick="removeStageSetup(${si})">DELETE STAGE</button></div>${f("Stage name","sn_"+si,s.name)}${s.targets.map((tr,ti)=>`<div class="targetCard"><div class="targetHeader"><strong>TARGET ${ti+1}</strong>${s.targets.length>1?`<button class="btn danger small" onclick="removePreTarget(${si},${ti})">REMOVE</button>`:""}</div><div class="grid two">${f("Target label","tl_"+si+"_"+ti,tr.label)}${f("Distance (m)","td_"+si+"_"+ti,inputFieldValue(tr,"distanceM"),"numeric")}<label>Range quality<select id="trq_${si}_${ti}" onchange="syncRangeCertainty(${si},${ti})">${["Match book","LRF / confirmed","Estimated"].map(x=>`<option ${x===(tr.rangeQuality||"Match book")?"selected":""}>${x}</option>`).join("")}</select></label>${targetUncertaintyFields(tr,si,ti)}<label>Shape<select id="ts_${si}_${ti}" onchange="syncShapeDims(${si},${ti})">${["Round","Square","Rectangle","Diamond","IPSC / Silhouette","Custom"].map(x=>`<option ${x===tr.shape?"selected":""}>${x}</option>`).join("")}</select></label>${f("Width / diameter cm","tw_"+si+"_"+ti,inputFieldValue(tr,"widthCm"),"decimal")}<div id="heightWrap_${si}_${ti}" class="${needsHeight(tr.shape)?"":"hidden"}">${f("Height cm","th_"+si+"_"+ti,inputFieldValue(tr,"heightCm")||inputFieldValue(tr,"widthCm"),"decimal")}</div></div></div>`).join("")}<button class="btn secondary small" onclick="addPreTarget(${si})">+ ADD TARGET TO STAGE ${si+1}</button></details>`).join("");m.stages.forEach((s,si)=>{const field=document.getElementById("sn_"+si);if(field)field.dataset.stageId=s.id;s.targets.forEach((tr,ti)=>{const el=document.getElementById("tl_"+si+"_"+ti);if(el)el.dataset.targetId=tr.id;syncShapeDims(si,ti);syncRangeCertainty(si,ti)});if(s.completedAt){const box=stageSetup.querySelectorAll(".stageBuilder")[si];box?.querySelectorAll("input,select,textarea,button").forEach(el=>el.disabled=true);const note=document.createElement("div");note.className="note";note.textContent="Completed stage: geometry is locked. Use the post-stage correction workflow for holds and scores; duplicate the match for a new setup.";box?.appendChild(note);}})}
 
 
 window.removeStageSetup=si=>runProtectedChange(async()=>{
@@ -1033,7 +1049,7 @@ function observationActive(o){const b=behavior[o?.indicator]?.[Number(o?.behavio
 function markObservationEntered(o){o.enabled=true;if(o.quality==="Unknown")o.quality="Clear";}
 function observationAt(where,pi,oi){const s=getStage();return where==="target"?s?.targetObs?.[oi]:s?.points?.[pi]?.obs?.[oi];}
 function setObservationEnabled(where,pi,oi,enabled){if(!canMutateData())return;const o=observationAt(where,pi,oi);if(!o)return;o.enabled=!!enabled;if(enabled&&o.quality==="Unknown")o.quality="Clear";autosave();renderFastDownrange(getStage());}
-function newObs(){return {id:uid("o"),indicator:"Long grass",behavior:0,quality:"Unknown",dir:"",enabled:false}}
+function newObs(addedByUser=false){return {id:uid("o"),indicator:"Long grass",behavior:0,quality:"Unknown",dir:"",enabled:!!addedByUser}}
 function ensureLive(s){s.downrangeOpen=s.downrangeOpen||"points";if(!s.wind)s.wind={min:"",avg:"",max:"",now:"",avgDir:"",nowDir:"",window:"10 min"};if(!s.points?.length)s.points=[{id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs()]}];s.points.forEach(p=>{if(!Array.isArray(p.obs))p.obs=[];});if(!s.points[0].obs.length)s.points[0].obs=[newObs()];if(!s.targetObs)s.targetObs=[];if(!s.intel)s.intel=[]}
 
 function angleOK(x){const z=n(x);return z!==null&&z>=0&&z<=360}
@@ -1051,7 +1067,7 @@ function numericSafetyError(s,t){
  const val=(v,max,positive=false)=>n(v)!==null&&n(v)>=(positive?Number.MIN_VALUE:0)&&n(v)<=max;
  if(!s||!t||!s.wind)return "Complete the wind and target inputs.";
  const pending=pendingNumericError(s.wind,t,...(s.points||[]));if(pending)return pending;
- const uncertainty=optionalNumberError(t,["rangeUncM","targetSizeUncPct"])||optionalNumberError(currentMatchAndAmmo().m,["envTempUncC","envPressureUncHpa","envDaUncM","ajResidualMil"]);if(uncertainty)return uncertainty;
+ const uncertainty=(!targetGeometryConfirmed(t)&&optionalNumberError(t,["rangeUncM","targetSizeUncPct"]))||optionalNumberError(currentMatchAndAmmo().m,["envTempUncC","envPressureUncHpa","envDaUncM","ajResidualMil"]);if(uncertainty)return uncertainty;
  for(const k of ["min","avg","max"])if(!val(s.wind[k],INPUT_LIMITS.windMph))return "Wind MIN / AVG / MAX must be 0–200 mph.";
  if(!(n(s.wind.min)<=n(s.wind.avg)&&n(s.wind.avg)<=n(s.wind.max)))return "Wind must satisfy MIN ≤ AVG ≤ MAX.";
  if(String(s.wind.now??"").trim()!==""&&!val(s.wind.now,INPUT_LIMITS.windMph))return "NOW wind must be 0–200 mph or blank.";
@@ -1238,12 +1254,12 @@ function precisionSigmaMil(a,axis){
  return full/4;
 }
 function rangeSigmaM(tt){
+ if(targetGeometryConfirmed(tt))return 0;
  const u=n(tt.rangeUncM);if(u>0)return u/2;
- if(tt.rangeQuality==="LRF / confirmed")return .5;
  if(tt.rangeQuality==="Estimated")return Math.max(2,(n(tt.distanceM)||0)*.01);
  return 1;
 }
-function targetScaleSample(tt,z){const p=Math.max(0,n(tt.targetSizeUncPct)||0);return clamp(1+z*(p/100)/2,.8,1.2)}
+function targetScaleSample(tt,z){if(targetGeometryConfirmed(tt))return 1;const p=Math.max(0,n(tt.targetSizeUncPct)||0);return clamp(1+z*(p/100)/2,.8,1.2)}
 function mvToFps(v,unit){const x=n(v);if(x===null)return null;return String(unit||"fps").toLowerCase()==="m/s"?x*3.280839895:x}
 function mvSdToFps(v,unit){return mvToFps(v,unit)}
 function mvVerticalSigmaMil(a,tt){const mv=mvToFps(a?.mv,a?.mvUnit),sd=mvSdToFps(a?.mvSd,a?.mvUnit),d=n(tt.distanceM);if(!(mv>0&&sd>0&&d>0))return 0;return (sd/mv)*(d/100)*.55}
@@ -1492,16 +1508,16 @@ function renderFastDownrange(s){
  <div class="note"><strong>Speed rule:</strong> if there is no reliable observation, press NEXT. Do not invent data.</div>`;
  bindAuto(captureLive);
 }
-function obsHTML(o,where,pi,oi){return `<div class="obs"><div class="cardhead"><strong>Observation ${oi+1}</strong><button class="btn danger small" onclick="removeObs('${where}',${pi},${oi})">REMOVE</button></div><label class="observationEnable"><input type="checkbox" ${o.enabled!==false?"checked":""} onchange="setObservationEnabled('${where}',${pi},${oi},this.checked)"> USE THIS OBSERVATION</label>${o.enabled===false?`<div class="note">Not used in the wind call. Enable or enter an observation to use it.</div>`:typeof o.enabled!=="boolean"?`<div class="small">Saved in an earlier version: confirm this observation was entered. Untick USE if it was an unused default.</div>`:""}<div class="grid two"><label>Indicator<select id="oi_${where}_${pi}_${oi}" onchange="changeIndicator('${where}',${pi},${oi},this.value)">${Object.keys(behavior).map(x=>`<option ${x===o.indicator?"selected":""}>${x}</option>`).join("")}</select></label><label>Behaviour<select id="ob_${where}_${pi}_${oi}" onchange="changeBehavior('${where}',${pi},${oi},this.value)">${behavior[o.indicator].map((x,i)=>`<option value="${i}" ${i===+o.behavior?"selected":""}>${x[0]}</option>`).join("")}</select></label><label>Direction quality<select id="oq_${where}_${pi}_${oi}" onchange="changeQuality('${where}',${pi},${oi},this.value)"><option ${o.quality==="Clear"?"selected":""}>Clear</option><option ${o.quality==="Approximate"?"selected":""}>Approximate</option><option ${o.quality==="Unknown"?"selected":""}>Unknown</option></select></label>${o.quality==="Unknown"?"":f("Indicator moving TO °","od_"+where+"_"+pi+"_"+oi,o.dir,"numeric")}</div>${o.quality==="Unknown"?"":`<button class="btn outline small" onclick="openObsWheel('${where}',${pi},${oi})">◎ TO ANGLE</button>`}<div class="small" style="margin-top:8px">${evidenceText(o)}</div></div>`}
+function obsHTML(o,where,pi,oi){return `<div class="obs"><div class="cardhead"><strong>Observation ${oi+1}</strong><button class="btn danger small" onclick="removeObs('${where}',${pi},${oi})">REMOVE</button></div><label class="observationEnable"><input type="checkbox" ${o.enabled!==false?"checked":""} onchange="setObservationEnabled('${where}',${pi},${oi},this.checked)"> USE THIS OBSERVATION</label>${o.enabled===false?`<div class="note">Not used in the wind call. Enable or enter an observation to use it.</div>`:o.quality==="Unknown"?`<div class="small">USE is selected. Enter an observed behaviour or direction quality before this row contributes; untouched defaults are not evidence.</div>`:typeof o.enabled!=="boolean"?`<div class="small">Saved in an earlier version: confirm this observation was entered. Untick USE if it was an unused default.</div>`:""}<div class="grid two"><label>Indicator<select id="oi_${where}_${pi}_${oi}" onchange="changeIndicator('${where}',${pi},${oi},this.value)">${Object.keys(behavior).map(x=>`<option ${x===o.indicator?"selected":""}>${x}</option>`).join("")}</select></label><label>Behaviour<select id="ob_${where}_${pi}_${oi}" onchange="changeBehavior('${where}',${pi},${oi},this.value)">${behavior[o.indicator].map((x,i)=>`<option value="${i}" ${i===+o.behavior?"selected":""}>${x[0]}</option>`).join("")}</select></label><label>Direction quality<select id="oq_${where}_${pi}_${oi}" onchange="changeQuality('${where}',${pi},${oi},this.value)"><option ${o.quality==="Clear"?"selected":""}>Clear</option><option ${o.quality==="Approximate"?"selected":""}>Approximate</option><option ${o.quality==="Unknown"?"selected":""}>Unknown</option></select></label>${o.quality==="Unknown"?"":f("Indicator moving TO °","od_"+where+"_"+pi+"_"+oi,o.dir,"numeric")}</div>${o.quality==="Unknown"?"":`<button class="btn outline small" onclick="openObsWheel('${where}',${pi},${oi})">◎ TO ANGLE</button>`}<div class="small" style="margin-top:8px">${evidenceText(o)}</div></div>`}
 function evidenceText(o){if(!observationActive(o))return "Inactive / unknown — not used in the wind call";let b=behavior[o.indicator]?.[+o.behavior||0];if(!b)return "No usable evidence";return b[1]!=null?(b[1]===b[2]?`~${b[1]} mph evidence`:`${b[1]}–${b[2]} mph evidence`) + (b[3].includes("direction")?" • direction useful":""):(b[3]==="direction"?"Direction evidence":"Qualitative only")}
-window.addPoint=()=>{if(!canMutateData())return;captureLive();let s=getStage();s.downrangeOpen="points";if(s.points.length>=MAX_POINTS){alert(`Easy Mode supports up to ${MAX_POINTS} downrange points.`);return;}s.points.push({id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs()]});autosave();renderFastDownrange(s)}
+window.addPoint=()=>{if(!canMutateData())return;captureLive();let s=getStage();s.downrangeOpen="points";if(s.points.length>=MAX_POINTS){alert(`Easy Mode supports up to ${MAX_POINTS} downrange points.`);return;}s.points.push({id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs(true)]});autosave();renderFastDownrange(s)}
 window.removePoint=pi=>runProtectedChange(async()=>{
  if(!canMutateData())return false;captureLive();const s=getStage();if(!s?.points?.[pi])return false;
  if(!await beforeDestructiveChange("Before downrange point deletion"))return false;
  s.downrangeOpen="points";s.points.splice(pi,1);if(!s.points.length)s.points.push({id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs()]});
  await writeNow();renderFastDownrange(s);return true;
 });
-window.addObs=(where,pi)=>{if(!canMutateData())return;captureLive();let s=getStage();s.downrangeOpen=where==="target"?"target":"points";const arr=where==="target"?s.targetObs:s.points[pi].obs;if(arr.length>=MAX_OBS){alert(`Easy Mode supports up to ${MAX_OBS} observations per zone.`);return;}arr.push(newObs());autosave();renderFastDownrange(s)}
+window.addObs=(where,pi)=>{if(!canMutateData())return;captureLive();let s=getStage();s.downrangeOpen=where==="target"?"target":"points";const arr=where==="target"?s.targetObs:s.points[pi].obs;if(arr.length>=MAX_OBS){alert(`Easy Mode supports up to ${MAX_OBS} observations per zone.`);return;}arr.push(newObs(true));autosave();renderFastDownrange(s)}
 window.removeObs=(where,pi,oi)=>runProtectedChange(async()=>{
  if(!canMutateData())return false;captureLive();const s=getStage(),arr=where==="target"?s?.targetObs:s?.points?.[pi]?.obs;if(!arr?.[oi])return false;
  if(!await beforeDestructiveChange("Before observation deletion"))return false;
@@ -1931,7 +1947,7 @@ function parseCandidate(raw,source,kind="primary",at=null){
 }
 function storageStatus(text,isError=false){
  saveState.textContent=text;saveState.style.color=isError?"var(--bad)":"";
- saveState.title=protection.warning||protection.notice||"Open DATA for storage status and recovery.";
+ saveState.title=protection.warning||protection.notice||(text+" — Open DATA for storage status and recovery.");
  const a=document.getElementById('dpLocal'),b=document.getElementById('dpMirror'),t=document.getElementById('dpSavedAt');if(a)a.textContent=protection.localOK?'Current copy verified':'Not verified / not current';if(b)b.textContent=protection.idbOK?'Current copy verified':'Not verified / not current';if(t)t.textContent=st.data.lastSavedAt?new Date(st.data.lastSavedAt).toLocaleString():'Not yet saved';
  const box=document.getElementById('storageNotice');
  if(box){box.className=(isError||protection.blocked)?"bad":"note";box.textContent=protection.warning||protection.notice||text;box.hidden=!(isError||protection.blocked||protection.warning||protection.notice)}

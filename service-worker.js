@@ -1,7 +1,7 @@
 /* Competition Core shell only. Never touches localStorage or IndexedDB.
  * No skipWaiting: updates must not interrupt an open stage or mix app versions.
  */
-const CACHE='wind-sight-v3810-competition-core';
+const CACHE='wind-sight-v3811-competition-core';
 const SHELL=['./','./index.html','./manifest.webmanifest','./apple-touch-icon.png','./icon-192.png','./icon-512.png','./wind-sight-icon.png','./zealtech-transparent.png'];
 const BASE=new URL('./',self.location.href);
 self.addEventListener('install',event=>event.waitUntil((async()=>{
