@@ -1,0 +1,226 @@
+WIND SIGHT PRS — v3.8.10 COMPETITION CORE
+Final reliability, diagnostics and automated UAT report
+ZealTech | Prepared for Leon Goosen | 8 September 2026
+
+RELEASE DECISION
+===============
+Automated engineering acceptance: PASS within the tested scope.
+Two complete runs on identical application bytes: 220/220 named checks passed in
+EACH run, with zero current-release failures. These are 220 unique checks/test
+groups, not 440 different features. Larger numeric/scenario sweeps sit inside
+those groups and are not added again to the named-check total.
+
+All 11 issues in the previous v3.8.9 final diagnostic have targeted corrections
+and passing regression reproductions. The earlier 121-check release suite also
+passes. Further defects and validation-contract gaps found during this work were
+corrected and added to the final gate. There are no unresolved failed checks in
+this defined automated release gate.
+
+This is NOT a guarantee that no unknown defect exists. It is NOT owner/human UAT,
+physical iPhone/Safari/PWA sign-off, a successful live-hosted update test, native
+storage/offline durability certification or independent ballistic validation.
+Complete the device acceptance checklist below before competition reliance.
+
+BUILD AND PROVENANCE
+====================
+Baseline: the supplied WIND_SIGHT_PRS_v3.8.9_Competition_Core.zip.
+Baseline ZIP SHA-256:
+3e95970fe12625e1c2f531e801a2497a590e52095faee6b31ff71155cb627b28
+Baseline index.html SHA-256:
+56d23021c133c7ead281965feacacccf24372d6620503e2ade41f1dd6886fc8e
+Tested and delivered index.html SHA-256:
+da213c177def18f87f05f6cee9592c499217ee6f9d2a4d92f6ca8bc7b2747af9
+Tested service-worker.js SHA-256:
+c8c7ebbbc06783aac3320a75f4a2daac8fc9989197ad1277bd170fdcdd6d78b5
+
+The old ZIP remains unchanged. This is a targeted forward release, not a rollback
+or redesign. Runtime changes are in index.html; package version and the shell
+cache identifier are updated. All five PNG branding/PWA assets, the manifest and
+read-only backup helper remain byte-identical to the supplied baseline. No font
+files, external JavaScript dependency, runtime npm dependency, telemetry service,
+Bluetooth integration, production data or account credentials were added.
+
+Storage stays on schema 4, local key windSightPRS and IndexedDB
+windSightPRSDB / state / appData, database version 2. Explicit draft containers
+are additive. Do not assume an older app understands new draft metadata: blind
+rollback is not a supported recovery strategy. Keep an external pre-update backup.
+
+CORRECTIONS TO THE PREVIOUS 11 FINDINGS
+=====================================
+1. Target and stage deletion: capture edits BEFORE removing array entries; do not
+   read an old position-indexed form into the surviving objects afterward. DOM
+   stage/target identity checks protect capture. Successful and failed deletions
+   retain the correct survivor geometry and values, including after simulated
+   reopening. Existing labels are preserved except the established automatic T1,
+   T2 numbering behavior for generic target labels.
+2. Rifle/ammo draft resume: reconnect the edited ammo object to its rifle and
+   commit that same object. New ammunition name and MV survive resume/save/reopen.
+3. Calibration A headings: blank headings retain their original column positions.
+   Duplicate/unsupported edits are isolated as recoverable pending calibration;
+   they do not silently reassign or drop stored measurements.
+4. Correction-history growth: snapshots omit snapshot/history/draft containers,
+   while each accepted correction records a single prior committed revision.
+   Forty actual-control corrections passed; the one-stage fixture grew from
+   5,878 to 49,988 serialized bytes. A separate
+   helper-level 1,000-revision test passed within its bounds. The 1,000-revision
+   test is NOT a claim of 1,000 physical-phone correction sessions.
+5. Locked historical records: completed geometry cannot be changed through normal
+   setup. Correction edits remain drafts until saved; simply opening or leaving a
+   completed record does not rewrite it. Completed views, Reports, Dashboard and
+   historical learning read the committed snapshot. Legacy raw discrepancies are
+   retained for investigation rather than silently overwritten.
+6. UI/export/import consistency: invalid working holds stay as explicit draft
+   text instead of replacing validated magnitudes. Editing, completed-stage Save,
+   actual generated export bytes and FileReader import paths are exercised.
+7. Historical shape validation: malformed saved solution collections and snapshots
+   are rejected before replacing active data; accepted data can render Reports.
+8. Identity integrity: required identifiers, safe characters and uniqueness are
+   checked within entity collections. Active and Trash cannot contain the same
+   match ID. Restoring a colliding identity is guarded.
+9. Calibration structure: header/row dimensions and duplicate axes are validated.
+   B-distance insertion preserves values AND left/right information by distance.
+10. Clearing optional trajectory factors resets to the documented interim mode;
+    explicit zero factors remain visible and saved. Incomplete/negative factors
+    are recoverable draft edits, not valid solver-derived weights.
+11. Invalid numerical conditions: negative/invalid weights and optional physical
+    inputs cannot produce a new recommendation. Searches remain bounded, and the
+    tested valid-input prediction behavior is preserved.
+
+ADDITIONAL HARDENING FOUND DURING THE LOOPS
+=========================================
+- Duplicate rows/headings or oversized calibration text no longer force a normal
+  edit into an unrecoverable read-only state. The user can reopen and correct the
+  draft while the prior valid matrix remains intact.
+- Invalid wind, DOF, Kestrel and target geometry entries are separate draft values.
+  The old authoritative value is not replaced, and a pending invalid edit blocks
+  progression/prediction instead of silently using a stale call.
+- Cleared calibration metadata is not replaced with invented default conditions.
+- First-use normalization does not repeatedly resurrect deliberately empty work
+  tables. The last-row deletion guard and calibration survivor behavior are tested.
+- Corrupt/rejected saved copies can be exported under DATA as original data for
+  investigation. They are clearly labeled REJECTED / REVIEW ONLY, not verified
+  restorable backups. Exact byte preservation was checked for a rejected local
+  JSON string. IndexedDB quarantine preserves the original structured object.
+- Candidate parsing, recovery verification and import now use compatible numeric
+  and structural contracts. A truthy but unrestorable pin is not valid protection.
+  Total checkpoint failure blocks editing/deletion rather than pretending success.
+- Explicit replacement quarantines numerically invalid database data as well as
+  malformed local data before allowing replacement.
+- Invalid observation/completion timestamps do not propagate NaN into weighting;
+  unusable dated evidence is not promoted into trusted directional/learning weight.
+- Read-only and protected-change guards remain in place across tested keyboard,
+  import, deletion, archive/restore, duplicate and asynchronous conflict paths.
+
+ITERATION AND COUNTING RECORD
+============================
+The evidence retains initial failures, intermediate loops, the untouched baseline,
+the final test scripts, final complete run logs, screenshots and result JSON.
+Partial runs and early failed hypotheses are NOT passed off as final acceptance.
+Earlier successful suites were expanded; later findings were fixed before the two
+final complete runs (iterations 05 and 06) on the delivered runtime bytes.
+
+A deliberate control against unchanged v3.8.8 still reproduces its old ammo-draft
+bug. That result remains labeled FAIL in baseline evidence and is explicitly
+excluded from the v3.8.10 release count. It is not an unresolved v3.8.10 failure.
+
+Test-harness corrections are documented: numeric-equivalent string values compare
+numerically; a correctly rejected import leaves no malformed history key to index;
+locked fields are checked as disabled rather than forcibly edited; hidden advanced
+controls are opened before interaction; existing last-row UI guards are respected.
+These are distinct from production-code fixes. Acceptance tests assert the intended
+corrected behavior, not the original defective output.
+
+FINAL COMPLETE SUITE RESULTS (EACH PASS)
+=======================================
+core_browser                   29 checks     29 PASS     0 FAIL
+reliability_browser            14 checks     14 PASS     0 FAIL
+storage                        26 checks     26 PASS     0 FAIL
+reliability_unit               15 checks     15 PASS     0 FAIL
+service_worker                  8 checks      8 PASS     0 FAIL
+static                         15 checks     15 PASS     0 FAIL
+engine_regression              14 checks     14 PASS     0 FAIL
+extended_workflows             10 checks     10 PASS     0 FAIL
+adversarial_workflows           9 checks      9 PASS     0 FAIL
+schema                          8 checks      8 PASS     0 FAIL
+independent_engine             12 checks     12 PASS     0 FAIL
+layout_capacity                 8 checks      8 PASS     0 FAIL
+backup_roundtrip                1 checks      1 PASS     0 FAIL
+deeper_workflows               14 checks     14 PASS     0 FAIL
+portable_inputs                 4 checks      4 PASS     0 FAIL
+deeper_data                     9 checks      9 PASS     0 FAIL
+numeric_adversarial            16 checks     16 PASS     0 FAIL
+supplied_v389_regression        1 checks      1 PASS     0 FAIL
+history_observations            4 checks      4 PASS     0 FAIL
+recovery_contract               3 checks      3 PASS     0 FAIL
+TOTAL                         220 checks    220 PASS     0 FAIL
+
+Numerical/regression evidence includes:
+- 144 manual/visual/uncalibrated comparison scenarios against v3.8.8: compared
+  outputs matched; 138 solutions and six matching no-solution cases.
+- 64 additional valid-input scenarios against the untouched supplied v3.8.9:
+  same holds/sides and compared model outputs within 1e-10 numeric tolerance;
+  all 64 returned solutions. These include further ranges, angles and shapes.
+- Independent geometry/angle identities, solver-anchor reconstruction, angle
+  application once, left/right behavior and rotation invariance.
+- 2,880 prepared-response/reference comparisons, 10,001 rounding examples and
+  adversarial optional-number sweeps. These are finite checks, not measured
+  real-world accuracy or proof that all possible inputs have been tested.
+- Rendering at 320, 390, 768 and 1440 pixels across 18 routes, ten-target SHOOT /
+  Range Card, and a synthetic 20-match / 400-stage / 4,000-target capacity case.
+  Desktop timings are in raw results; they are not iPhone performance claims.
+
+ENVIRONMENT AND COVERAGE BOUNDARY
+=================================
+Chromium 144.0.7559.96 built on Debian GNU/Linux 13 (trixie)
+Playwright 1.57.0; Node v22.16.0; Python 3.13.
+
+DOM interaction uses actual Chromium rendering and application script bytes, but
+set_content with explicitly simulated localStorage, IndexedDB and service-worker
+boundaries. Imported files go through the app's real FileReader path. Generated
+Blob content is inspected; the final OS Files/Downloads handoff is not certified.
+Asset data URLs and browser API doubles exist only in the harness, not in the app.
+
+Native browser navigation to the local test server returned
+ERR_BLOCKED_BY_ADMINISTRATOR. No administrative browser policy was bypassed.
+A normal attempt to install Playwright WebKit failed with DNS EAI_AGAIN; Firefox
+was not installed. No Safari, physical iPhone, native browser database, service-
+worker upgrade lifecycle on the hosted app, force-quit durability or installed
+PWA offline session is marked passed. Their status remains NOT TESTED here.
+
+Static source/package inspection found no active Calypso/Bluefy/Bluetooth code,
+new external runtime dependency, destructive primary-storage clear/delete call,
+script syntax error or duplicate top-level function in the covered checks. This
+is not a third-party penetration-test certificate or an antivirus guarantee.
+
+EXISTING DATA THAT CANNOT BE RECONSTRUCTED BY GUESSING
+====================================================
+Legacy observation rows may not record whether they were deliberate or untouched
+defaults. Their existing information is retained; review USE THIS OBSERVATION.
+The patch prevents new calibration column misassignment but cannot infer original
+solver values already saved against the wrong axis by an older release. Check
+suspect tables against the original solver readings/backup. Rejected or already
+oversized legacy saves are preserved/exportable for review; do not erase them to
+force startup. This release does not fabricate missing historical measurements.
+
+PHONE / HOSTED ACCEPTANCE BEFORE COMPETITION
+===========================================
+A. BEFORE replacing the app, export the current full JSON backup in the same
+   browser/PWA where your data is visible. Confirm the file exists independently
+   in Files/Downloads. If still on v3.8.6, use the separately supplied unchanged-
+   engine v3.8.6 Backup Access package first; the failed releases need not be used.
+B. Deploy the complete extracted APPLICATION ZIP to the same project and URL.
+   It is a static web app, not a WordPress plugin. Do not change DNS/hostname,
+   clear website data or uninstall the PWA to force this update.
+C. Open online, allow the app update to download, close all its old tabs/PWA
+   windows, reopen and confirm v3.8.10 in the visible header.
+D. Compare rifle/ammo/match/stage counts and key calibration values to your backup.
+   Inspect DATA status. Test a non-critical edit/save/close/reopen; a draft resume;
+   a full manual-wind/Kestrel/SHOOT/Range Card/post-stage workflow; an ordinary
+   correction; and a backup exported by this release.
+E. After the complete online load, enable airplane mode and test reopening,
+   editing/saving, closing and reopening again. Re-enable connectivity and confirm
+   the expected values. Native offline/update acceptance remains pending until
+   these tests pass on the actual competition device and installed context.
+
+No live hosting, DNS, account setting or actual user dataset was changed in this
+work. The evidence ZIP is not the application and must not be deployed.

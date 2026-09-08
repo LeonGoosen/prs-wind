@@ -1,12 +1,33 @@
-const CACHE="wind-sight-v386-calibration";
-const SHELL=["./","./index.html","./manifest.webmanifest","./apple-touch-icon.png","./icon-192.png","./icon-512.png","./wind-sight-icon.png","./zealtech-transparent.png"];
-self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));
-self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
-self.addEventListener("fetch",e=>{
- if(e.request.method!=="GET")return;
- if(e.request.mode==="navigate"){
-   e.respondWith(fetch(e.request).then(r=>{const c=r.clone();caches.open(CACHE).then(x=>x.put("./index.html",c));return r}).catch(()=>caches.match("./index.html")));
- }else{
-   e.respondWith(caches.match(e.request).then(cached=>cached||fetch(e.request).then(r=>{const c=r.clone();caches.open(CACHE).then(x=>x.put(e.request,c));return r})));
- }
+/* Competition Core shell only. Never touches localStorage or IndexedDB.
+ * No skipWaiting: updates must not interrupt an open stage or mix app versions.
+ */
+const CACHE='wind-sight-v3810-competition-core';
+const SHELL=['./','./index.html','./manifest.webmanifest','./apple-touch-icon.png','./icon-192.png','./icon-512.png','./wind-sight-icon.png','./zealtech-transparent.png'];
+const BASE=new URL('./',self.location.href);
+self.addEventListener('install',event=>event.waitUntil((async()=>{
+ const cache=await caches.open(CACHE);
+ // cache:'reload' bypasses stale HTTP cache during installation. A failed shell fetch
+ // fails the install; the previous active version remains available.
+ await cache.addAll(SHELL.map(path=>new Request(new URL(path,BASE),{cache:'reload'})));
+})()));
+self.addEventListener('activate',event=>event.waitUntil((async()=>{
+ const names=await caches.keys();
+ await Promise.all(names.filter(name=>name.startsWith('wind-sight-')&&name!==CACHE).map(name=>caches.delete(name)));
+ await self.clients.claim();
+})()));
+self.addEventListener('fetch',event=>{
+ const request=event.request,url=new URL(request.url);
+ if(request.method!=='GET'||url.origin!==BASE.origin)return;
+ const appNavigation=request.mode==='navigate'&&[BASE.pathname,new URL('index.html',BASE).pathname].includes(url.pathname);
+ const shellPath=SHELL.find(path=>new URL(path,BASE).pathname===url.pathname);
+ if(!appNavigation&&!shellPath)return;
+ event.respondWith((async()=>{
+  const cache=await caches.open(CACHE);
+  const canonical=appNavigation?new URL('index.html',BASE):new URL(shellPath,BASE);
+  const cached=await cache.match(canonical.href);
+  if(cached)return cached;
+  // Cache eviction is possible. Fetch the actual request, but never populate a
+  // versioned shell cache with a potentially newer, mixed-version response.
+  return fetch(request);
+ })());
 });

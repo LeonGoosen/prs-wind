@@ -1,0 +1,223 @@
+{
+  "version": "3.8.10",
+  "index_sha256": "da213c177def18f87f05f6cee9592c499217ee6f9d2a4d92f6ca8bc7b2747af9",
+  "gate_runs": [
+    {
+      "run": "05",
+      "checks": 220,
+      "passed": 220,
+      "failed": 0,
+      "identical_runtime": true
+    },
+    {
+      "run": "06",
+      "checks": 220,
+      "passed": 220,
+      "failed": 0,
+      "identical_runtime": true
+    }
+  ],
+  "native_device_acceptance": "PENDING \u2014 not tested here",
+  "suites": [
+    {
+      "suite": "core_browser",
+      "status": "PASS",
+      "checks": 29,
+      "passed": 29,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 37.77
+    },
+    {
+      "suite": "reliability_browser",
+      "status": "PASS",
+      "checks": 14,
+      "passed": 14,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 30.7
+    },
+    {
+      "suite": "storage",
+      "status": "PASS",
+      "checks": 26,
+      "passed": 26,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 2.04
+    },
+    {
+      "suite": "reliability_unit",
+      "status": "PASS",
+      "checks": 15,
+      "passed": 15,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 3.11
+    },
+    {
+      "suite": "service_worker",
+      "status": "PASS",
+      "checks": 8,
+      "passed": 8,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 0.42
+    },
+    {
+      "suite": "static",
+      "status": "PASS",
+      "checks": 15,
+      "passed": 15,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 2.51
+    },
+    {
+      "suite": "engine_regression",
+      "status": "PASS",
+      "checks": 14,
+      "passed": 14,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 86.35
+    },
+    {
+      "suite": "extended_workflows",
+      "status": "PASS",
+      "checks": 10,
+      "passed": 10,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 38.45
+    },
+    {
+      "suite": "adversarial_workflows",
+      "status": "PASS",
+      "checks": 9,
+      "passed": 9,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 43.39
+    },
+    {
+      "suite": "schema",
+      "status": "PASS",
+      "checks": 8,
+      "passed": 8,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 0.37
+    },
+    {
+      "suite": "independent_engine",
+      "status": "PASS",
+      "checks": 12,
+      "passed": 12,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 7.67
+    },
+    {
+      "suite": "layout_capacity",
+      "status": "PASS",
+      "checks": 8,
+      "passed": 8,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 37.87
+    },
+    {
+      "suite": "backup_roundtrip",
+      "status": "PASS",
+      "checks": 1,
+      "passed": 1,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 11.93
+    },
+    {
+      "suite": "deeper_workflows",
+      "status": "PASS",
+      "checks": 14,
+      "passed": 14,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 49.41
+    },
+    {
+      "suite": "portable_inputs",
+      "status": "PASS",
+      "checks": 4,
+      "passed": 4,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 21.84
+    },
+    {
+      "suite": "deeper_data",
+      "status": "PASS",
+      "checks": 9,
+      "passed": 9,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 0.47
+    },
+    {
+      "suite": "numeric_adversarial",
+      "status": "PASS",
+      "checks": 16,
+      "passed": 16,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 14.79
+    },
+    {
+      "suite": "supplied_v389_regression",
+      "status": "PASS",
+      "checks": 1,
+      "passed": 1,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 39.93
+    },
+    {
+      "suite": "history_observations",
+      "status": "PASS",
+      "checks": 4,
+      "passed": 4,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 22.94
+    },
+    {
+      "suite": "recovery_contract",
+      "status": "PASS",
+      "checks": 3,
+      "passed": 3,
+      "failed": 0,
+      "failures": [],
+      "exit": 0,
+      "seconds": 0.53
+    }
+  ]
+}
