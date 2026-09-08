@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.8.11 Competition Core — Input Stability</title>
+<title>WIND SIGHT PRS by ZealTech — v3.8.12 Direction Clarity</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -246,13 +246,56 @@ html,body{touch-action:manipulation}
 .brandrow>div{flex:1 1 0;min-width:0}
 .rangeConfirmedNote{grid-column:1/-1;font-size:11px;line-height:1.4;color:var(--muted)}
  .observationEnable{display:flex;align-items:center;gap:10px;margin:8px 0;font-size:12px}.observationEnable input{width:auto;margin:0}
+
+/* v3.8.12: display-only FROM/TO pairing. Shared zero; no direction re-baselining. */
+#overlay{touch-action:pan-y}
+#sheet{touch-action:pan-y;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-top:0}
+.wheelHead{display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:4;background:#08131f;padding:13px 0 10px;border-bottom:1px solid var(--line)}
+#wheelTitle{font-size:18px;line-height:1.2;margin:4px 0 0}
+.wheelHead .wheelActions{display:flex;gap:6px;flex-shrink:0}
+.wheelHead button.btn{min-height:44px;padding:9px 11px}
+#wheelContext{font-size:12px;color:var(--muted);padding-top:9px;min-height:26px;overflow-wrap:anywhere}
+.wheelPair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.wheelReadout{background:#0a1724;border:1px solid #304459;border-radius:12px;padding:9px;text-align:center;min-width:0}
+.wheelReadout.isPrimary{border:2px solid var(--blue);padding:8px;background:#09202c}
+.wheelReadout .readoutKind{font-size:11px;font-weight:950;letter-spacing:.04em}
+.wheelReadout .readoutAngle{font-size:27px;line-height:1.15;font-weight:1000;display:block;font-variant-numeric:tabular-nums}
+.wheelReadout .readoutClock{font-size:12px;display:block;color:var(--muted);font-variant-numeric:tabular-nums}
+.wheelReadout .readoutMode{font-size:10px;display:block;color:#d9dee7;margin-top:3px}
+#wheelBearingReadout{padding-top:9px}
+#wheel{width:min(300px,78vw);height:auto;max-width:none;max-height:none;aspect-ratio:1;flex-shrink:0;outline-offset:3px}
+#wheel .tick{font-size:13px;line-height:1.15;text-align:center;min-width:30px;pointer-events:none;z-index:2}
+#wheel .tick small{display:block;font-size:9px;color:#9bafc1;font-weight:700;letter-spacing:0}
+#wheel .pointer{height:34%;margin-top:0;top:16%;width:4px}
+#wheel .dot{width:9px;height:9px;z-index:1;pointer-events:none}
+.windFlow{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.windFlow line{stroke:var(--blue);stroke-width:3}
+.windFlow polygon{fill:var(--blue)}
+.windFlow circle{fill:var(--silver)}
+.flowEndpoint{position:absolute;transform:translate(-50%,-50%);background:#08131f;border:1px solid #65788c;border-radius:7px;text-align:center;min-width:58px;padding:3px 4px;line-height:1.2;pointer-events:none;z-index:2}
+.flowEndpoint strong{display:block;font-size:10px;letter-spacing:.05em}
+.flowEndpoint span{font-size:13px;font-weight:950;font-variant-numeric:tabular-nums}
+.flowEndpoint.isPrimary{border:2px solid var(--blue);padding:2px 3px}
+#wheelHint{font-size:12px;line-height:1.35;min-height:32px;text-align:center;margin:3px 0 8px;color:#cbd7e3}
+#wheelInput{margin-top:4px}
+#wheelInputLabel{margin-top:6px}
+#wheelError{color:#ff9993;min-height:18px;line-height:18px;font-size:12px;margin-top:4px}
+#wheelPreview{min-height:32px;font-size:12px;line-height:1.35;margin-top:5px;color:#cbd7e3}
+#wheelReference{font-size:11px;line-height:1.4;margin-top:7px;color:var(--muted)}
+.directionField{min-width:0}
+.directionPreview{font-size:11px;line-height:1.4;min-height:33px;padding-top:6px;color:#b5c5d6;font-variant-numeric:tabular-nums}
+.localWindNote strong,.windModelNotice strong{color:#e4edf6}
+.windModelNotice{border-color:#6e5830;color:#d7c28e}
+@media(max-height:700px){#wheel{width:min(245px,72vw)}.wheelwrap{margin:8px 0}.wheelReadout .readoutAngle{font-size:24px}}
+@media(max-width:360px){#wheelTitle{font-size:16px}.wheelHead .wheelActions{gap:4px}.wheelHead button{padding:8px;font-size:11px}.wheelReadout .readoutKind{font-size:10px}}
+
 </style>
 </head>
 <body>
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>COMPETITION CORE • v3.8.11</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>DIRECTION CLARITY • v3.8.12</small></div></div>
   <button class="save storageButton" id="saveState" type="button" onclick="if(protection.ready){saveCurrent();st.screen='dataProtection';render()}">Checking data…</button>
 </div>
 <nav id="nav"></nav>
@@ -262,12 +305,23 @@ html,body{touch-action:manipulation}
 <div class="bottom" id="bottom"><div class="bottomin"><button class="bigbtn" id="backBtn">← BACK</button><button class="bigbtn primary" id="nextBtn">NEXT →</button></div></div>
 
 <div id="overlay" class="overlay hidden">
-  <div class="sheet" id="sheet">
-    <div class="cardhead"><div><div class="kicker">Angle tool</div><h2 id="wheelTitle">WIND FROM</h2></div><button class="btn secondary small" id="wheelDone">DONE</button></div>
-    <div id="wheelDeg" class="wheelValue">000°</div><div id="wheelClock" class="wheelSub">12:00</div>
-    <div class="wheelwrap"><div id="wheel" class="wheel"><div id="pointer" class="pointer"></div><div class="dot"></div></div></div>
-    <label>Exact degrees<input id="wheelInput" type="text" inputmode="numeric"></label>
-    <div class="note"><strong>Convention:</strong> WIND FROM for wind direction. TARGET DOF for target geometry.</div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="wheelTitle" aria-describedby="wheelReference">
+    <div class="wheelHead"><div><div class="kicker" id="wheelMode">Angle tool</div><h2 id="wheelTitle">WIND FROM</h2></div><div class="wheelActions"><button class="btn outline small" type="button" id="wheelCancel">CANCEL</button><button class="btn secondary small" type="button" id="wheelDone">DONE</button></div></div>
+    <div id="wheelContext"></div>
+    <div class="wheelPair" id="wheelPair">
+      <div class="wheelReadout" id="wheelFromCard"><span class="readoutKind">WIND FROM</span><strong class="readoutAngle" id="wheelFromDeg">—</strong><span class="readoutClock" id="wheelFromClock">Not entered</span><span class="readoutMode" id="wheelFromMode">SOURCE</span></div>
+      <div class="wheelReadout" id="wheelToCard"><span class="readoutKind">MOVING TO</span><strong class="readoutAngle" id="wheelToDeg">—</strong><span class="readoutClock" id="wheelToClock">Not entered</span><span class="readoutMode" id="wheelToMode">DESTINATION</span></div>
+    </div>
+    <div id="wheelBearingReadout" class="hidden"><div id="wheelDeg" class="wheelValue">—</div><div id="wheelClock" class="wheelSub">Not entered</div></div>
+    <div class="wheelwrap"><div id="wheel" class="wheel" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="359" aria-label="Direction angle" aria-describedby="wheelHint">
+      <svg class="windFlow hidden" id="windFlow" viewBox="0 0 300 300" aria-hidden="true"><line id="flowLine" x1="150" y1="45" x2="150" y2="255"/><circle id="flowTail" cx="150" cy="45" r="4"/><polygon id="flowHead" points="150,255 143,242 157,242"/></svg>
+      <div class="flowEndpoint hidden" id="flowFrom"><strong>FROM</strong><span>—</span></div><div class="flowEndpoint hidden" id="flowTo"><strong>TO</strong><span>—</span></div>
+      <div id="pointer" class="pointer hidden"></div><div class="dot"></div>
+    </div></div>
+    <div id="wheelHint"></div>
+    <label id="wheelInputLabel"><span id="wheelInputCaption">Exact degrees (0–360)</span><input id="wheelInput" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" aria-describedby="wheelError wheelPreview"></label>
+    <div id="wheelError" aria-live="polite"></div><div id="wheelPreview" aria-live="polite"></div>
+    <div id="wheelReference">Shared fixed 0° reference: 12 = 000°, 3 = 090°, 6 = 180°, 9 = 270°. Clock positions are not geographic bearings unless your zero is north.</div>
   </div>
 </div>
 
@@ -330,7 +384,7 @@ function navItems(){return [["home","HOME"],["matches","MATCHES"],["rifles","PRO
 function renderNav(){nav.innerHTML="";navItems().forEach(([k,l])=>{let b=document.createElement("button");b.className="navbtn"+(st.screen===k?" active":"");b.textContent=l;b.onclick=()=>{if(protection.blocked){st.screen="dataProtection";st.step=0;render();return;}saveCurrent();st.screen=k;st.step=0;render()};nav.appendChild(b)})}
 function setBottom(show=true,nextLabel="NEXT →",nextVisible=true){bottom.style.display=show?"block":"none";nextBtn.textContent=nextLabel;nextBtn.style.visibility=nextVisible?"visible":"hidden"}
 
-const APP_VERSION="3.8.11";
+const APP_VERSION="3.8.12";
 
 
 
@@ -1489,11 +1543,12 @@ function liveStage(){
  };
 }
 function renderDOF(s){live.innerHTML=`<p class="sub">Targets are preloaded. Enter only the target DOFs measured on your tripod.</p><div class="tabs">${s.targets.map((t,i)=>`<button class="tab ${i===0?"active":""}">${esc(t.label)}</button>`).join("")}</div>${s.targets.map((t,i)=>`<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m • ${esc(t.shape)}</strong><span class="tag ready">TARGET</span></div><div class="grid two">${f("DOF (°)","dof_"+i,inputFieldValue(t,"dof"),"numeric")}<button class="btn outline fullMobile" type="button" onclick="openWheelField('dof_${i}','TARGET DOF')">◎ ANGLE WHEEL</button></div></div>`).join("")}`;bindAuto(captureLive)}
-function renderWind(s){let w=s.wind;live.innerHTML=`<div class="cardhead"><div><h3>Shooter wind</h3><div class="small">Manual wind input</div></div><span class="tag live">MANUAL</span></div><div class="grid four">${f("MIN mph","wmin",inputFieldValue(w,"min"),"numeric")}${f("AVG mph","wavg",inputFieldValue(w,"avg"),"numeric")}${f("MAX mph","wmax",inputFieldValue(w,"max"),"numeric")}${f("NOW mph","wnow",inputFieldValue(w,"now"),"numeric")}</div><div class="grid two">${f("AVG WIND FROM °","wdir",inputFieldValue(w,"avgDir"),"numeric")}${f("NOW WIND FROM °","wndir",inputFieldValue(w,"nowDir"),"numeric")}<button class="btn outline" type="button" onclick="openWheelField('wdir','AVG WIND FROM')">◎ AVG ANGLE</button><button class="btn outline" type="button" onclick="openWheelField('wndir','NOW WIND FROM')">◎ NOW ANGLE</button><label>Logging window<select id="wwin"><option ${w.window==="10 min"?"selected":""}>10 min</option><option ${w.window==="20 min"?"selected":""}>20 min</option><option ${w.window==="30 min"?"selected":""}>30 min</option></select></label><label>Shooter terrain<select id="wterrain">${["Open / normal","Sheltered","Ridge / exposed","Valley / channel","Turbulent / complex","Unknown"].map(x=>`<option ${x===(w.terrain||"Open / normal")?"selected":""}>${x}</option>`).join("")}</select></label></div><div class="note">Easy Mode stores wind speed as whole mph. Direction remains exact degrees.</div>`;bindAuto(captureLive)}
+function renderWind(s){let w=s.wind;live.innerHTML=`<div class="cardhead"><div><h3>Shooter wind</h3><div class="small">Manual wind input</div></div><span class="tag live">MANUAL</span></div><div class="grid four">${f("MIN mph","wmin",inputFieldValue(w,"min"),"numeric")}${f("AVG mph","wavg",inputFieldValue(w,"avg"),"numeric")}${f("MAX mph","wmax",inputFieldValue(w,"max"),"numeric")}${f("NOW mph","wnow",inputFieldValue(w,"now"),"numeric")}</div><div class="grid two">${wdField("AVG WIND FROM °","wdir",inputFieldValue(w,"avgDir"),"from")}${wdField("NOW WIND FROM °","wndir",inputFieldValue(w,"nowDir"),"from")}<button class="btn outline" type="button" onclick="openWheelField('wdir','AVG WIND FROM')">◎ AVG ANGLE</button><button class="btn outline" type="button" onclick="openWheelField('wndir','NOW WIND FROM')">◎ NOW ANGLE</button><label>Logging window<select id="wwin"><option ${w.window==="10 min"?"selected":""}>10 min</option><option ${w.window==="20 min"?"selected":""}>20 min</option><option ${w.window==="30 min"?"selected":""}>30 min</option></select></label><label>Shooter terrain<select id="wterrain">${["Open / normal","Sheltered","Ridge / exposed","Valley / channel","Turbulent / complex","Unknown"].map(x=>`<option ${x===(w.terrain||"Open / normal")?"selected":""}>${x}</option>`).join("")}</select></label></div><div class="note">Easy Mode stores wind speed as whole mph. Direction remains whole degrees.</div>${wdLocalNotice()}`;bindAuto(captureLive)}
 function setDownrangeOpen(section){const s=getStage();if(!s)return;s.downrangeOpen=section;autosave()}
 function renderFastDownrange(s){
  const open=s.downrangeOpen||"points";
  live.innerHTML=`<div class="cardhead"><div><h3>Downrange</h3><div class="small">Only capture useful information. Target Zone and Shooter Intel remain optional.</div></div><span class="optionalChip">OPTIONAL</span></div>
+ ${wdLocalNotice()}
  <details id="downPoints" class="fastSection" ${open==="points"?"open":""}><summary onclick="setDownrangeOpen('points')">1. Downrange Point(s)</summary>
  ${s.points.map((p,pi)=>`<div class="card"><div class="cardhead"><strong>POINT ${pi+1}</strong>${s.points.length>1?`<button class="btn danger small" onclick="removePoint(${pi})">REMOVE</button>`:""}</div><div class="grid two">${f("Distance (m)","pd_"+pi,inputFieldValue(p,"distanceM"),"numeric")}<label>Terrain<select id="pt_${pi}">${["Open / normal","Sheltered","Ridge / exposed","Valley / channel","Turbulent / complex","Unknown"].map(x=>`<option ${x===p.terrain?"selected":""}>${x}</option>`).join("")}</select></label></div>${p.obs.map((o,oi)=>obsHTML(o,"point",pi,oi)).join("")}<button class="btn secondary small" onclick="addObs('point',${pi})">+ OBSERVATION</button></div>`).join("")}
  <div class="quickActions"><button class="btn secondary small" onclick="addPoint()">+ ADD POINT</button></div></details>
@@ -1508,7 +1563,7 @@ function renderFastDownrange(s){
  <div class="note"><strong>Speed rule:</strong> if there is no reliable observation, press NEXT. Do not invent data.</div>`;
  bindAuto(captureLive);
 }
-function obsHTML(o,where,pi,oi){return `<div class="obs"><div class="cardhead"><strong>Observation ${oi+1}</strong><button class="btn danger small" onclick="removeObs('${where}',${pi},${oi})">REMOVE</button></div><label class="observationEnable"><input type="checkbox" ${o.enabled!==false?"checked":""} onchange="setObservationEnabled('${where}',${pi},${oi},this.checked)"> USE THIS OBSERVATION</label>${o.enabled===false?`<div class="note">Not used in the wind call. Enable or enter an observation to use it.</div>`:o.quality==="Unknown"?`<div class="small">USE is selected. Enter an observed behaviour or direction quality before this row contributes; untouched defaults are not evidence.</div>`:typeof o.enabled!=="boolean"?`<div class="small">Saved in an earlier version: confirm this observation was entered. Untick USE if it was an unused default.</div>`:""}<div class="grid two"><label>Indicator<select id="oi_${where}_${pi}_${oi}" onchange="changeIndicator('${where}',${pi},${oi},this.value)">${Object.keys(behavior).map(x=>`<option ${x===o.indicator?"selected":""}>${x}</option>`).join("")}</select></label><label>Behaviour<select id="ob_${where}_${pi}_${oi}" onchange="changeBehavior('${where}',${pi},${oi},this.value)">${behavior[o.indicator].map((x,i)=>`<option value="${i}" ${i===+o.behavior?"selected":""}>${x[0]}</option>`).join("")}</select></label><label>Direction quality<select id="oq_${where}_${pi}_${oi}" onchange="changeQuality('${where}',${pi},${oi},this.value)"><option ${o.quality==="Clear"?"selected":""}>Clear</option><option ${o.quality==="Approximate"?"selected":""}>Approximate</option><option ${o.quality==="Unknown"?"selected":""}>Unknown</option></select></label>${o.quality==="Unknown"?"":f("Indicator moving TO °","od_"+where+"_"+pi+"_"+oi,o.dir,"numeric")}</div>${o.quality==="Unknown"?"":`<button class="btn outline small" onclick="openObsWheel('${where}',${pi},${oi})">◎ TO ANGLE</button>`}<div class="small" style="margin-top:8px">${evidenceText(o)}</div></div>`}
+function obsHTML(o,where,pi,oi){return `<div class="obs"><div class="cardhead"><strong>Observation ${oi+1}</strong><button class="btn danger small" onclick="removeObs('${where}',${pi},${oi})">REMOVE</button></div><label class="observationEnable"><input type="checkbox" ${o.enabled!==false?"checked":""} onchange="setObservationEnabled('${where}',${pi},${oi},this.checked)"> USE THIS OBSERVATION</label>${o.enabled===false?`<div class="note">Not used in the wind call. Enable or enter an observation to use it.</div>`:o.quality==="Unknown"?`<div class="small">USE is selected. Enter an observed behaviour or direction quality before this row contributes; untouched defaults are not evidence.</div>`:typeof o.enabled!=="boolean"?`<div class="small">Saved in an earlier version: confirm this observation was entered. Untick USE if it was an unused default.</div>`:""}<div class="grid two"><label>Indicator<select id="oi_${where}_${pi}_${oi}" onchange="changeIndicator('${where}',${pi},${oi},this.value)">${Object.keys(behavior).map(x=>`<option ${x===o.indicator?"selected":""}>${x}</option>`).join("")}</select></label><label>Behaviour<select id="ob_${where}_${pi}_${oi}" onchange="changeBehavior('${where}',${pi},${oi},this.value)">${behavior[o.indicator].map((x,i)=>`<option value="${i}" ${i===+o.behavior?"selected":""}>${x[0]}</option>`).join("")}</select></label><label>Direction quality<select id="oq_${where}_${pi}_${oi}" onchange="changeQuality('${where}',${pi},${oi},this.value)"><option ${o.quality==="Clear"?"selected":""}>Clear</option><option ${o.quality==="Approximate"?"selected":""}>Approximate</option><option ${o.quality==="Unknown"?"selected":""}>Unknown</option></select></label>${o.quality==="Unknown"?"":wdField("Observed movement TO °","od_"+where+"_"+pi+"_"+oi,o.dir,"to")}</div>${o.quality==="Unknown"?"":`<button class="btn outline small" onclick="openObsWheel('${where}',${pi},${oi})">◎ TO ANGLE</button>`}<div class="small" style="margin-top:8px">${evidenceText(o)}</div></div>`}
 function evidenceText(o){if(!observationActive(o))return "Inactive / unknown — not used in the wind call";let b=behavior[o.indicator]?.[+o.behavior||0];if(!b)return "No usable evidence";return b[1]!=null?(b[1]===b[2]?`~${b[1]} mph evidence`:`${b[1]}–${b[2]} mph evidence`) + (b[3].includes("direction")?" • direction useful":""):(b[3]==="direction"?"Direction evidence":"Qualitative only")}
 window.addPoint=()=>{if(!canMutateData())return;captureLive();let s=getStage();s.downrangeOpen="points";if(s.points.length>=MAX_POINTS){alert(`Easy Mode supports up to ${MAX_POINTS} downrange points.`);return;}s.points.push({id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs(true)]});autosave();renderFastDownrange(s)}
 window.removePoint=pi=>runProtectedChange(async()=>{
@@ -1537,10 +1592,10 @@ function renderKestrel(s){
  let content=!fz.valid
    ? `<div class="bad">${esc(fz.reason)}</div><div class="note">Required before Ballistic Software: manual MIN / AVG / MAX, AVG WIND FROM, and each target DOF.</div>`
    : s.targets.map((t,i)=>kTargetHTML(t,i,fz)).join("");
- live.innerHTML=`<div class="cardhead"><div><h3>Ballistic Software</h3><div class="small">${esc(getBallisticSoftware())}</div></div><span class="tag live">${fz.quality}</span></div>${fz.valid?matchLearningHTML(s):""}${content}`;
+ live.innerHTML=`<div class="cardhead"><div><h3>Ballistic Software</h3><div class="small">${esc(getBallisticSoftware())}</div></div><span class="tag live">LEGACY FLAG: ${esc(fz.quality)}</span></div>${wdModelNotice()}${fz.valid?matchLearningHTML(s):""}${content}`;
  bindAuto(captureLive);
 }
-function kTargetHTML(t,i,fz){const ds=targetDirectionState(getStage(),t);return `<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag ready">SOLVER</span></div><div class="hero"><div class="small">BALLISTIC INPUT / VERIFY</div><div style="font-size:24px;font-weight:1000;margin-top:8px">DOF ${String(Math.round(norm(n(t.dof)||0))).padStart(3,"0")}°</div><div class="small" style="margin-top:8px">WIND SIGHT FUSED TARGET WD</div><div style="font-size:32px;font-weight:1000;color:var(--blue)">${String(Math.round(ds.targetWD)).padStart(3,"0")}°</div><div class="small">${clock(ds.targetWD)} • SAME DIRECTION STATE USED BY ACCURACY ENGINE</div></div><div class="out3"><div class="obox"><div class="t">LOW WIND</div><div class="n">${fz.low.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox best"><div class="t">BEST WIND</div><div class="n">${fz.best.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox"><div class="t">HIGH WIND</div><div class="n">${fz.high.toFixed(0)}</div><div class="unit">mph</div></div></div><div class="grid two">${f("Solver MIN hold","kmin_"+i,inputFieldValue(t,"kMin"),"decimal")}${f("Solver MAX hold","kmax_"+i,inputFieldValue(t,"kMax"),"decimal")}</div><div class="note">Enter solver holds using the FUSED Target WD shown above. WIND SIGHT treats these holds as already angle-corrected and does not apply the angle a second time.</div>${n(t.kMin)!==null&&n(t.kMax)!==null?callCurveHTML(getStage(),t):""}</div>`}
+function kTargetHTML(t,i,fz){const ds=targetDirectionState(getStage(),t);return `<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag ready">SOLVER</span></div><div class="hero"><div class="small">BALLISTIC INPUT / VERIFY</div><div style="font-size:24px;font-weight:1000;margin-top:8px">DOF ${String(Math.round(norm(n(t.dof)||0))).padStart(3,"0")}°</div><div class="small" style="margin-top:8px">LEGACY COMBINED WD · MODEL</div><div style="font-size:32px;font-weight:1000;color:var(--blue)">${String(Math.round(ds.targetWD)).padStart(3,"0")}°</div><div class="small">${clock(ds.targetWD)} • POOLED MODEL VALUE · NOT A LOCAL MEASUREMENT</div></div><div class="out3"><div class="obox"><div class="t">LOW WIND</div><div class="n">${fz.low.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox best"><div class="t">BEST WIND</div><div class="n">${fz.best.toFixed(0)}</div><div class="unit">mph</div></div><div class="obox"><div class="t">HIGH WIND</div><div class="n">${fz.high.toFixed(0)}</div><div class="unit">mph</div></div></div><div class="grid two">${f("Solver MIN hold","kmin_"+i,inputFieldValue(t,"kMin"),"decimal")}${f("Solver MAX hold","kmax_"+i,inputFieldValue(t,"kMax"),"decimal")}</div><div class="note">The values shown above are retained legacy-model inputs, not measurements of the separate local winds. Existing solver-input conventions and calculations are unchanged in this display-only release.</div>${n(t.kMin)!==null&&n(t.kMax)!==null?callCurveHTML(getStage(),t):""}</div>`}
 function fuse(s){
  let mi=n(s.wind.min),av=n(s.wind.avg),ma=n(s.wind.max),dir=n(s.wind.avgDir);
  if(mi===null||av===null||ma===null||dir===null||mi<0||av<0||ma<0||!(mi<=av&&av<=ma)||!angleOK(dir))return {valid:false,reason:"Enter valid non-negative manual MIN / AVG / MAX and AVG WIND FROM.",quality:"WEAK"};
@@ -1589,30 +1644,30 @@ function hold1(x){const z=n(x);if(z===null)return "—";const a=Math.abs(z),r=Ma
 function renderShoot(s){
  try{
    const fz=fuse(s);
-   if(!fz.valid){live.innerHTML=`<div class="bad">${esc(fz.reason)}</div><div class="note">Go back to WIND / BALLISTICS and complete required values.</div>`;return}
+   if(!fz.valid){live.innerHTML=`${wdModelNotice()}<div class="bad">${esc(fz.reason)}</div><div class="note">Go back to WIND / BALLISTICS and complete required values.</div>`;return}
    const rows=s.targets.map(tt=>({tt,sol:optimizeShootSolutionV5(s,tt,10000),fallback:(n(tt.kMin)!==null&&n(tt.kMax)!==null&&n(tt.widthCm)>0&&n(tt.distanceM)>0),z:targetDirectionState(s,tt)}));
    const rangeCard=`<div class="stagecard rangeCard"><div class="rangeCardHead"><div><strong>Range Card</strong><div class="small">Stage at a glance</div></div><span class="tag ready">${rows.length} TARGET${rows.length===1?"":"S"}</span></div>${rows.map(x=>stageLineV2(x.tt,x.sol,x.fallback,x.z)).join("")}</div>`;
-   live.innerHTML=`<div class="cardhead"><div><h3>SHOOT</h3><div class="small">Immediate firing solution</div></div><span class="tag live">${fz.quality}</span></div>
+   live.innerHTML=`${wdModelNotice()}<div class="cardhead"><div><h3>SHOOT</h3><div class="small">Immediate firing solution</div></div><span class="tag live">LEGACY FLAG: ${esc(fz.quality)}</span></div>
    ${rows.map(x=>shootResultV2(x.tt,x.sol,x.fallback,x.z)).join("")}
    ${rangeCard}`;
  }catch(e){
    console.error("SHOOT v2 render error",e);
-   live.innerHTML=`<div class="shootError"><strong>SHOOT could not render.</strong><br>${esc(e?.message||"Unknown rendering error")}<br><span class="small">Stage data remains saved.</span></div>`;
+   live.innerHTML=`${wdModelNotice()}<div class="shootError"><strong>SHOOT could not render.</strong><br>${esc(e?.message||"Unknown rendering error")}<br><span class="small">Stage data remains saved.</span></div>`;
  }
 }
 function robustHoldText(sol){const a=hold1(sol.robustMin),b=hold1(sol.robustMax),side=sol.robustSide||sol.side||"";return a===b?`${a} ${side}`:`${a}–${b} ${side}`}
 function shootResultV2(tt,sol,fallback,z){
- if(sol?.sideAmbiguous)return `<div class="warn"><strong>${esc(tt.label)} • SIDE AMBIGUOUS</strong><br>${Math.round((sol.sideMinorProb||0)*100)}% of modeled wind correction lies on the opposite side. Re-check wind direction before shooting.</div>`;
+ if(sol?.sideAmbiguous)return `<div class="warn"><strong>${esc(tt.label)} • SIDE AMBIGUOUS</strong><br>${Math.round((sol.sideMinorProb||0)*100)}% of modeled wind correction lies on the opposite side. Different locations can have different winds. This model warning does not establish that an observation is wrong.</div>`;
  if(!fallback)return `<div class="note">${esc(tt.label)}: solver MIN/MAX holds and target width required.</div>`;
  if(!sol)return `<div class="shootCompact"><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootHold">—<small>WIND SIGHT HOLD UNAVAILABLE</small></div><div class="note">Check WIND, solver MIN/MAX and calibration. Invalid inputs or a calculation outside the supported search limits do not produce a call.</div></div>`;
  const dims=targetDimsMil(tt),miss=suggestedMissCorrection(tt),confClass=sol.confidence==="HIGH"?"confHigh":sol.confidence==="MEDIUM"?"confMed":"confLow",lo=Math.min(n(tt.kMin)||0,n(tt.kMax)||0),hi=Math.max(n(tt.kMin)||0,n(tt.kMax)||0);
  const gongMain=dims ? (tt.shape==="Round"?`Ø${dims.w.toFixed(2)} mil`:(Math.abs(dims.w-dims.h)<0.005?`${dims.w.toFixed(2)} × ${dims.w.toFixed(2)} mil`:`${dims.w.toFixed(2)} × ${dims.h.toFixed(2)} mil`)) : "—";
  const gongSub=dims ? `${esc(tt.shape||"Target")} • ${targetSizeText(tt)} • Solver ${hold1(lo)}${sol.side}–${hold1(hi)}${sol.side}` : `Solver ${hold1(lo)}${sol.side}–${hold1(hi)}${sol.side}`;
  const missSub=dims ? `${dims.w.toFixed(1)} mil target width` : `Suggested correction from target width`;
- return `<div class="shootCompact"><div class="shootTop"><div><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootMeta">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div></div><span class="tag done">CORE 5</span></div><div class="shootHold">${hold1(sol.hold)} ${sol.side}<small>WIND SIGHT HOLD</small></div><div class="wsHoldBand"><div><span>MIN</span><strong>${hold1(lo)} ${sol.side}</strong></div><div class="rec"><span>CALL</span><strong>${hold1(sol.hold)} ${sol.side}</strong></div><div><span>MAX</span><strong>${hold1(hi)} ${sol.side}</strong></div></div><div class="wsMetricGrid topMetrics"><div class="wsMetric"><div class="k">GONG</div><div class="v">${gongMain}</div><div class="sub">${gongSub}</div></div><div class="wsMetric"><div class="k">CORRECTION</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div><div class="sub">${missSub}</div></div></div><div class="wsMetricGrid"><div class="wsMetric primaryMetric"><div class="k">WIND HIT</div><div class="v">${Math.round(sol.windHit*100)}%</div><div class="impactSecondary">Est. impact ${Math.round(sol.modeledHit*100)}%</div></div><div class="wsMetric"><div class="k">CONFIDENCE</div><div class="v ${confClass}">${sol.confidence}</div><div class="sub">Model certainty for the current call</div></div></div></div>`;
+ return `<div class="shootCompact"><div class="shootTop"><div><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootMeta">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div></div><span class="tag done">CORE 5</span></div><div class="shootHold">${hold1(sol.hold)} ${sol.side}<small>WIND SIGHT HOLD</small></div><div class="wsHoldBand"><div><span>MIN</span><strong>${hold1(lo)} ${sol.side}</strong></div><div class="rec"><span>CALL</span><strong>${hold1(sol.hold)} ${sol.side}</strong></div><div><span>MAX</span><strong>${hold1(hi)} ${sol.side}</strong></div></div><div class="wsMetricGrid topMetrics"><div class="wsMetric"><div class="k">GONG</div><div class="v">${gongMain}</div><div class="sub">${gongSub}</div></div><div class="wsMetric"><div class="k">CORRECTION</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div><div class="sub">${missSub}</div></div></div><div class="wsMetricGrid"><div class="wsMetric primaryMetric"><div class="k">WIND HIT</div><div class="v">${Math.round(sol.windHit*100)}%</div><div class="impactSecondary">Est. impact ${Math.round(sol.modeledHit*100)}%</div></div><div class="wsMetric"><div class="k">CONFIDENCE</div><div class="v ${confClass}">${sol.confidence}</div><div class="sub">Unvalidated legacy-model rating</div></div></div></div>`;
 }
 function stageLineV2(tt,sol,fallback,z){
- if(sol?.sideAmbiguous)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><div class="hold">SIDE?</div><div class="meta">Recheck wind direction</div></div>`;
+ if(sol?.sideAmbiguous)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><div class="hold">SIDE?</div><div class="meta">Model-limited · local winds may differ</div></div>`;
  if(sol){
    const dims=targetDimsMil(tt),lo=Math.min(n(tt.kMin)||0,n(tt.kMax)||0),hi=Math.max(n(tt.kMin)||0,n(tt.kMax)||0);
    const gong=dims ? (tt.shape==="Round"?`Ø${dims.w.toFixed(2)} mil`:(Math.abs(dims.w-dims.h)<0.005?`${dims.w.toFixed(2)} × ${dims.w.toFixed(2)} mil`:`${dims.w.toFixed(2)} × ${dims.h.toFixed(2)} mil`)) : "size —";
@@ -1744,29 +1799,177 @@ function unwrapAngles(values){
 function svgLine(values,minV,maxV,label){const w=600,h=160,p=24;if(!values.length)return `<div class="note">No ${label} data yet.</div>`;if(maxV===minV)maxV=minV+1;const pts=values.map((vv,i)=>{const x=p+(w-2*p)*(values.length===1?.5:i/(values.length-1)),y=h-p-(h-2*p)*(vv-minV)/(maxV-minV);return `${x.toFixed(1)},${y.toFixed(1)}`}).join(" ");return `<svg class="reportChart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="#009abf" stroke-width="4"/></svg><div class="reportLegend">${label}: ${values.map(vv=>Number(vv).toFixed(1)).join(" • ")}</div>`}
 function reportStageCapture(s){let total=0,inside=0;const sol=s.preShootSolution;(s.targets||[]).forEach(tt=>{const a=n(tt.actualHold),lo=n(tt.kMin),hi=n(tt.kMax),ps=sol?.targets?.find(x=>x.targetId===tt.id||x.label===tt.label);if(a!==null&&lo!==null&&hi!==null){total++;const sideOK=!ps?.side||tt.holdSide===ps.side;if(sideOK&&a>=Math.min(lo,hi)&&a<=Math.max(lo,hi))inside++}});return {total,inside,pct:total?100*inside/total:null}}
 function reports(){setBottom(false);const matches=st.data.matches.filter(m=>!m.archivedAt);main.innerHTML=`<div class="panel"><div class="kicker">Match analytics</div><h2>Reports</h2><div id="rep"></div></div>`;if(!matches.length){rep.innerHTML=`<div class="note">No match history yet.</div>`;return}rep.innerHTML=matches.slice().reverse().map(m=>{const done=m.stages.filter(s=>s.completedAt).map(historicalStageView),score=done.reduce((x,s)=>x+(n(s.score)||0),0),avail=done.reduce((x,s)=>x+(n(s.pointsAvailable)||0),0);let bt=0,bi=0,errs=[];done.forEach(s=>{const c=reportStageCapture(s);bt+=c.total;bi+=c.inside;const sol=s.preShootSolution;if(sol)s.targets.forEach(tt=>{const ps=sol.targets?.find(x=>x.targetId===tt.id||x.label===tt.label),aa=n(tt.actualHold);if(ps&&aa!==null&&ps.hold!==null){const as=(tt.holdSide==="R"?1:-1)*aa,pr=(ps.side==="R"?1:-1)*ps.hold;errs.push(Math.abs(as-pr))}})});const cap=bt?100*bi/bt:null,mae=errs.length?errs.reduce((a,b)=>a+b,0)/errs.length:null,windAvg=done.map(s=>n(s.wind?.avg)).filter(x=>x!==null),windDir=done.map(s=>n(s.wind?.avgDir)).filter(x=>x!==null),windDirPlot=unwrapAngles(windDir),stagePct=done.map(s=>n(s.pointsAvailable)>0?100*n(s.score)/n(s.pointsAvailable):0);return `<div class="card"><div class="cardhead"><div><strong>${esc(m.name)}</strong><div class="small">${done.length}/${m.stages.length} stages complete</div></div><span class="tag done">${avail?(100*score/avail).toFixed(1)+"%":"—"}</span></div><div class="grid four"><div><div class="small">TOTAL POINTS</div><div class="metric">${score}/${avail||"—"}</div></div><div><div class="small">WIND BRACKET CAPTURE</div><div class="metric">${cap!==null?cap.toFixed(0)+"%":"—"}</div></div><div><div class="small">MEAN HOLD ERROR</div><div class="metric">${mae!==null?mae.toFixed(1):"—"}</div><div class="small">mil</div></div><div><div class="small">AVG WIND</div><div class="metric">${windAvg.length?(windAvg.reduce((a,b)=>a+b,0)/windAvg.length).toFixed(1):"—"}</div><div class="small">mph</div></div></div><div class="note"><strong>WIND BRACKET CAPTURE</strong> = percentage of actual working holds that fell inside the pre-stage MIN–MAX solver hold bracket.</div><h3 style="margin-top:18px">Wind Speed Through Match</h3>${svgLine(windAvg,windAvg.length?Math.min(...windAvg):0,windAvg.length?Math.max(...windAvg):1,"AVG mph")}<h3 style="margin-top:18px">Wind Direction Through Match</h3>${svgLine(windDirPlot,windDirPlot.length?Math.min(...windDirPlot):0,windDirPlot.length?Math.max(...windDirPlot):360,"WIND FROM ° (unwrapped for continuity)")}<h3 style="margin-top:18px">Stage Score %</h3>${svgLine(stagePct,0,100,"Stage %")}<div class="matchSectionTitle">Stage Summary</div>${done.map(s=>{const c=reportStageCapture(s);return `<div class="listrow"><span>${esc(s.name)} • ${esc(s.wind?.avg||"—")} mph @ ${esc(s.wind?.avgDir||"—")}°</span><strong>${esc(s.score||"—")}/${esc(s.pointsAvailable||"—")} ${c.pct!==null?`• bracket ${c.pct.toFixed(0)}%`:""}</strong></div>`}).join("")||`<div class="note">No completed stages.</div>`}</div>`}).join("")}
-function openWheelField(id,title){let el=document.getElementById(id);wheelCtx={type:"field",id,title};openWheel(el?.value||0,title)}
-function openObsWheel(where,pi,oi){captureLive();let s=getStage();s.downrangeOpen=where==="target"?"target":"points";let o=where==="target"?s.targetObs[oi]:s.points[pi].obs[oi];wheelCtx={type:"obs",where,pi,oi,title:"INDICATOR MOVING TO"};openWheel(o.dir||0,"INDICATOR MOVING TO")}
-function openWheel(val,title){wheelTitle.textContent=title;setTimeout(positionTicks,0);document.body.classList.add("modal-open");overlay.classList.remove("hidden");setWheel(n(val)||0)}
-function closeWheel(commit=true){
- if(commit&&wheelCtx&&canMutateData()){
-  let val=String(Math.round(n(wheelInput.value)||0));
-  if(wheelCtx.type==="field"){let el=document.getElementById(wheelCtx.id);if(el){el.value=val;el.dispatchEvent(new Event("input",{bubbles:true}));captureLive();writeNow()}}
-  else{let s=getStage();s.downrangeOpen=wheelCtx.where==="target"?"target":"points";let o=wheelCtx.where==="target"?s.targetObs[wheelCtx.oi]:s.points[wheelCtx.pi].obs[wheelCtx.oi];markObservationEntered(o);o.dir=angleValue(val);writeNow();if(st.liveStep===2)renderFastDownrange(s)}
- }
- overlay.classList.add("hidden");document.body.classList.remove("modal-open");wheelCtx=null
+/* v3.8.12: meteorological notation and UI only.
+ * Reads existing FROM/TO fields. Never changes reference, merges locations,
+ * migrates saved angles, or alters any physics/statistical model.
+ */
+function wdAngle(raw){
+ if(raw===null||raw===undefined||String(raw).trim()==="")return null;
+ const text=String(raw).trim();
+ if(!/^\d+(?:\.0+)?$/.test(text))return null;
+ const value=Number(text);
+ return Number.isFinite(value)&&Number.isInteger(value)&&value>=0&&value<=360 ? value%360 : null;
 }
-function setWheel(vv){let d=norm(vv);pointer.style.transform=`rotate(${d}deg)`;wheelDeg.textContent=String(Math.round(d)).padStart(3,"0")+"°";wheelClock.textContent=clock(d);wheelInput.value=String(Math.round(d))}
-function evtAngle(e){e.preventDefault();let r=wheel.getBoundingClientRect(),x=e.clientX-(r.left+r.width/2),y=e.clientY-(r.top+r.height/2),d=Math.atan2(x,-y)*180/Math.PI;if(d<0)d+=360;setWheel(d)}
-wheel.addEventListener("pointerdown",e=>{e.preventDefault();drag=true;wheel.setPointerCapture(e.pointerId);evtAngle(e)},{passive:false});
-wheel.addEventListener("pointermove",e=>{if(drag)evtAngle(e)},{passive:false});
-wheel.addEventListener("pointerup",e=>{drag=false;e.preventDefault()},{passive:false});
-wheel.addEventListener("touchmove",e=>e.preventDefault(),{passive:false});
-sheet.addEventListener("touchmove",e=>{if(e.target.closest(".wheel"))e.preventDefault()},{passive:false});
-overlay.addEventListener("touchmove",e=>{if(e.target===overlay)e.preventDefault()},{passive:false});
-wheelInput.addEventListener("input",()=>setWheel(n(wheelInput.value)||0));wheelDone.onclick=()=>closeWheel(true);
-function positionTicks(){const size=wheel.clientWidth,c=size/2,r=size*.413;[...wheel.querySelectorAll(".tick")].forEach((el,idx)=>{let deg=(idx+1)*30,rad=(deg-90)*Math.PI/180;el.style.left=(c+r*Math.cos(rad))+"px";el.style.top=(c+r*Math.sin(rad))+"px"})}
-for(let h=1;h<=12;h++){let el=document.createElement("div");el.className="tick";el.textContent=h;wheel.appendChild(el)}
+function wdPair(raw,mode){
+ const angle=wdAngle(raw);if(angle===null)return null;
+ return mode==="to"?{from:(angle+180)%360,to:angle}: {from:angle,to:(angle+180)%360};
+}
+function wdDegrees(value){return String(value).padStart(3,"0")+"°";}
+function wdClock(value){
+ const total=Math.round(((value%360)+360)%360*2)%720;
+ return (Math.floor(total/60)||12)+":"+String(total%60).padStart(2,"0");
+}
+function wdPreviewText(raw,mode){
+ const pair=wdPair(raw,mode);
+ if(!pair){const empty=String(raw??"").trim()==="";return `${mode==="to"?"TO":"FROM"}: ${empty?"not entered":"invalid angle"}\n${mode==="to"?"FROM":"TO"}: not derived`;}
+ const from=`WIND FROM ${wdDegrees(pair.from)} (${wdClock(pair.from)})`,to=`MOVING TO ${wdDegrees(pair.to)} (${wdClock(pair.to)})`;
+ return mode==="to"?to+"\n"+from:from+"\n"+to;
+}
+function wdField(label,id,raw,mode){
+ return `<div class="directionField">${f(label,id,raw,"numeric")}<div class="directionPreview" data-wd-field="${esc(id)}" data-wd-mode="${esc(mode)}" style="white-space:pre-line">${esc(wdPreviewText(raw,mode))}</div></div>`;
+}
+function wdRefreshPreviews(){
+ main.querySelectorAll("[data-wd-field]").forEach(el=>{const input=document.getElementById(el.dataset.wdField);if(input)el.textContent=wdPreviewText(input.value,el.dataset.wdMode);});
+}
+function wdLocalNotice(){
+ return `<div class="note localWindNote"><strong>LOCAL WIND CAN DIFFER.</strong> Shooter, downrange points and target zone are separate locations. Different speeds or directions are not automatically conflicting evidence or an input error.<br><strong>One fixed zero:</strong> use the same 0° reference for all entries. Wind FROM is the source; movement TO is the destination. The paired value is display-only.</div>`;
+}
+function wdModelNotice(){
+ return `<div class="note windModelNotice"><strong>LOCAL WIND / MODEL LIMITS.</strong> Different winds at different locations can all be valid. The combined direction, confidence flags and hit percentages below come from the unchanged, unvalidated pooled model — not independent measurements of each location. This UI update does not correct those algorithms.</div>`;
+}
+main.addEventListener("input",wdRefreshPreviews);
+main.addEventListener("change",wdRefreshPreviews);
+function wdMode(){return wheelCtx?.mode||"from";}
+function wdContextText(){
+ if(wheelCtx?.type!=="obs")return wdMode()==="bearing"?"Target bearing · same fixed zero":"Shooter location · "+(wheelCtx?.id==="wndir"?"NOW":"AVERAGE");
+ const s=getStage(),p=s?.points?.[wheelCtx.pi],o=wheelCtx.where==="target"?s?.targetObs?.[wheelCtx.oi]:p?.obs?.[wheelCtx.oi];
+ const place=wheelCtx.where==="target"?"Target zone":`Point ${wheelCtx.pi+1}${String(p?.distanceM??"").trim()?" · "+p.distanceM+" m":""}`;
+ return place+" · "+(o?.indicator||"Observation");
+}
+function openWheelField(id,title){
+ if(!canMutateData())return;
+ const el=document.getElementById(id);if(!el)return;
+ wheelCtx={type:"field",id,title,mode:id.startsWith("dof_")||title==="TARGET DOF"?"bearing":"from",dirty:false,initialRaw:el.value,returnFocus:document.activeElement};
+ openWheel(el.value,title);
+}
+function openObsWheel(where,pi,oi){
+ if(!canMutateData())return;
+ const s=getStage(),o=where==="target"?s?.targetObs?.[oi]:s?.points?.[pi]?.obs?.[oi];if(!o)return;
+ wheelCtx={type:"obs",where,pi,oi,title:"OBSERVED MOVEMENT TO",mode:"to",dirty:false,initialRaw:String(o.dir??""),returnFocus:document.activeElement};
+ openWheel(o.dir??"","OBSERVED MOVEMENT TO");
+}
+function openWheel(raw,title){
+ wheelTitle.textContent=title;
+ const bearing=wdMode()==="bearing";
+ document.getElementById("wheelContext").textContent=wdContextText();
+ document.getElementById("wheelMode").textContent=bearing?"BEARING · NOT WIND":wdMode()==="to"?"EDITING TO · FROM IS DERIVED":"EDITING FROM · TO IS DERIVED";
+ document.getElementById("wheelPair").classList.toggle("hidden",bearing);
+ document.getElementById("wheelBearingReadout").classList.toggle("hidden",!bearing);
+ document.getElementById("wheelInputCaption").textContent=(bearing?"Target DOF":wdMode()==="to"?"Observed movement TO":"Wind FROM")+" — whole degrees (0–360)";
+ document.getElementById("wheelHint").textContent=bearing?"Tap the target bearing. This is not an airflow arrow.":wdMode()==="to"?"Tap where the indicator moves TO. Arrowhead = TO; tail = FROM.":"Tap where the wind comes FROM. Arrowhead = TO; tail = FROM.";
+ document.getElementById("wheelReference").textContent="Shared fixed 0° reference: 12 = 000°, 3 = 090°, 6 = 180°, 9 = 270°. Clock positions are not geographic bearings unless your zero is north.";
+ document.getElementById("wheelFromCard").classList.toggle("isPrimary",wdMode()==="from");
+ document.getElementById("wheelToCard").classList.toggle("isPrimary",wdMode()==="to");
+ document.getElementById("wheelFromMode").textContent=wdMode()==="from"?"EDITED · SOURCE":"DERIVED · SOURCE";
+ document.getElementById("wheelToMode").textContent=wdMode()==="to"?"EDITED · DESTINATION":"DERIVED · DESTINATION";
+ wheel.setAttribute("aria-label",bearing?"Target DOF bearing":wdMode()==="to"?"Observed movement TO angle":"Wind FROM angle");
+ document.body.classList.add("modal-open");overlay.classList.remove("hidden");sheet.scrollTop=0;
+ wheelInput.value=String(raw??"");wdDrawWheel();positionTicks();
+ wheel.focus({preventScroll:true});
+}
+function closeWheel(commit=true){
+ if(commit&&wheelCtx){
+  const value=wdAngle(wheelInput.value);if(value===null){wdDrawWheel();return;}
+  if(wheelCtx.dirty){
+   if(!canMutateData())return;
+   if(wheelCtx.type==="field"){
+    const el=document.getElementById(wheelCtx.id);if(!el)return;
+    el.value=String(value);el.dispatchEvent(new Event("input",{bubbles:true}));captureLive();writeNow();wdRefreshPreviews();
+   }else{
+    const s=getStage(),o=wheelCtx.where==="target"?s?.targetObs?.[wheelCtx.oi]:s?.points?.[wheelCtx.pi]?.obs?.[wheelCtx.oi];if(!o)return;
+    s.downrangeOpen=wheelCtx.where==="target"?"target":"points";
+    markObservationEntered(o);o.dir=String(value);writeNow();if(st.liveStep===2)renderFastDownrange(s);
+   }
+  }
+ }
+ const focus=wheelCtx?.returnFocus;
+ drag=false;wdPointerId=null;overlay.classList.add("hidden");document.body.classList.remove("modal-open");wheelCtx=null;
+ if(focus?.isConnected)focus.focus({preventScroll:true});
+}
+function wdPoint(degrees,radius,center=150){const rad=degrees*Math.PI/180;return {x:center+Math.sin(rad)*radius,y:center-Math.cos(rad)*radius};}
+function wdDrawWheel(){
+ const angle=wdAngle(wheelInput.value),bearing=wdMode()==="bearing",valid=angle!==null,pair=valid?wdPair(angle,wdMode()):null;
+ document.getElementById("wheelError").textContent=valid?"":String(wheelInput.value).trim()===""?"Choose an angle, or CANCEL to leave it unset.":"Enter a whole number from 0 to 360. Nothing saved.";
+ wheelDone.disabled=!valid||protection.blocked||!protection.ready;
+ wheelInput.setAttribute("aria-invalid",String(!valid));
+ if(valid)wheel.setAttribute("aria-valuenow",String(angle));else wheel.removeAttribute("aria-valuenow");
+ const preview=document.getElementById("wheelPreview");
+ wheelDeg.textContent=valid?wdDegrees(angle):"—";wheelClock.textContent=valid?wdClock(angle):"Not entered";
+ pointer.classList.toggle("hidden",!bearing||!valid);if(bearing&&valid)pointer.style.transform=`rotate(${angle}deg)`;
+ document.getElementById("windFlow").classList.toggle("hidden",bearing||!valid);
+ for(const kind of ["from","to"]){
+  const name=kind==="from"?"From":"To",endpoint=document.getElementById("flow"+name);
+  document.getElementById("wheel"+name+"Deg").textContent=valid?wdDegrees(pair[kind]):"—";
+  document.getElementById("wheel"+name+"Clock").textContent=valid?wdClock(pair[kind]):"Not entered";
+  endpoint.classList.toggle("hidden",bearing||!valid);endpoint.classList.toggle("isPrimary",wdMode()===kind);
+  if(valid&&!bearing){
+   endpoint.querySelector("span").textContent=wdDegrees(pair[kind]);
+   const pos=wdPoint(pair[kind],20,50);endpoint.style.left=pos.x+"%";endpoint.style.top=pos.y+"%";
+  }
+ }
+ if(!valid){preview.textContent="No angle selected. Blank is not 000°.";wheel.setAttribute("aria-valuetext","No angle selected");return;}
+ if(bearing){preview.textContent=`Target bearing ${wdDegrees(angle)} (${wdClock(angle)}). No FROM/TO conversion applies.`;wheel.setAttribute("aria-valuetext",preview.textContent);return;}
+ const start=wdPoint(pair.from,108),end=wdPoint(pair.to,108),base=wdPoint(pair.to,94),rad=pair.to*Math.PI/180,side={x:Math.cos(rad)*7,y:Math.sin(rad)*7};
+ const line=document.getElementById("flowLine");line.setAttribute("x1",start.x);line.setAttribute("y1",start.y);line.setAttribute("x2",base.x);line.setAttribute("y2",base.y);
+ const tail=document.getElementById("flowTail");tail.setAttribute("cx",start.x);tail.setAttribute("cy",start.y);
+ document.getElementById("flowHead").setAttribute("points",`${end.x},${end.y} ${base.x+side.x},${base.y+side.y} ${base.x-side.x},${base.y-side.y}`);
+ preview.textContent=`Equivalent WIND FROM ${wdDegrees(pair.from)}. Stored entry: ${wdMode()==="to"?"TO "+wdDegrees(pair.to):"FROM "+wdDegrees(pair.from)}. Same airflow, not a change in the wind.`;
+ wheel.setAttribute("aria-valuetext",`Wind FROM ${wdDegrees(pair.from)} at ${wdClock(pair.from)}, moving TO ${wdDegrees(pair.to)} at ${wdClock(pair.to)}. Editing ${wdMode().toUpperCase()}.`);
+}
+function setWheel(value){
+ if(!wheelCtx||!canMutateData()||!Number.isFinite(Number(value)))return;
+ const angle=((Math.round(Number(value))%360)+360)%360;
+ wheelCtx.dirty=true;wheelInput.value=String(angle);wdDrawWheel();
+}
+function evtAngle(event){
+ event.preventDefault();const r=wheel.getBoundingClientRect(),x=event.clientX-(r.left+r.width/2),y=event.clientY-(r.top+r.height/2);
+ if(Math.hypot(x,y)<r.width*.10)return; // A center tap has no identifiable bearing.
+ setWheel(Math.atan2(x,-y)*180/Math.PI);
+}
+let wdPointerId=null;
+wheel.addEventListener("pointerdown",event=>{
+ if(!wheelCtx||!canMutateData()||event.isPrimary===false||event.pointerType==="mouse"&&event.button!==0)return;
+ event.preventDefault();drag=true;wdPointerId=event.pointerId;wheel.setPointerCapture(event.pointerId);evtAngle(event);
+},{passive:false});
+wheel.addEventListener("pointermove",event=>{if(drag&&event.pointerId===wdPointerId)evtAngle(event);},{passive:false});
+function wdEndPointer(event){if(event.pointerId!==wdPointerId)return;drag=false;wdPointerId=null;if(wheel.hasPointerCapture(event.pointerId))wheel.releasePointerCapture(event.pointerId);}
+wheel.addEventListener("pointerup",wdEndPointer);
+wheel.addEventListener("pointercancel",wdEndPointer);
+wheel.addEventListener("lostpointercapture",event=>{if(event.pointerId===wdPointerId){drag=false;wdPointerId=null;}});
+wheel.addEventListener("keydown",event=>{
+ const current=wdAngle(wheelInput.value)??0;
+ const steps={ArrowRight:1,ArrowUp:1,ArrowLeft:-1,ArrowDown:-1,PageUp:15,PageDown:-15};
+ if(Object.prototype.hasOwnProperty.call(steps,event.key)){event.preventDefault();setWheel(current+steps[event.key]);}
+ else if(event.key==="Home"||event.key==="End"){event.preventDefault();setWheel(event.key==="Home"?0:359);}
+});
+wheelInput.addEventListener("input",()=>{if(wheelCtx)wheelCtx.dirty=true;wdDrawWheel();}); // Do not rewrite the field or move its cursor while typing.
+wheelDone.onclick=()=>closeWheel(true);
+wheelCancel.onclick=()=>closeWheel(false);
+sheet.addEventListener("keydown",event=>{
+ if(!wheelCtx)return;
+ if(event.key==="Escape"){event.preventDefault();closeWheel(false);return;}
+ if(event.key==="Enter"&&event.target===wheelInput){event.preventDefault();closeWheel(true);return;}
+ if(event.key==="Tab"){
+  const targets=[...sheet.querySelectorAll('button:not(:disabled),input:not(:disabled),[tabindex="0"]')].filter(el=>el.getClientRects().length);
+  const first=targets[0],last=targets[targets.length-1];
+  if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}
+  else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
+ }
+});
+function positionTicks(){const size=wheel.clientWidth,c=size/2,r=size*.418;[...wheel.querySelectorAll(".tick")].forEach((el,idx)=>{const deg=(idx+1)*30,rad=(deg-90)*Math.PI/180;el.style.left=(c+r*Math.cos(rad))+"px";el.style.top=(c+r*Math.sin(rad))+"px";});}
+for(let h=1;h<=12;h++){const el=document.createElement("div");el.className="tick";const number=document.createElement("span"),degrees=document.createElement("small");number.textContent=h;degrees.textContent=wdDegrees((h*30)%360);el.append(number,degrees);wheel.appendChild(el);}
 window.addEventListener("resize",positionTicks);setTimeout(positionTicks,0);
+
 
 /* WIND SIGHT PRS 3.8.10 — local data protection, no remote service.
  * Existing schema 4, localStorage key and IndexedDB version/stores are retained.

@@ -1,6 +1,6 @@
 {
   "name": "wind-sight-prs",
-  "version": "3.8.11",
+  "version": "3.8.12",
   "private": true,
-  "description": "WIND SIGHT PRS by ZealTech \u2014 Competition Core Input Stability. Targeted user-feedback fixes; probability-distribution assumptions unchanged."
+  "description": "WIND SIGHT PRS by ZealTech \u2014 Direction Clarity. FROM/TO display and local-wind wording; existing aiming and probability algorithms unchanged and unvalidated."
 }
