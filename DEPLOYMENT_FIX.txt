@@ -1,0 +1,72 @@
+WIND SIGHT PRS v3.8.11 - CLOUDFLARE DEPLOYMENT FIX CF1
+Prepared 8 September 2026
+
+This is a hosting-only packaging correction to the supplied v3.8.11 ZIP.
+ALL ORIGINAL FILES ARE UNCHANGED, including index.html, service-worker.js,
+package.json, the manifest, branding, and the original reports/checksums.
+The interface intentionally continues to display v3.8.11. CF1 identifies only
+this deployment package, not a new application or scientific-model release.
+
+CAUSE
+The supplied error says Workers is using /opt/buildhome/repo as its asset
+folder and includes node_modules/workerd/bin/workerd, a 146 MiB tool binary.
+The original ZIP did not contain .assetsignore. Build dependencies generated
+in the repository therefore need exclusion from this root-based asset upload.
+The telemetry notice is not the reported failure.
+
+FIX
+The only operational addition is .assetsignore at the same level as index.html.
+It uses Cloudflare's documented .gitignore-style rules to allow the existing
+nine static application files and exclude everything else, including installed
+node_modules, dependency metadata, environment files, ZIPs, and QA documents.
+Existing _headers and _redirects files are also allowed when already present;
+none are created or changed by this package.
+
+HOW TO APPLY TO THE EXISTING REPOSITORY
+1. Keep your existing app ZIP and independently exported JSON backup.
+2. Extract this ZIP. Add .assetsignore to the same repository folder as
+   index.html. This single-file addition is sufficient for the shown error
+   when that folder remains the configured assets directory.
+3. Confirm GitHub actually shows the name .assetsignore (with the leading dot,
+   and NOT .assetsignore.txt). Hidden files can be missed in a file selection.
+4. Commit to the branch that your EXISTING Cloudflare Worker deploys from.
+   Build the NEW commit containing this file, not the old failed commit.
+5. Keep the existing Worker name, app URL, DNS, credentials and deployment
+   settings. The error already shows Wrangler scanning the intended root;
+   this patch filters that scan. Do not change to ./public unless the app has
+   actually been moved there. This ZIP retains the flat layout.
+6. Confirm the build log no longer reports the workerd binary as an asset,
+   and check the existing app URL after a successful deployment.
+
+ALTERNATIVELY, upload all EXTRACTED contents from this ZIP into the existing
+app repository folder, preserving any existing Cloudflare account/routing
+configuration. Do not upload the ZIP itself as a website asset and do not
+erase the repository or its configuration files.
+
+No npm dependency deletion is necessary for this fix; tools may remain
+installed in the build environment without being uploaded as public assets.
+Do not clear browser storage, change the hostname, or uninstall the PWA.
+
+MAINTENANCE
+The allowlist matches this package. When adding NEW static filenames or
+subdirectories in a future release, update .assetsignore at the same time.
+Files whose names are not allowed are intentionally excluded.
+These patterns are specific to this flat layout, not a universal framework
+configuration. Do not overwrite an existing custom .assetsignore without
+preserving its additional required public assets.
+
+VALIDATION BOUNDARY
+Local integrity, unchanged-file, size, resource-coverage and ignore-pattern
+checks are documented in the separate deployment verification report.
+No authenticated Cloudflare deployment or live-account change was performed.
+Wrangler could not be installed for a local CLI run because this environment
+could not resolve registry.npmjs.org (EAI_AGAIN). Ignore rules were checked
+with Git and Python pathspec against the documented .gitignore semantics,
+including a 146 MiB sparse test file at the reported relative path.
+This patch is not new application UAT or validation of its calculation model.
+
+OFFICIAL REFERENCES (accessed 8 September 2026)
+https://developers.cloudflare.com/workers/static-assets/binding/
+https://developers.cloudflare.com/workers/ci-cd/builds/configuration/
+https://developers.cloudflare.com/workers/platform/limits/
+https://github.com/cloudflare/workers-sdk/blob/main/packages/wrangler/telemetry.md
