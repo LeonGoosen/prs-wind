@@ -1,6 +1,6 @@
 {
   "name": "wind-sight-prs",
-  "version": "3.8.12",
+  "version": "3.8.13",
   "private": true,
-  "description": "WIND SIGHT PRS by ZealTech \u2014 Direction Clarity. FROM/TO display and local-wind wording; existing aiming and probability algorithms unchanged and unvalidated."
+  "description": "WIND SIGHT PRS by ZealTech \u2014 recorded report clarity, new-record defaults and explicit safe app-shell updates. Existing aiming and probability algorithms unchanged and unvalidated."
 }

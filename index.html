@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.8.12 Direction Clarity</title>
+<title>WIND SIGHT PRS by ZealTech — v3.8.13 Report Clarity</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -289,13 +289,18 @@ html,body{touch-action:manipulation}
 @media(max-height:700px){#wheel{width:min(245px,72vw)}.wheelwrap{margin:8px 0}.wheelReadout .readoutAngle{font-size:24px}}
 @media(max-width:360px){#wheelTitle{font-size:16px}.wheelHead .wheelActions{gap:4px}.wheelHead button{padding:8px;font-size:11px}.wheelReadout .readoutKind{font-size:10px}}
 
+/* v3.8.13: compact record report. No global layout or input sizing changes. */
+.rpFilters{margin:14px 0}.rpSummary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px}.rpMetric{min-width:0;border:1px solid var(--line);border-radius:12px;padding:14px;background:#07131f}.rpMetric>small{display:block;font-size:10px;letter-spacing:.07em;color:var(--muted);min-height:28px;line-height:1.4}.rpMetric>strong{display:block;font-size:29px;line-height:1.2;font-variant-numeric:tabular-nums}.rpMetric em{font-size:13px;font-style:normal;color:var(--muted)}.rpMetric>span{display:block;font-size:11px;color:var(--muted);line-height:1.4;margin-top:6px}.rpReference{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.5;margin:16px 0 0}.rpReference input{width:20px;min-height:20px;flex:0 0 20px;margin:0}.rpFootnote{font-size:11px;color:var(--muted);line-height:1.65;margin-top:12px}.rpStage{border:1px solid var(--line);border-radius:12px;margin-top:12px;background:#07131f}.rpStage>summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:14px;cursor:pointer;list-style:none}.rpStage>summary::-webkit-details-marker{display:none}.rpStage>summary>div:first-child{min-width:0}.rpStage>summary>div:first-child>strong{display:block;overflow-wrap:anywhere;font-size:16px}.rpStage>summary>div:first-child>span{display:block;font-size:11px;color:var(--muted);margin-top:4px;overflow-wrap:anywhere}.rpStageMetrics{text-align:right;white-space:nowrap}.rpStageMetrics>strong{display:block;font-size:19px;font-variant-numeric:tabular-nums}.rpStageMetrics>strong>small{font-size:11px}.rpStageMetrics>span{font-size:11px;color:var(--muted)}.rpScore{grid-column:1/-1;font-size:12px;color:var(--silver)}.rpScore::before{content:'Score: ';color:var(--muted)}.rpStage[open]>summary{border-bottom:1px solid var(--line)}.rpStageBody{padding:14px}.rpProvenance{font-size:10px;letter-spacing:.06em;color:var(--muted);line-height:1.6}.rpWeatherGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}.rpWeatherGrid small{display:block;font-size:10px;color:var(--muted);line-height:1.4}.rpWeatherGrid strong{display:block;font-size:14px;line-height:1.6;overflow-wrap:anywhere}.rpStageBody h4{margin:18px 0 9px;font-size:13px}.rpObs{padding:10px 0;border-bottom:1px solid var(--line);font-size:12px;line-height:1.6}.rpObs>strong,.rpObs>span{display:block}.rpObs>span{color:var(--muted)}.rpNotes{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.65}.rpTableWrap{max-width:100%;overflow-x:auto;margin-top:14px;border:1px solid var(--line);border-radius:12px}.rpTable{border-collapse:collapse;min-width:525px;width:100%;font-size:12px;background:#07131f}.rpTable th,.rpTable td{padding:13px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.rpTable thead th{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}.rpTable tbody th{font-weight:400;max-width:280px;overflow-wrap:anywhere}.rpTable tbody strong{display:block}.rpTable small{display:block;margin-top:4px;font-size:10px;color:var(--muted)}.rpTable td{white-space:nowrap;font-variant-numeric:tabular-nums}.rpSecondary summary{cursor:pointer;font-size:13px;font-weight:700}.rpSecondary p{font-size:12px;line-height:1.65;color:var(--muted)}.appUpdateStatus{font-size:12px;line-height:1.6;margin:10px 0;overflow-wrap:anywhere}
+@media(max-width:700px){.rpSummary{grid-template-columns:1fr 1fr}.rpMetric>strong{font-size:27px}}
+@media(max-width:359px){.rpMetric{padding:11px}.rpMetric>strong{font-size:24px}.rpWeatherGrid{grid-template-columns:1fr}.rpStage>summary{padding:11px}.rpStageBody{padding:11px}}
+
 </style>
 </head>
 <body>
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>DIRECTION CLARITY • v3.8.12</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>REPORT CLARITY • v3.8.13</small></div></div>
   <button class="save storageButton" id="saveState" type="button" onclick="if(protection.ready){saveCurrent();st.screen='dataProtection';render()}">Checking data…</button>
 </div>
 <nav id="nav"></nav>
@@ -384,7 +389,7 @@ function navItems(){return [["home","HOME"],["matches","MATCHES"],["rifles","PRO
 function renderNav(){nav.innerHTML="";navItems().forEach(([k,l])=>{let b=document.createElement("button");b.className="navbtn"+(st.screen===k?" active":"");b.textContent=l;b.onclick=()=>{if(protection.blocked){st.screen="dataProtection";st.step=0;render();return;}saveCurrent();st.screen=k;st.step=0;render()};nav.appendChild(b)})}
 function setBottom(show=true,nextLabel="NEXT →",nextVisible=true){bottom.style.display=show?"block":"none";nextBtn.textContent=nextLabel;nextBtn.style.visibility=nextVisible?"visible":"hidden"}
 
-const APP_VERSION="3.8.12";
+const APP_VERSION="3.8.13";
 
 
 
@@ -884,7 +889,12 @@ function calTableD(a){
 }
 
 function deepClone(x){return JSON.parse(JSON.stringify(x))}
-function regenTargetIds(targets){return (targets||[]).map((t,i)=>({...deepClone(t),id:uid("t"),label:t.label||("T"+(i+1)),dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L",holdQuality:"Unknown"}))}
+function regenTargetIds(targets){return (targets||[]).map((t,i)=>{
+ const copy={...t,id:uid("t"),label:t.label||("T"+(i+1)),dof:"0",kMin:"",kMax:"",actualHold:"",holdSide:"L",holdQuality:"Unknown"};
+ // A new copy must not retain draft values for fields deliberately reset above.
+ if(recordObject(t.inputDrafts)){copy.inputDrafts={...t.inputDrafts};for(const k of ["dof","kMin","kMax","actualHold"])delete copy.inputDrafts[k];if(!Object.keys(copy.inputDrafts).length)delete copy.inputDrafts;}
+ delete copy.actualHoldDraft;return copy;
+})}
 function duplicateStageRecord(s,index){
  const c=deepClone(s);
  c.id=uid("s");c.name=(s.name||("Stage "+(index+1)))+" Copy";c.createdAt=iso();c.liveStartedAt=null;c.completedAt=null;c.preShootSnapshot=null;c.preShootSolution=null;c.postStageSnapshot=null;c.revisionHistory=[];c.correctionMode=false;c.score="";c.postNotes="";
@@ -971,7 +981,7 @@ function bindMatchCards(){
    el.querySelector(".permanentDelete")?.addEventListener("click",()=>permanentlyDeleteMatchById(id));
  });
 }
-function newStage(nm){return {id:uid("s"),name:nm,targets:[{id:uid("t"),label:"T1",distanceM:"",rangeQuality:"Match book",rangeUncM:"0",targetSizeUncPct:"0",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L",holdQuality:"Unknown"}],wind:{min:"",avg:"",max:"",now:"",avgDir:"",nowDir:"",window:"10 min"},points:[{id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[]}],targetObs:[],targetTerrain:"Open / normal",intel:[],score:"",pointsAvailable:"",impacts:"",shots:"",preNotes:"",postNotes:"",createdAt:iso()}}
+function newStage(nm){return {id:uid("s"),name:nm,targets:[{id:uid("t"),label:"T1",distanceM:"",rangeQuality:"LRF / confirmed",rangeUncM:"0",targetSizeUncPct:"0",shape:"Round",widthCm:"",heightCm:"",dof:"0",kMin:"",kMax:"",actualHold:"",holdSide:"L",holdQuality:"Unknown"}],wind:{min:"",avg:"",max:"",now:"",avgDir:"",nowDir:"",window:"10 min"},points:[{id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[]}],targetObs:[],targetTerrain:"Open / normal",intel:[],score:"",pointsAvailable:"",impacts:"",shots:"",preNotes:"",postNotes:"",createdAt:iso()}}
 function matchWizard(){
  const m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):(st._md||loadDraft("match")||(st._md={id:uid("m"),name:"",date:new Date().toISOString().slice(0,10),venue:"",rifleId:"",ammoId:"",rifleSnapshot:null,ammoSnapshot:null,calibrationVersion:null,envTempUncC:"0",envPressureUncHpa:"0",envDaUncM:"0",ajResidualMil:"0",stages:[],createdAt:iso()}));
  if(!m){st.selectedMatch=null;st.screen="matches";render();return;}
@@ -1086,7 +1096,7 @@ window.removePreTarget=(si,ti)=>runProtectedChange(async()=>{
  m.stages[si].targets.splice(ti,1);m.stages[si].targets.forEach((t,i)=>{if(!t.label||/^T\d+$/.test(t.label))t.label="T"+(i+1);});
  if(!st.selectedMatch)saveDraft("match",m);await writeNow();renderStageSetup(m);bindAuto(()=>saveMatch(m));return true;
 });
-window.addPreTarget=si=>{if(!canMutateData())return;let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;if(!m?.stages?.[si]||m.stages[si].completedAt)return;saveMatch(m);if(m.stages[si].targets.length>=MAX_TARGETS){alert(`Easy Mode supports up to ${MAX_TARGETS} targets per stage.`);return;}m.stages[si].targets.push({id:uid("t"),label:"T"+(m.stages[si].targets.length+1),distanceM:"",rangeQuality:"Match book",rangeUncM:"0",targetSizeUncPct:"0",shape:"Round",widthCm:"",heightCm:"",dof:"",kMin:"",kMax:"",actualHold:"",holdSide:"L",holdQuality:"Unknown"});saveMatch(m);renderStageSetup(m);bindAuto(()=>saveMatch(m))}
+window.addPreTarget=si=>{if(!canMutateData())return;let m=st.selectedMatch?st.data.matches.find(x=>x.id===st.selectedMatch):st._md;if(!m?.stages?.[si]||m.stages[si].completedAt)return;saveMatch(m);if(m.stages[si].targets.length>=MAX_TARGETS){alert(`Easy Mode supports up to ${MAX_TARGETS} targets per stage.`);return;}m.stages[si].targets.push({id:uid("t"),label:"T"+(m.stages[si].targets.length+1),distanceM:"",rangeQuality:"LRF / confirmed",rangeUncM:"0",targetSizeUncPct:"0",shape:"Round",widthCm:"",heightCm:"",dof:"0",kMin:"",kMax:"",actualHold:"",holdSide:"L",holdQuality:"Unknown"});saveMatch(m);renderStageSetup(m);bindAuto(()=>saveMatch(m))}
 
 const behavior={
  "Long grass":[["Rattles only",5,5,"speed"],["Starts bending; direction visible",7,8,"speed+direction"],["Bent over / picked up straight",9,11,"speed+direction"],["Bent + oscillating up/down",12,13,"speed+direction"],["Cannot determine",null,null,"none"]],
@@ -1103,7 +1113,7 @@ function observationActive(o){const b=behavior[o?.indicator]?.[Number(o?.behavio
 function markObservationEntered(o){o.enabled=true;if(o.quality==="Unknown")o.quality="Clear";}
 function observationAt(where,pi,oi){const s=getStage();return where==="target"?s?.targetObs?.[oi]:s?.points?.[pi]?.obs?.[oi];}
 function setObservationEnabled(where,pi,oi,enabled){if(!canMutateData())return;const o=observationAt(where,pi,oi);if(!o)return;o.enabled=!!enabled;if(enabled&&o.quality==="Unknown")o.quality="Clear";autosave();renderFastDownrange(getStage());}
-function newObs(addedByUser=false){return {id:uid("o"),indicator:"Long grass",behavior:0,quality:"Unknown",dir:"",enabled:!!addedByUser}}
+function newObs(addedByUser=true){return {id:uid("o"),indicator:"Long grass",behavior:0,quality:"Unknown",dir:"",enabled:!!addedByUser}}
 function ensureLive(s){s.downrangeOpen=s.downrangeOpen||"points";if(!s.wind)s.wind={min:"",avg:"",max:"",now:"",avgDir:"",nowDir:"",window:"10 min"};if(!s.points?.length)s.points=[{id:uid("p"),distanceM:"",terrain:"Open / normal",obs:[newObs()]}];s.points.forEach(p=>{if(!Array.isArray(p.obs))p.obs=[];});if(!s.points[0].obs.length)s.points[0].obs=[newObs()];if(!s.targetObs)s.targetObs=[];if(!s.intel)s.intel=[]}
 
 function angleOK(x){const z=n(x);return z!==null&&z>=0&&z<=360}
@@ -1542,7 +1552,7 @@ function liveStage(){
    if(st.liveStep<STEPS.length-1){st.liveStep++;render()}else{st.screen="matchDashboard";render()}
  };
 }
-function renderDOF(s){live.innerHTML=`<p class="sub">Targets are preloaded. Enter only the target DOFs measured on your tripod.</p><div class="tabs">${s.targets.map((t,i)=>`<button class="tab ${i===0?"active":""}">${esc(t.label)}</button>`).join("")}</div>${s.targets.map((t,i)=>`<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m • ${esc(t.shape)}</strong><span class="tag ready">TARGET</span></div><div class="grid two">${f("DOF (°)","dof_"+i,inputFieldValue(t,"dof"),"numeric")}<button class="btn outline fullMobile" type="button" onclick="openWheelField('dof_${i}','TARGET DOF')">◎ ANGLE WHEEL</button></div></div>`).join("")}`;bindAuto(captureLive)}
+function renderDOF(s){live.innerHTML=`<p class="sub">New targets start at 0°. Confirm or edit each saved target bearing; existing bearings are not reset.</p><div class="tabs">${s.targets.map((t,i)=>`<button class="tab ${i===0?"active":""}">${esc(t.label)}</button>`).join("")}</div>${s.targets.map((t,i)=>`<div class="card"><div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m • ${esc(t.shape)}</strong><span class="tag ready">TARGET</span></div><div class="grid two">${f("DOF (°)","dof_"+i,inputFieldValue(t,"dof"),"numeric")}<button class="btn outline fullMobile" type="button" onclick="openWheelField('dof_${i}','TARGET DOF')">◎ ANGLE WHEEL</button></div></div>`).join("")}`;bindAuto(captureLive)}
 function renderWind(s){let w=s.wind;live.innerHTML=`<div class="cardhead"><div><h3>Shooter wind</h3><div class="small">Manual wind input</div></div><span class="tag live">MANUAL</span></div><div class="grid four">${f("MIN mph","wmin",inputFieldValue(w,"min"),"numeric")}${f("AVG mph","wavg",inputFieldValue(w,"avg"),"numeric")}${f("MAX mph","wmax",inputFieldValue(w,"max"),"numeric")}${f("NOW mph","wnow",inputFieldValue(w,"now"),"numeric")}</div><div class="grid two">${wdField("AVG WIND FROM °","wdir",inputFieldValue(w,"avgDir"),"from")}${wdField("NOW WIND FROM °","wndir",inputFieldValue(w,"nowDir"),"from")}<button class="btn outline" type="button" onclick="openWheelField('wdir','AVG WIND FROM')">◎ AVG ANGLE</button><button class="btn outline" type="button" onclick="openWheelField('wndir','NOW WIND FROM')">◎ NOW ANGLE</button><label>Logging window<select id="wwin"><option ${w.window==="10 min"?"selected":""}>10 min</option><option ${w.window==="20 min"?"selected":""}>20 min</option><option ${w.window==="30 min"?"selected":""}>30 min</option></select></label><label>Shooter terrain<select id="wterrain">${["Open / normal","Sheltered","Ridge / exposed","Valley / channel","Turbulent / complex","Unknown"].map(x=>`<option ${x===(w.terrain||"Open / normal")?"selected":""}>${x}</option>`).join("")}</select></label></div><div class="note">Easy Mode stores wind speed as whole mph. Direction remains whole degrees.</div>${wdLocalNotice()}`;bindAuto(captureLive)}
 function setDownrangeOpen(section){const s=getStage();if(!s)return;s.downrangeOpen=section;autosave()}
 function renderFastDownrange(s){
@@ -1664,7 +1674,7 @@ function shootResultV2(tt,sol,fallback,z){
  const gongMain=dims ? (tt.shape==="Round"?`Ø${dims.w.toFixed(2)} mil`:(Math.abs(dims.w-dims.h)<0.005?`${dims.w.toFixed(2)} × ${dims.w.toFixed(2)} mil`:`${dims.w.toFixed(2)} × ${dims.h.toFixed(2)} mil`)) : "—";
  const gongSub=dims ? `${esc(tt.shape||"Target")} • ${targetSizeText(tt)} • Solver ${hold1(lo)}${sol.side}–${hold1(hi)}${sol.side}` : `Solver ${hold1(lo)}${sol.side}–${hold1(hi)}${sol.side}`;
  const missSub=dims ? `${dims.w.toFixed(1)} mil target width` : `Suggested correction from target width`;
- return `<div class="shootCompact"><div class="shootTop"><div><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootMeta">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div></div><span class="tag done">CORE 5</span></div><div class="shootHold">${hold1(sol.hold)} ${sol.side}<small>WIND SIGHT HOLD</small></div><div class="wsHoldBand"><div><span>MIN</span><strong>${hold1(lo)} ${sol.side}</strong></div><div class="rec"><span>CALL</span><strong>${hold1(sol.hold)} ${sol.side}</strong></div><div><span>MAX</span><strong>${hold1(hi)} ${sol.side}</strong></div></div><div class="wsMetricGrid topMetrics"><div class="wsMetric"><div class="k">GONG</div><div class="v">${gongMain}</div><div class="sub">${gongSub}</div></div><div class="wsMetric"><div class="k">CORRECTION</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div><div class="sub">${missSub}</div></div></div><div class="wsMetricGrid"><div class="wsMetric primaryMetric"><div class="k">WIND HIT</div><div class="v">${Math.round(sol.windHit*100)}%</div><div class="impactSecondary">Est. impact ${Math.round(sol.modeledHit*100)}%</div></div><div class="wsMetric"><div class="k">CONFIDENCE</div><div class="v ${confClass}">${sol.confidence}</div><div class="sub">Unvalidated legacy-model rating</div></div></div></div>`;
+ return `<div class="shootCompact"><div class="shootTop"><div><div class="shootTarget">${esc(tt.label)} • ${esc(tt.distanceM)} m</div><div class="shootMeta">${esc(tt.shape||"Target")} • ${esc(targetSizeText(tt))}</div></div><span class="tag done">CORE 5</span></div><div class="shootHold">${hold1(sol.hold)} ${sol.side}<small>WIND SIGHT HOLD</small></div><div class="wsHoldBand"><div><span>MIN</span><strong>${hold1(lo)} ${sol.side}</strong></div><div class="rec"><span>CALL</span><strong>${hold1(sol.hold)} ${sol.side}</strong></div><div><span>MAX</span><strong>${hold1(hi)} ${sol.side}</strong></div></div><div class="wsMetricGrid topMetrics"><div class="wsMetric"><div class="k">GONG</div><div class="v">${gongMain}</div><div class="sub">${gongSub}</div></div><div class="wsMetric"><div class="k">MIN CORRECTION</div><div class="v">${miss!==null?`${hold1(miss)} mil`:"—"}</div><div class="sub">${missSub}</div></div></div><div class="wsMetricGrid"><div class="wsMetric primaryMetric"><div class="k">WIND HIT</div><div class="v">${Math.round(sol.windHit*100)}%</div><div class="impactSecondary">Est. impact ${Math.round(sol.modeledHit*100)}%</div></div><div class="wsMetric"><div class="k">CONFIDENCE</div><div class="v ${confClass}">${sol.confidence}</div><div class="sub">Unvalidated legacy-model rating</div></div></div></div>`;
 }
 function stageLineV2(tt,sol,fallback,z){
  if(sol?.sideAmbiguous)return `<div class="stageLine"><strong>${esc(tt.label)} • ${esc(tt.distanceM)} m</strong><div class="hold">SIDE?</div><div class="meta">Model-limited · local winds may differ</div></div>`;
@@ -1798,7 +1808,116 @@ function unwrapAngles(values){
 
 function svgLine(values,minV,maxV,label){const w=600,h=160,p=24;if(!values.length)return `<div class="note">No ${label} data yet.</div>`;if(maxV===minV)maxV=minV+1;const pts=values.map((vv,i)=>{const x=p+(w-2*p)*(values.length===1?.5:i/(values.length-1)),y=h-p-(h-2*p)*(vv-minV)/(maxV-minV);return `${x.toFixed(1)},${y.toFixed(1)}`}).join(" ");return `<svg class="reportChart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="#009abf" stroke-width="4"/></svg><div class="reportLegend">${label}: ${values.map(vv=>Number(vv).toFixed(1)).join(" • ")}</div>`}
 function reportStageCapture(s){let total=0,inside=0;const sol=s.preShootSolution;(s.targets||[]).forEach(tt=>{const a=n(tt.actualHold),lo=n(tt.kMin),hi=n(tt.kMax),ps=sol?.targets?.find(x=>x.targetId===tt.id||x.label===tt.label);if(a!==null&&lo!==null&&hi!==null){total++;const sideOK=!ps?.side||tt.holdSide===ps.side;if(sideOK&&a>=Math.min(lo,hi)&&a<=Math.max(lo,hi))inside++}});return {total,inside,pct:total?100*inside/total:null}}
-function reports(){setBottom(false);const matches=st.data.matches.filter(m=>!m.archivedAt);main.innerHTML=`<div class="panel"><div class="kicker">Match analytics</div><h2>Reports</h2><div id="rep"></div></div>`;if(!matches.length){rep.innerHTML=`<div class="note">No match history yet.</div>`;return}rep.innerHTML=matches.slice().reverse().map(m=>{const done=m.stages.filter(s=>s.completedAt).map(historicalStageView),score=done.reduce((x,s)=>x+(n(s.score)||0),0),avail=done.reduce((x,s)=>x+(n(s.pointsAvailable)||0),0);let bt=0,bi=0,errs=[];done.forEach(s=>{const c=reportStageCapture(s);bt+=c.total;bi+=c.inside;const sol=s.preShootSolution;if(sol)s.targets.forEach(tt=>{const ps=sol.targets?.find(x=>x.targetId===tt.id||x.label===tt.label),aa=n(tt.actualHold);if(ps&&aa!==null&&ps.hold!==null){const as=(tt.holdSide==="R"?1:-1)*aa,pr=(ps.side==="R"?1:-1)*ps.hold;errs.push(Math.abs(as-pr))}})});const cap=bt?100*bi/bt:null,mae=errs.length?errs.reduce((a,b)=>a+b,0)/errs.length:null,windAvg=done.map(s=>n(s.wind?.avg)).filter(x=>x!==null),windDir=done.map(s=>n(s.wind?.avgDir)).filter(x=>x!==null),windDirPlot=unwrapAngles(windDir),stagePct=done.map(s=>n(s.pointsAvailable)>0?100*n(s.score)/n(s.pointsAvailable):0);return `<div class="card"><div class="cardhead"><div><strong>${esc(m.name)}</strong><div class="small">${done.length}/${m.stages.length} stages complete</div></div><span class="tag done">${avail?(100*score/avail).toFixed(1)+"%":"—"}</span></div><div class="grid four"><div><div class="small">TOTAL POINTS</div><div class="metric">${score}/${avail||"—"}</div></div><div><div class="small">WIND BRACKET CAPTURE</div><div class="metric">${cap!==null?cap.toFixed(0)+"%":"—"}</div></div><div><div class="small">MEAN HOLD ERROR</div><div class="metric">${mae!==null?mae.toFixed(1):"—"}</div><div class="small">mil</div></div><div><div class="small">AVG WIND</div><div class="metric">${windAvg.length?(windAvg.reduce((a,b)=>a+b,0)/windAvg.length).toFixed(1):"—"}</div><div class="small">mph</div></div></div><div class="note"><strong>WIND BRACKET CAPTURE</strong> = percentage of actual working holds that fell inside the pre-stage MIN–MAX solver hold bracket.</div><h3 style="margin-top:18px">Wind Speed Through Match</h3>${svgLine(windAvg,windAvg.length?Math.min(...windAvg):0,windAvg.length?Math.max(...windAvg):1,"AVG mph")}<h3 style="margin-top:18px">Wind Direction Through Match</h3>${svgLine(windDirPlot,windDirPlot.length?Math.min(...windDirPlot):0,windDirPlot.length?Math.max(...windDirPlot):360,"WIND FROM ° (unwrapped for continuity)")}<h3 style="margin-top:18px">Stage Score %</h3>${svgLine(stagePct,0,100,"Stage %")}<div class="matchSectionTitle">Stage Summary</div>${done.map(s=>{const c=reportStageCapture(s);return `<div class="listrow"><span>${esc(s.name)} • ${esc(s.wind?.avg||"—")} mph @ ${esc(s.wind?.avgDir||"—")}°</span><strong>${esc(s.score||"—")}/${esc(s.pointsAvailable||"—")} ${c.pct!==null?`• bracket ${c.pct.toFixed(0)}%`:""}</strong></div>`}).join("")||`<div class="note">No completed stages.</div>`}</div>`}).join("")}
+function reportsLegacy(){setBottom(false);const matches=st.data.matches.filter(m=>!m.archivedAt);main.innerHTML=`<div class="panel"><div class="kicker">Match analytics</div><h2>Reports</h2><div id="rep"></div></div>`;if(!matches.length){rep.innerHTML=`<div class="note">No match history yet.</div>`;return}rep.innerHTML=matches.slice().reverse().map(m=>{const done=m.stages.filter(s=>s.completedAt).map(historicalStageView),score=done.reduce((x,s)=>x+(n(s.score)||0),0),avail=done.reduce((x,s)=>x+(n(s.pointsAvailable)||0),0);let bt=0,bi=0,errs=[];done.forEach(s=>{const c=reportStageCapture(s);bt+=c.total;bi+=c.inside;const sol=s.preShootSolution;if(sol)s.targets.forEach(tt=>{const ps=sol.targets?.find(x=>x.targetId===tt.id||x.label===tt.label),aa=n(tt.actualHold);if(ps&&aa!==null&&ps.hold!==null){const as=(tt.holdSide==="R"?1:-1)*aa,pr=(ps.side==="R"?1:-1)*ps.hold;errs.push(Math.abs(as-pr))}})});const cap=bt?100*bi/bt:null,mae=errs.length?errs.reduce((a,b)=>a+b,0)/errs.length:null,windAvg=done.map(s=>n(s.wind?.avg)).filter(x=>x!==null),windDir=done.map(s=>n(s.wind?.avgDir)).filter(x=>x!==null),windDirPlot=unwrapAngles(windDir),stagePct=done.map(s=>n(s.pointsAvailable)>0?100*n(s.score)/n(s.pointsAvailable):0);return `<div class="card"><div class="cardhead"><div><strong>${esc(m.name)}</strong><div class="small">${done.length}/${m.stages.length} stages complete</div></div><span class="tag done">${avail?(100*score/avail).toFixed(1)+"%":"—"}</span></div><div class="grid four"><div><div class="small">TOTAL POINTS</div><div class="metric">${score}/${avail||"—"}</div></div><div><div class="small">WIND BRACKET CAPTURE</div><div class="metric">${cap!==null?cap.toFixed(0)+"%":"—"}</div></div><div><div class="small">MEAN HOLD ERROR</div><div class="metric">${mae!==null?mae.toFixed(1):"—"}</div><div class="small">mil</div></div><div><div class="small">AVG WIND</div><div class="metric">${windAvg.length?(windAvg.reduce((a,b)=>a+b,0)/windAvg.length).toFixed(1):"—"}</div><div class="small">mph</div></div></div><div class="note"><strong>WIND BRACKET CAPTURE</strong> = percentage of actual working holds that fell inside the pre-stage MIN–MAX solver hold bracket.</div><h3 style="margin-top:18px">Wind Speed Through Match</h3>${svgLine(windAvg,windAvg.length?Math.min(...windAvg):0,windAvg.length?Math.max(...windAvg):1,"AVG mph")}<h3 style="margin-top:18px">Wind Direction Through Match</h3>${svgLine(windDirPlot,windDirPlot.length?Math.min(...windDirPlot):0,windDirPlot.length?Math.max(...windDirPlot):360,"WIND FROM ° (unwrapped for continuity)")}<h3 style="margin-top:18px">Stage Score %</h3>${svgLine(stagePct,0,100,"Stage %")}<div class="matchSectionTitle">Stage Summary</div>${done.map(s=>{const c=reportStageCapture(s);return `<div class="listrow"><span>${esc(s.name)} • ${esc(s.wind?.avg||"—")} mph @ ${esc(s.wind?.avgDir||"—")}°</span><strong>${esc(s.score||"—")}/${esc(s.pointsAvailable||"—")} ${c.pct!==null?`• bracket ${c.pct.toFixed(0)}%`:""}</strong></div>`}).join("")||`<div class="note">No completed stages.</div>`}</div>`}).join("")}
+/* v3.8.13: read-only record presentation and descriptive recorded weather only.
+ * No targeting, inference, calibration, live fusion or probability functions are called.
+ * Completed snapshots are read without filling missing fields from mutable live data.
+ * Report filters stay in memory; opening or filtering this screen never writes records.
+ */
+const reportView={day:null,match:'all',sharedZero:false};
+function rpNumber(value){
+ if(value===null||value===undefined||typeof value==='boolean'||typeof value==='object'||String(value).trim()==='')return null;
+ const text=String(value).trim().replace(',','.');if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(text))return null;
+ const result=Number(text);return Number.isFinite(result)?result:null;
+}
+function rpValue(value,digits=1){const x=rpNumber(value);return x===null?'—':x.toFixed(digits);}
+function rpAngle(value){const x=rpNumber(value);return x!==null&&x>=0&&x<=360?((x%360)+360)%360:null;}
+function rpAngleText(value){const x=rpAngle(value);return x===null?'—':String(Math.round(x)%360).padStart(3,'0')+'°';}
+function rpTime(value){if(typeof value!=='string'||!value.trim())return null;const t=Date.parse(value);return Number.isFinite(t)?t:null;}
+function rpDay(value){const t=rpTime(value);if(t===null)return 'unknown';const d=new Date(t);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function rpDayLabel(key){if(key==='unknown')return 'Date not recorded';if(key==='all')return 'All recorded dates';const d=new Date(key+'T12:00:00');return Number.isNaN(d.getTime())?key:d.toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});}
+function rpStageRecords(data){
+ const out=[];
+ for(const m of (Array.isArray(data?.matches)?data.matches:[])){
+  if(!recordObject(m)||m.deletedAt)continue;
+  for(const [index,original]of (Array.isArray(m.stages)?m.stages:[]).entries()){
+   if(!recordObject(original)||!original.completedAt)continue;
+   const frozen=recordObject(original.postStageSnapshot?.data),s=frozen?original.postStageSnapshot.data:original;
+   const at=typeof original.completedAt==='string'?original.completedAt:'';
+   out.push({matchId:m.id,matchName:m.name||'Unnamed match',archived:!!m.archivedAt,id:original.id,index,
+    name:s.name??original.name??('Stage '+(index+1)),stage:s,frozen,at,ts:rpTime(at),day:rpDay(at),
+    targets:(Array.isArray(s.targets)?s.targets:[]).filter(recordObject),
+    revisions:Array.isArray(original.revisionHistory)?original.revisionHistory.length:0,
+    pending:!!original.correctionMode||!!original.correctionDraft,
+    snapshotAt:original.postStageSnapshot?.createdAt||null});
+  }
+ }
+ return out.sort((a,b)=>(a.ts??Infinity)-(b.ts??Infinity)||String(a.matchName).localeCompare(String(b.matchName))||a.index-b.index);
+}
+function rpSelected(records){return records.filter(r=>(reportView.day==='all'||r.day===reportView.day)&&(reportView.match==='all'||r.matchId===reportView.match));}
+function rpSummary(records,sharedZero=false){
+ const speeds=[],directions=[];let points=0,possible=0,scored=0,legacy=0;
+ for(const r of records){
+  if(!r.frozen){legacy++;continue;}
+  const w=r.stage.wind||{},speed=rpNumber(w.avg),direction=rpAngle(w.avgDir);
+  if(speed!==null&&speed>=0)speeds.push(speed);
+  // A stored direction during explicitly calm wind does not describe moving air.
+  if(direction!==null&&speed!==0)directions.push(direction);
+  const score=rpNumber(r.stage.score),max=rpNumber(r.stage.pointsAvailable);
+  if(score!==null&&max!==null&&max>0&&score>=0&&score<=max){points+=score;possible+=max;scored++;}
+ }
+ let meanDir=null,resultant=null,dirStatus='missing';
+ if(directions.length){
+  if(directions.length>1&&!sharedZero)dirStatus='reference';
+  else{const x=directions.reduce((s,a)=>s+Math.cos(a*Math.PI/180),0)/directions.length,
+    y=directions.reduce((s,a)=>s+Math.sin(a*Math.PI/180),0)/directions.length;
+   resultant=Math.hypot(x,y);
+   if(resultant<1e-8)dirStatus='variable';else{meanDir=((Math.atan2(y,x)*180/Math.PI)%360+360)%360;dirStatus='available';}
+  }
+ }
+ return {stages:records.length,legacy,speedCount:speeds.length,directionCount:directions.length,
+  meanSpeed:speeds.length?speeds.reduce((a,b)=>a+b,0)/speeds.length:null,
+  meanDir,resultant,dirStatus,points,possible,scored};
+}
+function rpObservationRows(s){
+ const rows=[];
+ const add=(o,location)=>{
+  if(!recordObject(o))return;
+  // Untouched default rows are not historical measurements.
+  if(o.quality==='Unknown'&&String(o.dir??'').trim()==='')return;
+  const entry=behavior[o.indicator]?.[Number(o.behavior)],movement=rpAngle(o.dir);
+  rows.push({location,indicator:o.indicator||'Unspecified',description:entry?.[0]||'Behaviour unavailable',
+    movement,from:movement===null?null:(movement+180)%360,quality:o.quality||'Not recorded',enabled:o.enabled!==false});
+ };
+ for(const [i,p]of (Array.isArray(s.points)?s.points:[]).entries()){
+  if(!recordObject(p))continue;const d=rpNumber(p.distanceM);
+  for(const o of (Array.isArray(p.obs)?p.obs:[]))add(o,'Point '+(i+1)+(d===null?'':' · '+d+' m'));
+ }
+ for(const o of (Array.isArray(s.targetObs)?s.targetObs:[]))add(o,'Target zone');
+ return rows;
+}
+function rpTargetRows(records){
+ const rows=[];for(const r of records)for(const [index,t]of r.targets.entries()){
+  const d=rpNumber(t.distanceM);rows.push({record:r,target:t,index,distance:d!==null&&d>0?d:null});
+ }
+ return rows.sort((a,b)=>(a.distance??Infinity)-(b.distance??Infinity)||(a.record.ts??Infinity)-(b.record.ts??Infinity)||a.index-b.index);
+}
+function rpTargetTable(records){
+ const rows=rpTargetRows(records);if(!rows.length)return '<div class="note">No target setup was saved for these completed stages.</div>';
+ return `<div class="rpTableWrap" role="region" aria-label="Saved target records, near to far" tabindex="0"><table class="rpTable"><thead><tr><th scope="col">Stage / target</th><th scope="col">Distance</th><th scope="col">Stored DOF</th><th scope="col">Range quality</th></tr></thead><tbody>${rows.map(({record:r,target:t,distance})=>`<tr><th scope="row"><strong>${esc(r.name)} · ${esc(t.label||'Unlabelled')}</strong><small>${esc(r.matchName)}${r.frozen?'':' · legacy record'}</small></th><td>${distance===null?'—':esc(distance)+' m'}</td><td>${rpAngleText(t.dof)}</td><td>${esc(t.rangeQuality||'Not recorded')}</td></tr>`).join('')}</tbody></table></div><div class="rpFootnote">Saved setup only, sorted near to far. Missing distances are listed last. Original records are not reordered.</div>`;
+}
+function rpStageCard(r){
+ const s=r.stage,w=recordObject(s.wind)?s.wind:{},obs=rpObservationRows(s),score=rpNumber(s.score),max=rpNumber(s.pointsAvailable);
+ const scoreText=score===null?'Not recorded':String(score),maxText=max===null?'—':String(max);
+ const time=r.ts===null?'Completion time missing':new Date(r.ts).toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+ return `<details class="rpStage"><summary><div><strong>${esc(r.name)}</strong><span>${esc(r.matchName)} · ${esc(time)}${r.archived?' · archived':''}</span></div><div class="rpStageMetrics"><strong>${rpValue(w.avg)} <small>mph</small></strong><span>FROM ${rpAngleText(w.avgDir)}</span></div><div class="rpScore">${esc(scoreText)}<small> / ${esc(maxText)}</small></div></summary><div class="rpStageBody"><div class="rpProvenance">${r.frozen?'COMMITTED COMPLETION RECORD':'LEGACY CURRENT RECORD — NO FROZEN COMPLETION COPY'}${r.revisions?' · '+r.revisions+' saved revision'+(r.revisions===1?'':'s'):''}</div>${!r.frozen?'<div class="note">No frozen completion snapshot exists. The available legacy record is shown, but excluded from the daily weather and score aggregates.</div>':''}${r.pending?'<div class="note">An unfinished edit exists. This report still shows the last committed completion record.</div>':''}<div class="rpWeatherGrid"><div><small>RECORDED MIN / AVG / MAX</small><strong>${rpValue(w.min)} / ${rpValue(w.avg)} / ${rpValue(w.max)} mph</strong></div><div><small>RECORDED AVG FROM</small><strong>${rpAngleText(w.avgDir)}</strong></div><div><small>RECORDED NOW</small><strong>${rpValue(w.now)} mph · FROM ${rpAngleText(w.nowDir)}</strong></div><div><small>ENTRY SOURCE</small><strong>${esc(w.source||'Not recorded')}</strong></div></div><div class="rpFootnote">These are the shooter-location entries saved with this completion. AVG and NOW are different fields; neither is wind inferred from a result.</div>${obs.length?`<h4>Saved local observations</h4>${obs.map(o=>`<div class="rpObs"><strong>${esc(o.location)} · ${esc(o.indicator)}</strong><span>${esc(o.description)} · ${esc(o.quality)}${o.enabled?'':' · excluded'}</span>${o.movement!==null?`<span>Entered movement TO ${rpAngleText(o.movement)} · equivalent FROM ${rpAngleText(o.from)}</span>`:''}</div>`).join('')}<div class="rpFootnote">A movement angle is an entered observation, not a verified direction measurement. Different locations remain separate; no pooled direction is calculated here.</div>`:''}${String(s.postNotes??'').trim()?`<h4>Saved notes</h4><p class="rpNotes">${esc(s.postNotes)}</p>`:''}</div></details>`;
+}
+function reports(){
+ setBottom(false);const records=rpStageRecords(st.data),days=[...new Set(records.map(r=>r.day))].sort((a,b)=>a==='unknown'?1:b==='unknown'?-1:b.localeCompare(a));
+ const today=rpDay(new Date().toISOString());if(reportView.day===null)reportView.day=days.includes(today)?today:(days[0]||today);
+ if(reportView.day!=='all'&&!days.includes(reportView.day)&&records.length)reportView.day=days[0];
+ const matchOptions=[...new Map(records.map(r=>[r.matchId,r.matchName])).entries()];
+ if(reportView.match!=='all'&&!matchOptions.some(([id])=>id===reportView.match))reportView.match='all';
+ const chosen=rpSelected(records),s=rpSummary(chosen,reportView.sharedZero);
+ const angle=s.dirStatus==='available'?rpAngleText(s.meanDir):s.dirStatus==='variable'?'Variable':'—';
+ const angleHint=s.dirStatus==='reference'?'Confirm a shared zero below':s.dirStatus==='variable'?'No unique circular mean':s.dirStatus==='missing'?'No usable recorded directions':`${s.directionCount} recorded direction${s.directionCount===1?'':'s'}`;
+ main.innerHTML=`<section class="panel rpHeader"><div class="kicker">Completed records · v${APP_VERSION}</div><h2>Day report</h2><p class="sub">Recorded values. Clear sources. No reconstructed weather.</p><div class="grid two rpFilters"><label>Day<select id="reportDay"><option value="all" ${reportView.day==='all'?'selected':''}>All recorded dates</option>${days.length?days.map(day=>`<option value="${esc(day)}" ${reportView.day===day?'selected':''}>${esc(rpDayLabel(day))}</option>`).join(''):`<option value="${esc(today)}" ${reportView.day===today?'selected':''}>Today — no completed records</option>`}</select></label><label>Match<select id="reportMatch"><option value="all">All matches</option>${matchOptions.map(([id,name])=>`<option value="${esc(id)}" ${reportView.match===id?'selected':''}>${esc(name)}</option>`).join('')}</select></label></div><div class="rpSummary"><div class="rpMetric"><small>COMPLETED STAGES</small><strong>${s.stages}</strong><span>${esc(rpDayLabel(reportView.day))}</span></div><div class="rpMetric"><small>RECORDED AVG WIND</small><strong>${rpValue(s.meanSpeed)} <em>mph</em></strong><span>${s.speedCount} committed AVG entries</span></div><div class="rpMetric"><small>RECORDED WIND FROM</small><strong>${angle}</strong><span>${angleHint}</span></div><div class="rpMetric"><small>RECORDED SCORE</small><strong>${s.scored?s.points:'—'} <em>/ ${s.scored?s.possible:'—'}</em></strong><span>${s.scored} complete score records</span></div></div><label class="rpReference"><input id="reportSharedZero" type="checkbox" ${reportView.sharedZero?'checked':''}><span>All selected stages use the same fixed 0° reference.</span></label><p class="rpFootnote">${s.legacy?s.legacy+' legacy record(s) excluded from the aggregates. ':''}Weather uses the saved shooter AVG entries, once per completed stage—not per target and not time-weighted. The direction is a circular mean, not an arithmetic average. Manually entered values are labelled RECORDED, not verified ACTUAL wind. Days use this device’s local completion date.</p></section><section class="panel"><div class="cardhead"><h3>Completed stages</h3><span class="small">Earliest → latest</span></div>${chosen.length?chosen.map(rpStageCard).join(''):'<div class="note">No completed stage records for this selection. In-progress stages are not included.</div>'}</section><section class="panel"><h3>Saved target setup</h3>${rpTargetTable(chosen)}</section><section class="panel rpSecondary"><details><summary>Report sources and limitations</summary><p>Committed post-stage snapshots take priority. Missing snapshot fields are shown as missing; they are not replaced with current edits, assumed zeroes or model outputs.</p><p>Inferred conditions are estimates, not actual weather measurements. This report does not calculate wind from working holds or impacts, and does not combine conditions from different locations.</p><button class="btn outline small" id="reportLegacy">OPEN ORIGINAL LEGACY METRICS</button><p class="small">The original calculation-based report remains available, unchanged and unvalidated. It is not the source of the recorded-weather summary above.</p></details></section>`;
+ document.getElementById('reportDay').onchange=e=>{reportView.day=e.target.value;reportView.sharedZero=false;reports();};
+ document.getElementById('reportMatch').onchange=e=>{reportView.match=e.target.value;reportView.sharedZero=false;reports();};
+ document.getElementById('reportSharedZero').onchange=e=>{reportView.sharedZero=e.target.checked;reports();};
+ document.getElementById('reportLegacy').onclick=()=>{reportsLegacy();const warning=document.createElement('div');warning.className='note';warning.textContent='Original legacy metrics — unvalidated calculation outputs. Missing values, label-based associations and chart alignment in this retained report are not accepted as validated history.';const b=document.createElement('button');b.className='btn outline';b.textContent='← RECORDED DAY REPORT';b.onclick=reports;main.prepend(warning);main.prepend(b);};
+}
+
 /* v3.8.12: meteorological notation and UI only.
  * Reads existing FROM/TO fields. Never changes reference, merges locations,
  * migrates saved angles, or alters any physics/statistical model.
@@ -2412,7 +2531,8 @@ async function verifyChangeBoundary(token,allowBlocked=false){
 }
 function dataProtection(){
  setBottom(false);
- main.innerHTML=`<div class="panel"><div class="kicker">Local data safety · v${APP_VERSION}</div><h2>Data Protection & Recovery</h2><p class="sub">${countsText(st.data)}</p><div class="${protection.blocked?'bad':'note'}">${esc(protection.warning||protection.notice||'Data stays in this browser and website. Export a JSON backup before an update or competition.')}</div><div class="grid two"><div><div class="small">LOCAL SAVE</div><strong id="dpLocal">${protection.localOK?'Current copy verified':'Not verified / not current'}</strong></div><div><div class="small">DATABASE MIRROR</div><strong id="dpMirror">${protection.idbOK?'Current copy verified':'Not verified / not current'}</strong></div></div><div class="note"><strong>Current website:</strong> <span style="overflow-wrap:anywhere">${esc(location.origin)}</span><br><strong>Last data save:</strong> <span id="dpSavedAt">${esc(st.data.lastSavedAt?new Date(st.data.lastSavedAt).toLocaleString():'Not yet saved')}</span><br>Recovery copies on this device are not an external backup. Clearing website data, changing browser or changing hostname can make them unavailable.</div><div class="actions"><button class="btn" id="exportProtected">EXPORT FULL BACKUP</button><button class="btn secondary" id="importProtected">IMPORT BACKUP</button><button class="btn outline" id="checkpointProtected">SAVE RECOVERY POINT</button></div><input id="protectedFile" class="hidden" type="file" accept=".json,application/json"><div class="actions"><button class="btn outline small" id="persistProtected">REQUEST PERSISTENT STORAGE</button><button class="btn outline small" id="reloadProtected">RECHECK SAVED DATA</button></div><div class="small" id="persistResult" style="margin-top:10px">Persistent storage: ${protection.persistent===true?'granted':protection.persistent===false?'not granted':'not checked / unsupported'}. The browser decides; this does not replace an exported backup.</div></div><div class="panel"><h3>Available recovery copies</h3><p class="sub">Review counts and dates before restoring. Restore replaces the complete working dataset.</p><div id="recoveryCopies">Loading recovery copies…</div></div>`;
+ main.innerHTML=`<div class="panel"><div class="kicker">Local data safety · v${APP_VERSION}</div><h2>Data Protection & Recovery</h2><p class="sub">${countsText(st.data)}</p><div class="${protection.blocked?'bad':'note'}">${esc(protection.warning||protection.notice||'Data stays in this browser and website. Export a JSON backup before an update or competition.')}</div><div class="grid two"><div><div class="small">LOCAL SAVE</div><strong id="dpLocal">${protection.localOK?'Current copy verified':'Not verified / not current'}</strong></div><div><div class="small">DATABASE MIRROR</div><strong id="dpMirror">${protection.idbOK?'Current copy verified':'Not verified / not current'}</strong></div></div><div class="note"><strong>Current website:</strong> <span style="overflow-wrap:anywhere">${esc(location.origin)}</span><br><strong>Last data save:</strong> <span id="dpSavedAt">${esc(st.data.lastSavedAt?new Date(st.data.lastSavedAt).toLocaleString():'Not yet saved')}</span><br>Recovery copies on this device are not an external backup. Clearing website data, changing browser or changing hostname can make them unavailable.</div><div class="actions"><button class="btn" id="exportProtected">EXPORT FULL BACKUP</button><button class="btn secondary" id="importProtected">IMPORT BACKUP</button><button class="btn outline" id="checkpointProtected">SAVE RECOVERY POINT</button></div><input id="protectedFile" class="hidden" type="file" accept=".json,application/json"><div class="actions"><button class="btn outline small" id="persistProtected">REQUEST PERSISTENT STORAGE</button><button class="btn outline small" id="reloadProtected">RECHECK SAVED DATA</button></div><div class="small" id="persistResult" style="margin-top:10px">Persistent storage: ${protection.persistent===true?'granted':protection.persistent===false?'not granted':'not checked / unsupported'}. The browser decides; this does not replace an exported backup.</div></div><div class="panel"><h3>App update</h3><p class="small">Loaded app: v${APP_VERSION}. A successful server deployment does not replace an already open offline copy.</p><div class="actions"><button class="btn outline" id="checkAppUpdate">CHECK APP UPDATE</button><button class="btn secondary" id="applyAppUpdate" hidden>APPLY SAVED UPDATE</button></div><div id="appUpdateStatus" class="appUpdateStatus" role="status">Export a full backup before applying an update. No automatic reload or data clearing.</div></div><div class="panel"><h3>Available recovery copies</h3><p class="sub">Review counts and dates before restoring. Restore replaces the complete working dataset.</p><div id="recoveryCopies">Loading recovery copies…</div></div>`;
+ document.getElementById('checkAppUpdate').onclick=checkAppUpdate;document.getElementById('applyAppUpdate').onclick=applyAppUpdate;
  exportProtected.onclick=exportData;importProtected.onclick=()=>protectedFile.click();protectedFile.onchange=importData;
  checkpointProtected.onclick=async()=>{if(protection.blocked){alert('Export available data before resolving the storage issue.');return}checkpointProtected.disabled=true;try{if(await createRecoveryPoint()){protection.notice='Recovery point saved on this device.';await refreshRecoveryList()}}finally{checkpointProtected.disabled=false}};
  reloadProtected.onclick=()=>{if(confirm('Export any unsaved work first. Reload now to recheck saved data?'))location.reload()};
@@ -2447,12 +2567,74 @@ async function runProtectedChange(action){
 }
 document.addEventListener('click',e=>{if(protection.operation){e.preventDefault();e.stopImmediatePropagation()}},true);
 
-if("serviceWorker" in navigator){window.addEventListener("load",async()=>{
- try{const reg=await navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"});
- const showUpdate=()=>{if(reg.waiting&&navigator.serviceWorker.controller){const el=document.getElementById('updateNotice');el.hidden=false;el.textContent='An app update is ready. Export your data, then close all WIND SIGHT tabs and reopen. No automatic reload will interrupt your stage.'}};
- showUpdate();reg.addEventListener('updatefound',()=>{const worker=reg.installing;if(worker)worker.addEventListener('statechange',showUpdate)});
- }catch(e){protection.warning='Offline installation failed. Keep a JSON backup and check connectivity before competition.';storageStatus(saveState.textContent)}
+/* Explicit app-shell update only. No automatic reload during a stage. */
+let appUpdateRegistration=null,appUpdateBusy=false;
+function appUpdateMessage(worker,message,timeoutMs=7000){
+ return new Promise((resolve,reject)=>{
+  if(!worker){reject(new Error('No service worker is available.'));return;}
+  const channel=new MessageChannel(),timer=setTimeout(()=>{channel.port1.close();reject(new Error('The installed worker did not respond. Close other WIND SIGHT windows and retry.'));},timeoutMs);
+  channel.port1.onmessage=e=>{clearTimeout(timer);channel.port1.close();resolve(e.data);};
+  try{worker.postMessage(message,[channel.port2]);}catch(e){clearTimeout(timer);channel.port1.close();reject(e);}
+ });
+}
+function appUpdateStatus(message){
+ const el=document.getElementById('appUpdateStatus');if(el)el.textContent=message;
+}
+function appUpdateNotice(reg){
+ if(!reg?.waiting||!navigator.serviceWorker?.controller)return;
+ const el=document.getElementById('updateNotice');if(!el)return;
+ el.hidden=false;el.textContent='A downloaded app update is waiting. Save and export your data, then use DATA → CHECK APP UPDATE. No automatic reload will interrupt an open stage.';
+}
+async function checkAppUpdate(){
+ if(appUpdateBusy)return;const button=document.getElementById('checkAppUpdate');if(button)button.disabled=true;
+ appUpdateStatus('Loaded app: v'+APP_VERSION+'. Checking the service-worker update…');
+ try{
+  if(!('serviceWorker' in navigator))throw new Error('Service workers are not available in this browser.');
+  const reg=appUpdateRegistration||await navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'});appUpdateRegistration=reg;
+  await reg.update();appUpdateNotice(reg);
+  let worker=reg.waiting;
+  if(!worker&&reg.installing){appUpdateStatus('Update is downloading. Remain online and check again once it finishes.');return;}
+  if(worker){const info=await appUpdateMessage(worker,{type:'WSP_GET_VERSION'});if(!info?.version)throw new Error('Downloaded worker did not supply its version.');
+   appUpdateStatus('Loaded app: v'+APP_VERSION+' · downloaded update: v'+info.version+'. Close every other WIND SIGHT window before applying.');
+   const apply=document.getElementById('applyAppUpdate');if(apply)apply.hidden=false;
+  }else{const info=await appUpdateMessage(navigator.serviceWorker.controller||reg.active,{type:'WSP_GET_VERSION'});
+   appUpdateStatus('Loaded app: v'+APP_VERSION+' · active offline shell: v'+(info?.version||'unknown')+'. '+(info?.version&&info.version!==APP_VERSION?'The shell is newer. Save your work, close this app and reopen.':'No waiting update was found.'));
+  }
+ }catch(e){appUpdateStatus('Update check not completed: '+e.message+' No saved data or caches were cleared.');}
+ finally{if(button)button.disabled=false;}
+}
+async function applyAppUpdate(){
+ if(appUpdateBusy||st.screen!=='dataProtection')return;
+ const reg=appUpdateRegistration;
+ if(!reg?.waiting){appUpdateStatus('No downloaded update is waiting. Check for updates first.');return;}
+ if(!confirm('Confirm your external JSON backup is saved and close every other WIND SIGHT window. Apply the downloaded app update and reopen now?'))return;
+ appUpdateBusy=true;
+ await runProtectedChange(async()=>{
+  try{
+   if(protection.blocked||!await writeNow())throw new Error('Current data could not be saved. Export it before attempting an update.');
+   const token=changeBoundaryToken(),worker=reg.waiting;
+   const info=await appUpdateMessage(worker,{type:'WSP_GET_VERSION'});
+   if(!info?.version||!await verifyChangeBoundary(token))throw new Error('The saved-data boundary changed. Update was cancelled.');
+   const result=await appUpdateMessage(worker,{type:'WSP_ACTIVATE_SAFELY',expectedVersion:info.version});
+   if(!result?.ok)throw new Error(result?.message||'Update was not activated.');
+   appUpdateStatus('Saved data verified. Activating v'+info.version+'…');
+   for(let i=0;i<30;i++){
+    await new Promise(resolve=>setTimeout(resolve,200));
+    const active=navigator.serviceWorker.controller||reg.active;
+    if(!active)continue;
+    try{const current=await appUpdateMessage(active,{type:'WSP_GET_VERSION'},1200);if(current?.version===info.version){location.reload();return;}}catch(e){}
+   }
+   appUpdateStatus('Update was accepted but activation could not be confirmed here. Close the app and reopen it. No data was cleared.');
+  }catch(e){appUpdateStatus('Update stopped: '+e.message);}
+ });
+ appUpdateBusy=false;
+}
+if('serviceWorker' in navigator){window.addEventListener('load',async()=>{
+ try{const reg=await navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'});appUpdateRegistration=reg;
+  appUpdateNotice(reg);reg.addEventListener('updatefound',()=>{const worker=reg.installing;if(worker)worker.addEventListener('statechange',()=>appUpdateNotice(reg));});
+ }catch(e){protection.warning='Offline installation failed. Keep a JSON backup and check connectivity before relying on offline access.';storageStatus(saveState.textContent);}
 });}
+
 initializeProtectedData().catch(e=>{protection.ready=true;blockStorage("Startup check failed: "+e.message);st.screen="dataProtection";render()});
 </script>
 </body>
