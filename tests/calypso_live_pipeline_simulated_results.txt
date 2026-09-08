@@ -1,5 +1,0 @@
-PASS 2A39 handler feeds live pipeline
-PASS Environmental handlers feed speed + referenced raw direction pipeline
-PASS Malformed Mini packet never enters live pipeline
-PASS Legacy CUPS handler feeds live pipeline
-RESULT 4/4 PASS
