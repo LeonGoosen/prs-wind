@@ -1,6 +1,6 @@
 {
   "name": "wind-sight-prs",
-  "version": "3.8.13",
+  "version": "3.8.14",
   "private": true,
-  "description": "WIND SIGHT PRS by ZealTech \u2014 recorded report clarity, new-record defaults and explicit safe app-shell updates. Existing aiming and probability algorithms unchanged and unvalidated."
+  "description": "WIND SIGHT PRS by ZealTech \u2014 historical-record integrity repairs and streamlined daily review. Existing firing-solution and probability algorithms unchanged."
 }

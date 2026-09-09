@@ -1,4 +1,4 @@
-/* WIND SIGHT PRS v3.8.13 Report Clarity; Safari redirect hotfix retained.
+/* WIND SIGHT PRS v3.8.14 Daily Review; Safari redirect hotfix retained.
  * Competition Core shell only. Never touches localStorage or IndexedDB.
  * No automatic skipWaiting. Explicit activation requires a sole requesting window.
  *
@@ -7,8 +7,8 @@
  * This worker therefore caches and serves the canonical root URL only and never
  * places redirected responses in the versioned shell cache.
  */
-const RELEASE='3.8.13';
-const CACHE='wind-sight-v3813-report-clarity-1';
+const RELEASE='3.8.14';
+const CACHE='wind-sight-v3814-daily-review-1';
 const BASE=new URL('./',self.location.href);
 const ROOT=BASE.href;
 const INDEX_PATH=new URL('index.html',BASE).pathname;
