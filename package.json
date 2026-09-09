@@ -1,6 +1,6 @@
 {
   "name": "wind-sight-prs",
-  "version": "3.8.14",
+  "version": "3.8.17",
   "private": true,
-  "description": "WIND SIGHT PRS by ZealTech \u2014 historical-record integrity repairs and streamlined daily review. Existing firing-solution and probability algorithms unchanged."
+  "description": "WIND SIGHT PRS by ZealTech — observation checkbox integrity, explicit general-quality labels and stage-record timing. Partial remediation only: two known live-model capability defects remain unresolved."
 }
