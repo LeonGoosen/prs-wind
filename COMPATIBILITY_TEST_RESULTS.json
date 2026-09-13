@@ -1,0 +1,48 @@
+{
+  "pass": 7,
+  "fail": 0,
+  "results": [
+    {
+      "name": "wind_order",
+      "strictErr": "Invalid archived or frozen record structure",
+      "runtimeErr": null,
+      "pass": true
+    },
+    {
+      "name": "solver_order",
+      "strictErr": "Invalid archived or frozen record structure",
+      "runtimeErr": null,
+      "pass": true
+    },
+    {
+      "name": "zero_distance",
+      "strictErr": "Invalid archived or frozen record structure",
+      "runtimeErr": null,
+      "pass": true
+    },
+    {
+      "name": "zero_width",
+      "strictErr": "Invalid archived or frozen record structure",
+      "runtimeErr": null,
+      "pass": true
+    },
+    {
+      "name": "dup_pre",
+      "strictErr": "Invalid archived or frozen record structure",
+      "runtimeErr": null,
+      "pass": true
+    },
+    {
+      "name": "bad_snap_time",
+      "strictErr": "Invalid archived or frozen record structure",
+      "runtimeErr": null,
+      "pass": true
+    },
+    {
+      "name": "bad_revision",
+      "strictErr": "Invalid match, target, observation or frozen profile structure",
+      "runtimeErr": null,
+      "pass": true
+    }
+  ]
+}

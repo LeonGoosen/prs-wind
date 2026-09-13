@@ -1,0 +1,132 @@
+{
+  "version": "3.8.23",
+  "passed": 25,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "app version 3.8.23",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "visible version 3.8.23",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "title version 3.8.23",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "package version 3.8.23",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "service worker release 3.8.23",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "service worker unique cache",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "strict validator retained",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "runtime compatibility validator added",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "runtime save uses compatibility validator",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "recovery uses compatibility validator",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "recovery record uses compatibility validator",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "external import strict by default",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy compatibility backup explicit marker",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy compatibility restore explicit confirmation",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no schema bump",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no localStorage delete",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "no indexedDB deleteDatabase",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "application JavaScript syntax",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "service worker syntax",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "critical function unchanged: optimizeShootSolutionV5",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "critical function unchanged: buildPreShootSolution",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "critical function unchanged: validatedTrajectoryWeights",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "critical function unchanged: calibrationAxesError",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "critical function unchanged: liveValidationFast",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "critical function unchanged: numericSafetyError",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}

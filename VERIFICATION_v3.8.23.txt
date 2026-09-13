@@ -1,0 +1,62 @@
+WIND SIGHT PRS v3.8.23 — LEGACY DATA COMPATIBILITY HOTFIX
+
+Static/source checks: 25 PASS / 0 FAIL
+
+Purpose:
+- Fix v3.8.22 recovery lockout caused by applying new strict historical-import rules to existing same-origin saved history.
+- Keep strict historical validation for new external imports.
+- Preserve existing records without deleting or rewriting them.
+- Keep schema version 4 and firing-solution mathematics unchanged.
+
+[PASS] app version 3.8.23
+[PASS] visible version 3.8.23
+[PASS] title version 3.8.23
+[PASS] package version 3.8.23
+[PASS] service worker release 3.8.23
+[PASS] service worker unique cache
+[PASS] strict validator retained
+[PASS] runtime compatibility validator added
+[PASS] runtime save uses compatibility validator
+[PASS] recovery uses compatibility validator
+[PASS] recovery record uses compatibility validator
+[PASS] external import strict by default
+[PASS] legacy compatibility backup explicit marker
+[PASS] legacy compatibility restore explicit confirmation
+[PASS] no schema bump
+[PASS] no localStorage delete
+[PASS] no indexedDB deleteDatabase
+[PASS] application JavaScript syntax
+[PASS] service worker syntax
+[PASS] critical function unchanged: optimizeShootSolutionV5
+[PASS] critical function unchanged: buildPreShootSolution
+[PASS] critical function unchanged: validatedTrajectoryWeights
+[PASS] critical function unchanged: calibrationAxesError
+[PASS] critical function unchanged: liveValidationFast
+[PASS] critical function unchanged: numericSafetyError
+
+Important: this hotfix cannot identify the exact legacy field in the user's on-device data without an exported JSON copy. It deliberately restores runtime compatibility while retaining strict ingress validation.
+
+Compatibility fixtures: 7 PASS / 0 FAIL
+[PASS] legacy fixture wind_order — strict='Invalid archived or frozen record structure'; runtime=None
+[PASS] legacy fixture solver_order — strict='Invalid archived or frozen record structure'; runtime=None
+[PASS] legacy fixture zero_distance — strict='Invalid archived or frozen record structure'; runtime=None
+[PASS] legacy fixture zero_width — strict='Invalid archived or frozen record structure'; runtime=None
+[PASS] legacy fixture dup_pre — strict='Invalid archived or frozen record structure'; runtime=None
+[PASS] legacy fixture bad_snap_time — strict='Invalid archived or frozen record structure'; runtime=None
+[PASS] legacy fixture bad_revision — strict='Invalid match, target, observation or frozen profile structure'; runtime=None
+
+Cloudflare build:
+WIND SIGHT CLOUDFLARE CF2: PUBLIC ASSETS READY
+Assets directory: /mnt/data/work3823/public
+Files: 9; total bytes: 511030; largest: index.html (301007 bytes)
+Deploy assets from ./public, NOT . or the repository root.
+d324054444f938817dda3472c832d30587e9adaa78ad7b680300955573320c3e  public/index.html
+5c93aed9781386d7506e46090843e2b7de8c239d4f5ee31db8511759324526e0  public/service-worker.js
+af7d03b93a144cd06fd2db604682c61cf501b23e4e18d0575be32ce9db924333  public/manifest.webmanifest
+83710432441340319d438874d8936a2c9b28605a569303abdbe53a7d2927fbe6  public/apple-touch-icon.png
+1206f6b374cacb59030f6520a0fd27735a59fa89d6a6e48d548234fd0a4e4efc  public/icon-192.png
+9132d6a56d9d23597f57ff8cd26517020b99a5d8f0b4db4cd4ac93bcae6be5f8  public/icon-512.png
+b6bc19596156a91277d5d756a1bbc9adcc04feb44aef538190a8bd60da521f4f  public/wind-sight-icon.png
+6137755b33345ee22c74ce7883056c532ac64a29ca45942bd04d42024576ba89  public/zealtech-transparent.png
+62e4c2691eeabde7fc0d8d23c2955a7dbc36446bb91910068679f357c0a97f71  public/backup-before-update.html
+

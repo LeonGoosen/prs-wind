@@ -1,0 +1,13 @@
+WIND SIGHT PRS v3.8.23 — PRODUCTION GUARDED HOTFIX
+
+Scope: Legacy Data Compatibility.
+
+This release fixes a v3.8.22 regression where stricter historical-integrity rules could place valid existing same-origin data into RECOVERY REQUIRED / save-blocked mode.
+
+Runtime behavior:
+- Existing on-device data is validated with the backward-compatible v3.8.21 runtime safety contract.
+- New external imports continue to use the strict v3.8.22 historical-integrity validator.
+- Legacy-compatible exports are explicitly marked and require confirmation to restore in the same app version.
+- No storage clearing, schema bump, or firing-solution math changes.
+
+Status: approved as a data-compatibility hotfix within the Production Guarded model. Physical iPhone/PWA acceptance remains required.
