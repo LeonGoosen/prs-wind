@@ -1,6 +1,6 @@
 {
   "name": "wind-sight-prs",
-  "version": "3.8.25",
+  "version": "3.8.26",
   "private": true,
-  "description": "WIND SIGHT PRS by ZealTech \u2014 v3.8.25 Wind Tab Hotfix; environmental capture and software safeguards with the legacy firing model retained and explicitly labelled."
+  "description": "WIND SIGHT PRS by ZealTech \u2014 v3.8.26 Average Window Summary; saved window AVGs drive environmental LOW/BEST/HIGH summaries while raw MIN/MAX remain visible; legacy firing model unchanged."
 }
