@@ -1,6 +1,6 @@
 {
   "name": "wind-sight-prs",
-  "version": "3.8.29",
+  "version": "3.8.30",
   "private": true,
-  "description": "WIND SIGHT PRS v3.8.29 Target Record Clarity. Read-only shared field records per target; legacy calculations unchanged."
+  "description": "WIND SIGHT PRS v3.8.30 Shared Wind Input. Target wind-speed display reuses the shared shooter environmental summary; DOF and legacy target-relative angle unchanged."
 }
