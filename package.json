@@ -1,6 +1,6 @@
 {
   "name": "wind-sight-prs",
-  "version": "3.8.26",
+  "version": "3.8.27",
   "private": true,
-  "description": "WIND SIGHT PRS by ZealTech \u2014 v3.8.26 Average Window Summary; saved window AVGs drive environmental LOW/BEST/HIGH summaries while raw MIN/MAX remain visible; legacy firing model unchanged."
+  "description": "WIND SIGHT PRS by ZealTech \u2014 v3.8.27 Field / Legacy Separation; saved window AVGs drive environmental LOW/BEST/HIGH summaries while raw MIN/MAX remain visible; legacy firing model unchanged."
 }

@@ -1,4 +1,4 @@
-/* WIND SIGHT PRS v3.8.26 Average Window Summary; legacy model frozen; Safari redirect hotfix retained.
+/* WIND SIGHT PRS v3.8.27 Field / Legacy Separation; legacy model frozen; Safari redirect hotfix retained.
  * Competition Core shell only. Never touches localStorage or IndexedDB.
  * No automatic skipWaiting. Explicit activation requires a sole requesting window.
  *
@@ -7,8 +7,8 @@
  * This worker therefore caches and serves the canonical root URL only and never
  * places redirected responses in the versioned shell cache.
  */
-const RELEASE='3.8.26';
-const CACHE='wind-sight-v3826-average-window-summary-1';
+const RELEASE='3.8.27';
+const CACHE='wind-sight-v3827-field-legacy-separation-1';
 const BASE=new URL('./',self.location.href);
 const ROOT=BASE.href;
 const INDEX_PATH=new URL('index.html',BASE).pathname;
