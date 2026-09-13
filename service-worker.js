@@ -1,4 +1,4 @@
-/* WIND SIGHT PRS v3.8.17 Observation Controls; Safari redirect hotfix retained.
+/* WIND SIGHT PRS v3.8.22 Historical Integrity; legacy model frozen; Safari redirect hotfix retained.
  * Competition Core shell only. Never touches localStorage or IndexedDB.
  * No automatic skipWaiting. Explicit activation requires a sole requesting window.
  *
@@ -7,8 +7,8 @@
  * This worker therefore caches and serves the canonical root URL only and never
  * places redirected responses in the versioned shell cache.
  */
-const RELEASE='3.8.17';
-const CACHE='wind-sight-v3817-observation-controls-1';
+const RELEASE='3.8.22';
+const CACHE='wind-sight-v3822-historical-integrity-1';
 const BASE=new URL('./',self.location.href);
 const ROOT=BASE.href;
 const INDEX_PATH=new URL('index.html',BASE).pathname;

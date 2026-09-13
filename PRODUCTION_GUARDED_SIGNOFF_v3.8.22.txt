@@ -1,0 +1,5 @@
+WIND SIGHT PRS v3.8.22 — PRODUCTION GUARDED RELEASE NOTE
+
+This release fixes historical-import integrity boundaries discovered during the v3.8.21 pre-upload audit: frozen wind ordering, solver ordering, nonpositive target geometry, duplicate pre-shoot target IDs, snapshot timestamps, and revision-history validation.
+
+Legacy firing-model limitations remain guarded/disclosed and are outside this maintenance release.
