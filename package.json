@@ -1,6 +1,6 @@
 {
   "name": "wind-sight-prs",
-  "version": "3.8.28",
+  "version": "3.8.29",
   "private": true,
-  "description": "WIND SIGHT PRS by ZealTech \u2014 v3.8.28 Update Flow Hotfix; saved window AVGs drive environmental LOW/BEST/HIGH summaries while raw MIN/MAX remain visible; legacy firing model unchanged."
+  "description": "WIND SIGHT PRS v3.8.29 Target Record Clarity. Read-only shared field records per target; legacy calculations unchanged."
 }
