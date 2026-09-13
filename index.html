@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.8.27 Field / Legacy Separation</title>
+<title>WIND SIGHT PRS by ZealTech — v3.8.28 Update Flow Hotfix</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -305,7 +305,7 @@ html,body{touch-action:manipulation}
 .windContext strong{display:block;font-size:18px}
 @media(max-width:620px){.windPrimaryGrid{grid-template-columns:1fr 1fr}.windContext{grid-template-columns:1fr 1fr}}
 @media(max-width:350px){.windPrimaryGrid{grid-template-columns:1fr}}
-/* v3.8.27 Field / Legacy Separation: legacy firing model frozen; model-integrity guardrails and explicit current-window versus saved-envelope disclosure retained. */
+/* v3.8.28 Update Flow Hotfix: legacy firing model frozen; model-integrity guardrails and explicit current-window versus saved-envelope disclosure retained. */
 .windSetSummary{margin-top:12px;border:1px solid #29435a;border-radius:15px;padding:12px;background:#07131f}
 .windSetSummaryHead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .windSetSummaryHead strong{font-size:14px}.windSetSummaryHead span{font-size:10px;color:var(--muted);text-align:right}
@@ -326,7 +326,7 @@ html,body{touch-action:manipulation}
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>PRODUCTION GUARDED • v3.8.27</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>PRODUCTION GUARDED • v3.8.28</small></div></div>
   <button class="save storageButton" id="saveState" type="button" onclick="if(protection.ready){saveCurrent();st.screen='dataProtection';render()}">Checking data…</button>
 </div>
 <nav id="nav"></nav>
@@ -415,7 +415,7 @@ function navItems(){return [["home","HOME"],["matches","MATCHES"],["rifles","PRO
 function renderNav(){nav.innerHTML="";navItems().forEach(([k,l])=>{let b=document.createElement("button");b.className="navbtn"+(st.screen===k?" active":"");b.textContent=l;b.onclick=()=>{if(protection.blocked){st.screen="dataProtection";st.step=0;render();return;}saveCurrent();st.screen=k;st.step=0;render()};nav.appendChild(b)})}
 function setBottom(show=true,nextLabel="NEXT →",nextVisible=true){bottom.style.display=show?"block":"none";nextBtn.textContent=nextLabel;nextBtn.style.visibility=nextVisible?"visible":"hidden"}
 
-const APP_VERSION="3.8.26";
+const APP_VERSION="3.8.28";
 const APP_SESSION_STARTED_AT=Date.now();
 
 
@@ -2119,7 +2119,7 @@ function reports(){
  const chosen=rpSelected(records),s=rpSummary(chosen,reportView.sharedZero),angle=s.dirStatus==='available'?rpAngleText(s.meanDir):s.dirStatus==='variable'?'Variable':s.dirStatus==='reference'?'Per stage':'—';
  const angleHint=s.dirStatus==='reference'?'Confirm shared 0° reference to calculate a circular mean':s.dirStatus==='variable'?'Directions cancel; no unique mean':s.dirStatus==='missing'?'No usable recorded directions':`${s.directionCount} stage direction${s.directionCount===1?'':'s'}`;
  const speedSpan=s.speedCount?`${rpValue(s.minSpeed)}–${rpValue(s.maxSpeed)} mph across stage AVG entries`:'No recorded stage AVG entries';
- main.innerHTML=`<section class="panel rpHeader"><div class="kicker">Historical stage records · v${APP_VERSION}</div><h2>Match day review</h2><p class="sub">What was recorded, where it was observed, and what changed across completed stages.</p><div class="grid two rpFilters"><label>Day<select id="reportDay"><option value="all" ${reportView.day==='all'?'selected':''}>All recorded dates</option>${days.length?days.map(day=>`<option value="${esc(day)}" ${reportView.day===day?'selected':''}>${esc(rpDayLabel(day))}</option>`).join(''):`<option value="${esc(today)}" ${reportView.day===today?'selected':''}>Today — no completed records</option>`}</select></label><label>Match<select id="reportMatch"><option value="all">All matches</option>${matchOptions.map(([id,name])=>`<option value="${esc(id)}" ${reportView.match===id?'selected':''}>${esc(name)}</option>`).join('')}</select></label></div><div class="rpSummary"><div class="rpMetric"><small>COMPLETED STAGES</small><strong>${s.stages}</strong><span>${esc(rpDayLabel(reportView.day))}</span></div><div class="rpMetric"><small>RECORDED SHOOTER AVG</small><strong>${rpValue(s.meanSpeed)} <em>mph</em></strong><span>${esc(speedSpan)}</span></div><div class="rpMetric"><small>RECORDED WIND FROM</small><strong>${angle}</strong><span>${esc(angleHint)}</span></div><div class="rpMetric"><small>RECORDED SCORE</small><strong>${s.scored?s.points:'—'} <em>/ ${s.scored?s.possible:'—'}</em></strong><span>${s.scored} scored${s.unscored?' · '+s.unscored+' unscored':''}</span></div></div><div class="rpCoverage"><span class="rpPill"><strong>${s.committed}</strong> committed</span><span class="rpPill"><strong>${s.observations}</strong> local observations</span>${s.pending?`<span class="rpPill"><strong>${s.pending}</strong> pending edit${s.pending===1?'':'s'}</span>`:''}${s.legacy?`<span class="rpPill"><strong>${s.legacy}</strong> legacy</span>`:''}</div><label class="rpReference"><input id="reportSharedZero" type="checkbox" ${reportView.sharedZero?'checked':''}><span>These selected stage directions share the same fixed 0° reference. Enable only when that statement is true.</span></label><p class="rpFootnote">Recorded shooter wind is the saved stage input, not independently verified weather. Different shooter/downrange/target locations are kept separate; different local directions or speeds are not automatically treated as errors. Direction averages use circular statistics only after a common reference is confirmed.</p></section><section class="panel"><div class="rpSectionHead"><h3>Stage timeline</h3><span>Fastest day-level check</span></div>${rpTimeline(chosen)}</section><section class="panel"><div class="rpSectionHead"><h3>Environmental field review</h3><span>Separate locations · stage completion times</span></div>${rpConditionsTable(chosen)}</section><section class="panel"><div class="rpSectionHead"><h3>Target history</h3><span>Near → far · historical values only</span></div>${rpTargetTable(chosen)}</section><section class="panel"><div class="rpSectionHead"><h3>Stage details</h3><span>Open only when needed</span></div>${chosen.length?chosen.map(rpStageCard).join(''):'<div class="note">No completed stage records for this selection.</div>'}</section><section class="panel rpSecondary"><details><summary>Data quality and report limits</summary><p>Committed post-stage snapshots take priority. Missing committed fields remain missing; later mutable edits are not used to reconstruct them.</p><p>In this environmental review, observation-derived speed and direction are capability-gated. Conditions at different locations stay separate.</p><p><strong>Unresolved live-model limits:</strong> the separate live engine can still use saved angles from speed-only observations and speed contributions from direction-only observations. Those legacy live-model algorithms remain unchanged in v3.8.27; environmental summaries and saved wind sets do not certify them.</p><p><strong>Quality:</strong> Observation quality is a general rating used for each supported evidence type in this review. This field was previously labelled Direction quality. Earlier selections are retained without re-rating; do not assume an older selection was an independent speed-confidence assessment.</p><p>The historical model/final-hold columns are displayed only as saved records. Environmental history is not fed into the firing solution, does not rank similar stages, and does not create a new recommendation.</p><button class="btn outline small" id="reportLegacy">OPEN ORIGINAL LEGACY METRICS</button></details></section>`;
+ main.innerHTML=`<section class="panel rpHeader"><div class="kicker">Historical stage records · v${APP_VERSION}</div><h2>Match day review</h2><p class="sub">What was recorded, where it was observed, and what changed across completed stages.</p><div class="grid two rpFilters"><label>Day<select id="reportDay"><option value="all" ${reportView.day==='all'?'selected':''}>All recorded dates</option>${days.length?days.map(day=>`<option value="${esc(day)}" ${reportView.day===day?'selected':''}>${esc(rpDayLabel(day))}</option>`).join(''):`<option value="${esc(today)}" ${reportView.day===today?'selected':''}>Today — no completed records</option>`}</select></label><label>Match<select id="reportMatch"><option value="all">All matches</option>${matchOptions.map(([id,name])=>`<option value="${esc(id)}" ${reportView.match===id?'selected':''}>${esc(name)}</option>`).join('')}</select></label></div><div class="rpSummary"><div class="rpMetric"><small>COMPLETED STAGES</small><strong>${s.stages}</strong><span>${esc(rpDayLabel(reportView.day))}</span></div><div class="rpMetric"><small>RECORDED SHOOTER AVG</small><strong>${rpValue(s.meanSpeed)} <em>mph</em></strong><span>${esc(speedSpan)}</span></div><div class="rpMetric"><small>RECORDED WIND FROM</small><strong>${angle}</strong><span>${esc(angleHint)}</span></div><div class="rpMetric"><small>RECORDED SCORE</small><strong>${s.scored?s.points:'—'} <em>/ ${s.scored?s.possible:'—'}</em></strong><span>${s.scored} scored${s.unscored?' · '+s.unscored+' unscored':''}</span></div></div><div class="rpCoverage"><span class="rpPill"><strong>${s.committed}</strong> committed</span><span class="rpPill"><strong>${s.observations}</strong> local observations</span>${s.pending?`<span class="rpPill"><strong>${s.pending}</strong> pending edit${s.pending===1?'':'s'}</span>`:''}${s.legacy?`<span class="rpPill"><strong>${s.legacy}</strong> legacy</span>`:''}</div><label class="rpReference"><input id="reportSharedZero" type="checkbox" ${reportView.sharedZero?'checked':''}><span>These selected stage directions share the same fixed 0° reference. Enable only when that statement is true.</span></label><p class="rpFootnote">Recorded shooter wind is the saved stage input, not independently verified weather. Different shooter/downrange/target locations are kept separate; different local directions or speeds are not automatically treated as errors. Direction averages use circular statistics only after a common reference is confirmed.</p></section><section class="panel"><div class="rpSectionHead"><h3>Stage timeline</h3><span>Fastest day-level check</span></div>${rpTimeline(chosen)}</section><section class="panel"><div class="rpSectionHead"><h3>Environmental field review</h3><span>Separate locations · stage completion times</span></div>${rpConditionsTable(chosen)}</section><section class="panel"><div class="rpSectionHead"><h3>Target history</h3><span>Near → far · historical values only</span></div>${rpTargetTable(chosen)}</section><section class="panel"><div class="rpSectionHead"><h3>Stage details</h3><span>Open only when needed</span></div>${chosen.length?chosen.map(rpStageCard).join(''):'<div class="note">No completed stage records for this selection.</div>'}</section><section class="panel rpSecondary"><details><summary>Data quality and report limits</summary><p>Committed post-stage snapshots take priority. Missing committed fields remain missing; later mutable edits are not used to reconstruct them.</p><p>In this environmental review, observation-derived speed and direction are capability-gated. Conditions at different locations stay separate.</p><p><strong>Unresolved live-model limits:</strong> the separate live engine can still use saved angles from speed-only observations and speed contributions from direction-only observations. Those legacy live-model algorithms remain unchanged in v3.8.28; environmental summaries and saved wind sets do not certify them.</p><p><strong>Quality:</strong> Observation quality is a general rating used for each supported evidence type in this review. This field was previously labelled Direction quality. Earlier selections are retained without re-rating; do not assume an older selection was an independent speed-confidence assessment.</p><p>The historical model/final-hold columns are displayed only as saved records. Environmental history is not fed into the firing solution, does not rank similar stages, and does not create a new recommendation.</p><button class="btn outline small" id="reportLegacy">OPEN ORIGINAL LEGACY METRICS</button></details></section>`;
  document.getElementById('reportDay').onchange=e=>{reportView.day=e.target.value;reportView.sharedZero=false;reports();};document.getElementById('reportMatch').onchange=e=>{reportView.match=e.target.value;reportView.sharedZero=false;reports();};document.getElementById('reportSharedZero').onchange=e=>{reportView.sharedZero=e.target.checked;reports();};document.getElementById('reportLegacy').onclick=()=>{reportsLegacy();const warning=document.createElement('div');warning.className='note';warning.textContent='Legacy metrics are retained for reference only and are not the source of the committed historical review.';const b=document.createElement('button');b.className='btn outline';b.textContent='← MATCH DAY REVIEW';b.onclick=reports;main.prepend(warning);main.prepend(b);};
 }
 
@@ -2929,6 +2929,30 @@ function appUpdateMessage(worker,message,timeoutMs=7000){
 function appUpdateStatus(message){
  const el=document.getElementById('appUpdateStatus');if(el)el.textContent=message;
 }
+function waitForAppUpdateInstall(reg,worker,timeoutMs=45000){
+ return new Promise((resolve,reject)=>{
+  if(reg?.waiting){resolve(reg.waiting);return;}
+  if(!worker){reject(new Error('No installing service worker is available.'));return;}
+  let settled=false;
+  const finish=(fn,value)=>{if(settled)return;settled=true;clearTimeout(timer);worker.removeEventListener('statechange',onState);fn(value);};
+  const onState=()=>{
+   if(reg?.waiting){finish(resolve,reg.waiting);return;}
+   if(worker.state==='installed'){setTimeout(()=>{if(reg?.waiting)finish(resolve,reg.waiting);else finish(resolve,worker);},0);return;}
+   if(worker.state==='redundant')finish(reject,new Error('The downloaded update was rejected during installation. Retry after confirming the deployment completed.'));
+  };
+  const timer=setTimeout(()=>finish(reject,new Error('The update did not finish installing within 45 seconds. Check connectivity and the deployment version, then retry.')),timeoutMs);
+  worker.addEventListener('statechange',onState);onState();
+ });
+}
+async function showReadyAppUpdate(reg,worker){
+ const candidate=reg?.waiting||worker;
+ if(!candidate)return false;
+ const info=await appUpdateMessage(candidate,{type:'WSP_GET_VERSION'});
+ if(!info?.version)throw new Error('Downloaded worker did not supply its version.');
+ appUpdateStatus('Loaded app: v'+APP_VERSION+' · downloaded update: v'+info.version+'. Close every other WIND SIGHT window before applying.');
+ const apply=document.getElementById('applyAppUpdate');if(apply)apply.hidden=false;
+ return true;
+}
 function appUpdateNotice(reg){
  if(!reg?.waiting||!navigator.serviceWorker?.controller)return;
  const el=document.getElementById('updateNotice');if(!el)return;
@@ -2942,10 +2966,11 @@ async function checkAppUpdate(){
   const reg=appUpdateRegistration||await navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'});appUpdateRegistration=reg;
   await reg.update();appUpdateNotice(reg);
   let worker=reg.waiting;
-  if(!worker&&reg.installing){appUpdateStatus('Update is downloading. Remain online and check again once it finishes.');return;}
-  if(worker){const info=await appUpdateMessage(worker,{type:'WSP_GET_VERSION'});if(!info?.version)throw new Error('Downloaded worker did not supply its version.');
-   appUpdateStatus('Loaded app: v'+APP_VERSION+' · downloaded update: v'+info.version+'. Close every other WIND SIGHT window before applying.');
-   const apply=document.getElementById('applyAppUpdate');if(apply)apply.hidden=false;
+  if(!worker&&reg.installing){
+   appUpdateStatus('Update is downloading and being verified…');
+   worker=await waitForAppUpdateInstall(reg,reg.installing);
+  }
+  if(worker){await showReadyAppUpdate(reg,worker);
   }else{const info=await appUpdateMessage(navigator.serviceWorker.controller||reg.active,{type:'WSP_GET_VERSION'});
    appUpdateStatus('Loaded app: v'+APP_VERSION+' · active offline shell: v'+(info?.version||'unknown')+'. '+(info?.version&&info.version!==APP_VERSION?'The shell is newer. Save your work, close this app and reopen.':'No waiting update was found.'));
   }
@@ -2980,7 +3005,7 @@ async function applyAppUpdate(){
 }
 if('serviceWorker' in navigator){window.addEventListener('load',async()=>{
  try{const reg=await navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'});appUpdateRegistration=reg;
-  appUpdateNotice(reg);reg.addEventListener('updatefound',()=>{const worker=reg.installing;if(worker)worker.addEventListener('statechange',()=>appUpdateNotice(reg));});
+  appUpdateNotice(reg);reg.addEventListener('updatefound',()=>{const worker=reg.installing;if(worker)worker.addEventListener('statechange',async()=>{appUpdateNotice(reg);if(worker.state==='installed'&&reg.waiting&&st.screen==='dataProtection'){try{await showReadyAppUpdate(reg,reg.waiting);}catch(e){appUpdateStatus('Update downloaded, but version verification failed: '+e.message);}}});});
  }catch(e){protection.warning='Offline installation failed. Keep a JSON backup and check connectivity before relying on offline access.';storageStatus(saveState.textContent);}
 });}
 
