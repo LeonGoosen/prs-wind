@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#07111d">
-<title>WIND SIGHT PRS by ZealTech — v3.8.30 Shared Wind Input</title>
+<title>WIND SIGHT PRS by ZealTech — v3.8.31 Ballistics Clarity</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -305,7 +305,7 @@ html,body{touch-action:manipulation}
 .windContext strong{display:block;font-size:18px}
 @media(max-width:620px){.windPrimaryGrid{grid-template-columns:1fr 1fr}.windContext{grid-template-columns:1fr 1fr}}
 @media(max-width:350px){.windPrimaryGrid{grid-template-columns:1fr}}
-/* v3.8.30 Shared Wind Input: legacy firing model frozen; model-integrity guardrails and explicit current-window versus saved-envelope disclosure retained. */
+/* v3.8.31 Ballistics Clarity: legacy firing model frozen; model-integrity guardrails and explicit current-window versus saved-envelope disclosure retained. */
 .windSetSummary{margin-top:12px;border:1px solid #29435a;border-radius:15px;padding:12px;background:#07131f}
 .windSetSummaryHead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .windSetSummaryHead strong{font-size:14px}.windSetSummaryHead span{font-size:10px;color:var(--muted);text-align:right}
@@ -321,7 +321,7 @@ html,body{touch-action:manipulation}
 @media(max-width:359px){.rpMetric{padding:10px}.rpMetric>strong{font-size:22px}.rpWeatherGrid{grid-template-columns:1fr}.rpStage>summary{padding:10px}.rpStageBody{padding:10px}}
 
 
-/* v3.8.30: target wind-speed display reuses the same shared shooter-record summary; DOF and legacy target-relative angle stay unchanged. */
+/* v3.8.31: target wind-speed display reuses the same shared shooter-record summary; DOF and legacy target-relative angle stay unchanged. */
 .targetFieldCard{overflow-wrap:anywhere}
 .targetFieldRecord{border:1px solid #31536a;border-radius:14px;padding:12px;margin:12px 0 16px;background:#0a1b29}
 .targetFieldRecord .fieldRecordHead{display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:space-between;align-items:center}
@@ -342,13 +342,38 @@ html,body{touch-action:manipulation}
 .legacyTargetRecord .legacyRecordBoundary{font-size:11px;color:#f0c465;line-height:1.5;margin:0 0 12px}
 @media(max-width:350px){.targetFieldRecord{padding:9px}.targetFieldRecord .fieldRecordValue strong{font-size:23px}}
 
+
+/* v3.8.31: compact Ballistics cards. Scoped selectors leave other screens unchanged. */
+.ballisticsHeading{margin:8px 0 10px}
+.ballisticsTargets{display:grid;gap:12px}
+.ballisticsTargetCard.card{margin:0;padding:14px;min-width:0;border-color:#30495e}
+.ballisticsTargetHeading{display:flex;align-items:center;gap:8px;min-width:0}
+.ballisticsTargetHeading strong{font-size:18px;line-height:1.35;overflow-wrap:anywhere}
+.ballisticsSource{font-size:10px;color:var(--muted);line-height:1.5;margin:5px 0 12px}
+.ballisticsWindValues{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.ballisticsWindValue{border:1px solid #29435a;border-radius:12px;padding:11px 4px 9px;text-align:center;background:#07131f;min-width:0}
+.ballisticsWindValue.isAverage{border:2px solid var(--blue);padding:10px 3px 8px;background:#0c2633}
+.ballisticsWindValue span{display:block;font-size:10px;font-weight:900;color:var(--muted);letter-spacing:.05em}
+.ballisticsWindValue strong{display:block;font-size:28px;line-height:1.25;margin-top:6px;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ballisticsWindValue small{display:block;font-size:10px;color:var(--muted);margin-top:2px}
+.ballisticsAngles{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:10px;margin-top:14px;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ballisticsAngles>div{min-width:0;display:flex;flex-direction:column;justify-content:space-between}
+.ballisticsAngles span{font-size:9px;color:var(--muted);font-weight:900;letter-spacing:.035em;line-height:1.4}
+.ballisticsAngles strong{display:block;margin-top:5px;font-size:25px;line-height:1.2;font-variant-numeric:tabular-nums}
+.ballisticsAngles strong[data-angle="wind"]{color:#71cfe7}
+.ballisticsSolverFields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+.ballisticsSolverFields label{font-size:10px;letter-spacing:.015em;line-height:1.4;min-width:0;margin:0}
+.ballisticsSolverFields input{width:100%;min-width:0;min-height:50px;font-size:20px;padding:10px;margin-top:6px;font-variant-numeric:tabular-nums}
+.ballisticsIssue{color:#ffd27a;font-size:11px;line-height:1.5;margin:10px 0 0;overflow-wrap:anywhere}
+@media(max-width:359px){.ballisticsTargetCard.card{padding:10px}.ballisticsWindValues{gap:5px}.ballisticsWindValue strong{font-size:23px}.ballisticsAngles strong{font-size:23px}.ballisticsSolverFields{gap:8px}.ballisticsSolverFields input{padding:8px;font-size:18px}}
+
 </style>
 </head>
 <body>
 <div class="app">
 <header>
 <div class="brandrow">
-  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>PRODUCTION GUARDED • v3.8.30</small></div></div>
+  <div style="display:flex;align-items:center;gap:10px"><img src="wind-sight-icon.png" alt="WIND SIGHT PRS" style="width:42px;height:42px;border-radius:10px"><div class="brand"><span style="color:#d9dee7">WIND</span> <span style="color:#009abf">SIGHT</span> <span style="font-size:12px;letter-spacing:.16em;color:#a7b4c3">PRS</span><small>PRODUCTION GUARDED • v3.8.31</small></div></div>
   <button class="save storageButton" id="saveState" type="button" onclick="if(protection.ready){saveCurrent();st.screen='dataProtection';render()}">Checking data…</button>
 </div>
 <nav id="nav"></nav>
@@ -437,7 +462,7 @@ function navItems(){return [["home","HOME"],["matches","MATCHES"],["rifles","PRO
 function renderNav(){nav.innerHTML="";navItems().forEach(([k,l])=>{let b=document.createElement("button");b.className="navbtn"+(st.screen===k?" active":"");b.textContent=l;b.onclick=()=>{if(protection.blocked){st.screen="dataProtection";st.step=0;render();return;}saveCurrent();st.screen=k;st.step=0;render()};nav.appendChild(b)})}
 function setBottom(show=true,nextLabel="NEXT →",nextVisible=true){bottom.style.display=show?"block":"none";nextBtn.textContent=nextLabel;nextBtn.style.visibility=nextVisible?"visible":"hidden"}
 
-const APP_VERSION="3.8.30";
+const APP_VERSION="3.8.31";
 const APP_SESSION_STARTED_AT=Date.now();
 
 
@@ -1847,20 +1872,26 @@ function targetFieldRecordHTML(ctx){
 function renderKestrel(s){
  const fz=fuse(s),ctx=stageFieldRecordContext(s);
  const content=s.targets.map((t,i)=>kTargetHTML(t,i,fz,ctx)).join('');
- live.innerHTML=`<div class="cardhead"><div><h3>Ballistic Software</h3><div class="small">${esc(getBallisticSoftware())}</div></div><span class="tag live">LEGACY MODEL · ${esc(fz.quality)}</span></div>${liveModelIntegrityHTML(s)}${content}`;
+ live.innerHTML=`<div class="ballisticsHeading"><h3>Ballistics</h3></div>${liveModelIntegrityHTML(s)}<div class="ballisticsTargets">${content}</div>`;
  bindAuto(captureLive);
 }
+
 function kTargetHTML(t,i,fz,fieldContext){
  const s=getStage(),ctx=fieldContext||stageFieldRecordContext(s);
- const field=targetFieldRecordHTML(ctx),shared=fieldRecordWindSummary(ctx);
- const header=`<div class="cardhead"><strong>${esc(t.label)} • ${esc(t.distanceM)} m</strong><span class="tag ready">TARGET</span></div>`;
- if(!fz.valid)return `<div class="card targetFieldCard" data-target-id="${esc(t.id)}">${header}${field}<div class="bad">${esc(fz.reason)}</div><div class="note">Existing target-relative angle and solver fields are unavailable until the current entry is complete. The shared shooter record above remains read-only.</div></div>`;
+ const shared=fieldRecordWindSummary(ctx);
+ const header=`<div class="ballisticsTargetHeading"><strong>${esc(t.label)} · ${esc(t.distanceM)} m</strong></div>`;
+ // Presentation only. Keep the v3.8.31 summary source and target angle path intact.
+ const origin=ctx?.source==='preShoot'?'Pre-shoot snapshot':ctx?.source==='completed'?'Completed snapshot':'Current record';
+ const source=shared.ok?(shared.mode==='saved'?`${origin} · ${shared.rows.length} saved sets · AVG = median`:`${origin} · single wind window`):origin;
+ const windBoxes=`<div class="ballisticsWindValues" data-target-wind-source="shared-shooter-record">${['MIN','AVG','MAX'].map((label,j)=>`<div class="ballisticsWindValue ${j===1?'isAverage':''}"><span>${label}</span><strong data-wind-value="${['min','avg','max'][j]}">${shared.ok?oneDecimal(shared.values[j]):'—'}</strong><small>mph</small></div>`).join('')}</div>`;
+ const sharedError=!shared.ok?`<div class="ballisticsIssue" role="status">${esc(shared.reason||'Wind values unavailable.')}</div>`:shared.skipped?`<div class="ballisticsIssue" role="status">${shared.skipped} unreadable saved window${shared.skipped===1?' was':'s were'} excluded. Original records are unchanged.</div>`:'';
+ if(!fz.valid)return `<section class="card ballisticsTargetCard" data-target-id="${esc(t.id)}" data-field-source="${esc(ctx?.source||'unavailable')}">${header}<div class="ballisticsSource">${esc(source)}</div>${windBoxes}${sharedError}<div class="ballisticsIssue" role="status">${esc(fz.reason)} Target angle and solver fields are unavailable until the current entry is complete.</div></section>`;
  const ds=targetDirectionState(s,t);
- const windBoxes=shared.ok
-  ? `<div class="out3" data-target-wind-source="shared-shooter-record">${shared.values.map((v,j)=>`<div class="obox ${j===1?'best':''}"><div class="t">${esc(shared.labels[j])}</div><div class="n">${oneDecimal(v)}</div><div class="unit">mph</div></div>`).join('')}</div>`
-  : `<div class="note"><strong>Shared wind values unavailable.</strong> ${esc(shared.reason||'No readable shared shooter record.')}</div>`;
- return `<div class="card targetFieldCard" data-target-id="${esc(t.id)}">${header}${field}<section class="legacyTargetRecord"><p class="legacyRecordBoundary"><strong>WIND VALUES USE THE SHARED SHOOTER RECORD.</strong> DOF and the existing target-relative legacy angle remain unchanged.</p><div class="hero"><div class="small">TARGET / WIND INPUT</div><div style="font-size:24px;font-weight:1000;margin-top:8px">DOF ${String(Math.round(norm(n(t.dof)||0))).padStart(3,"0")}°</div><div class="small" style="margin-top:8px">TARGET-RELATIVE WIND DIRECTION · LEGACY ANGLE</div><div style="font-size:32px;font-weight:1000;color:var(--blue)">${String(Math.round(ds.targetWD)).padStart(3,"0")}°</div><div class="small">${clock(ds.targetWD)}</div></div>${windBoxes}<div class="grid two">${f("Solver MIN hold","kmin_"+i,inputFieldValue(t,"kMin"),"decimal")}${f("Solver MAX hold","kmax_"+i,inputFieldValue(t,"kMax"),"decimal")}</div>${n(t.kMin)!==null&&n(t.kMax)!==null?callCurveHTML(s,t):""}</section></div>`;
+ const dof=String(Math.round(norm(n(t.dof)||0))).padStart(3,'0');
+ const angle=Number.isFinite(ds.targetWD)?String(Math.round(ds.targetWD)).padStart(3,'0')+'°':'—';
+ return `<section class="card ballisticsTargetCard" data-target-id="${esc(t.id)}" data-field-source="${esc(ctx?.source||'unavailable')}">${header}<div class="ballisticsSource">${esc(source)}</div>${windBoxes}${sharedError}<div class="ballisticsAngles"><div><span>DOF</span><strong data-angle="dof">${dof}°</strong></div><div><span>TARGET-RELATIVE WIND</span><strong data-angle="wind">${angle}</strong></div></div><div class="ballisticsSolverFields">${f('Solver MIN hold (mil)','kmin_'+i,inputFieldValue(t,'kMin'),'decimal')}${f('Solver MAX hold (mil)','kmax_'+i,inputFieldValue(t,'kMax'),'decimal')}</div></section>`;
 }
+
 function fuse(s){
  let mi=n(s.wind.min),av=n(s.wind.avg),ma=n(s.wind.max),dir=n(s.wind.avgDir);
  if(mi===null||av===null||ma===null||dir===null||mi<0||av<0||ma<0||!(mi<=av&&av<=ma)||!angleOK(dir))return {valid:false,reason:"Enter valid non-negative manual MIN / AVG / MAX and AVG WIND FROM.",quality:"WEAK"};
@@ -2191,7 +2222,7 @@ function reports(){
  const chosen=rpSelected(records),s=rpSummary(chosen,reportView.sharedZero),angle=s.dirStatus==='available'?rpAngleText(s.meanDir):s.dirStatus==='variable'?'Variable':s.dirStatus==='reference'?'Per stage':'—';
  const angleHint=s.dirStatus==='reference'?'Confirm shared 0° reference to calculate a circular mean':s.dirStatus==='variable'?'Directions cancel; no unique mean':s.dirStatus==='missing'?'No usable recorded directions':`${s.directionCount} stage direction${s.directionCount===1?'':'s'}`;
  const speedSpan=s.speedCount?`${rpValue(s.minSpeed)}–${rpValue(s.maxSpeed)} mph across stage AVG entries`:'No recorded stage AVG entries';
- main.innerHTML=`<section class="panel rpHeader"><div class="kicker">Historical stage records · v${APP_VERSION}</div><h2>Match day review</h2><p class="sub">What was recorded, where it was observed, and what changed across completed stages.</p><div class="grid two rpFilters"><label>Day<select id="reportDay"><option value="all" ${reportView.day==='all'?'selected':''}>All recorded dates</option>${days.length?days.map(day=>`<option value="${esc(day)}" ${reportView.day===day?'selected':''}>${esc(rpDayLabel(day))}</option>`).join(''):`<option value="${esc(today)}" ${reportView.day===today?'selected':''}>Today — no completed records</option>`}</select></label><label>Match<select id="reportMatch"><option value="all">All matches</option>${matchOptions.map(([id,name])=>`<option value="${esc(id)}" ${reportView.match===id?'selected':''}>${esc(name)}</option>`).join('')}</select></label></div><div class="rpSummary"><div class="rpMetric"><small>COMPLETED STAGES</small><strong>${s.stages}</strong><span>${esc(rpDayLabel(reportView.day))}</span></div><div class="rpMetric"><small>RECORDED SHOOTER AVG</small><strong>${rpValue(s.meanSpeed)} <em>mph</em></strong><span>${esc(speedSpan)}</span></div><div class="rpMetric"><small>RECORDED WIND FROM</small><strong>${angle}</strong><span>${esc(angleHint)}</span></div><div class="rpMetric"><small>RECORDED SCORE</small><strong>${s.scored?s.points:'—'} <em>/ ${s.scored?s.possible:'—'}</em></strong><span>${s.scored} scored${s.unscored?' · '+s.unscored+' unscored':''}</span></div></div><div class="rpCoverage"><span class="rpPill"><strong>${s.committed}</strong> committed</span><span class="rpPill"><strong>${s.observations}</strong> local observations</span>${s.pending?`<span class="rpPill"><strong>${s.pending}</strong> pending edit${s.pending===1?'':'s'}</span>`:''}${s.legacy?`<span class="rpPill"><strong>${s.legacy}</strong> legacy</span>`:''}</div><label class="rpReference"><input id="reportSharedZero" type="checkbox" ${reportView.sharedZero?'checked':''}><span>These selected stage directions share the same fixed 0° reference. Enable only when that statement is true.</span></label><p class="rpFootnote">Recorded shooter wind is the saved stage input, not independently verified weather. Different shooter/downrange/target locations are kept separate; different local directions or speeds are not automatically treated as errors. Direction averages use circular statistics only after a common reference is confirmed.</p></section><section class="panel"><div class="rpSectionHead"><h3>Stage timeline</h3><span>Fastest day-level check</span></div>${rpTimeline(chosen)}</section><section class="panel"><div class="rpSectionHead"><h3>Environmental field review</h3><span>Separate locations · stage completion times</span></div>${rpConditionsTable(chosen)}</section><section class="panel"><div class="rpSectionHead"><h3>Target history</h3><span>Near → far · historical values only</span></div>${rpTargetTable(chosen)}</section><section class="panel"><div class="rpSectionHead"><h3>Stage details</h3><span>Open only when needed</span></div>${chosen.length?chosen.map(rpStageCard).join(''):'<div class="note">No completed stage records for this selection.</div>'}</section><section class="panel rpSecondary"><details><summary>Data quality and report limits</summary><p>Committed post-stage snapshots take priority. Missing committed fields remain missing; later mutable edits are not used to reconstruct them.</p><p>In this environmental review, observation-derived speed and direction are capability-gated. Conditions at different locations stay separate.</p><p><strong>Unresolved live-model limits:</strong> the separate live engine can still use saved angles from speed-only observations and speed contributions from direction-only observations. Those legacy live-model algorithms remain unchanged in v3.8.30; environmental summaries and saved wind sets do not certify them.</p><p><strong>Quality:</strong> Observation quality is a general rating used for each supported evidence type in this review. This field was previously labelled Direction quality. Earlier selections are retained without re-rating; do not assume an older selection was an independent speed-confidence assessment.</p><p>The historical model/final-hold columns are displayed only as saved records. Environmental history is not fed into the firing solution, does not rank similar stages, and does not create a new recommendation.</p><button class="btn outline small" id="reportLegacy">OPEN ORIGINAL LEGACY METRICS</button></details></section>`;
+ main.innerHTML=`<section class="panel rpHeader"><div class="kicker">Historical stage records · v${APP_VERSION}</div><h2>Match day review</h2><p class="sub">What was recorded, where it was observed, and what changed across completed stages.</p><div class="grid two rpFilters"><label>Day<select id="reportDay"><option value="all" ${reportView.day==='all'?'selected':''}>All recorded dates</option>${days.length?days.map(day=>`<option value="${esc(day)}" ${reportView.day===day?'selected':''}>${esc(rpDayLabel(day))}</option>`).join(''):`<option value="${esc(today)}" ${reportView.day===today?'selected':''}>Today — no completed records</option>`}</select></label><label>Match<select id="reportMatch"><option value="all">All matches</option>${matchOptions.map(([id,name])=>`<option value="${esc(id)}" ${reportView.match===id?'selected':''}>${esc(name)}</option>`).join('')}</select></label></div><div class="rpSummary"><div class="rpMetric"><small>COMPLETED STAGES</small><strong>${s.stages}</strong><span>${esc(rpDayLabel(reportView.day))}</span></div><div class="rpMetric"><small>RECORDED SHOOTER AVG</small><strong>${rpValue(s.meanSpeed)} <em>mph</em></strong><span>${esc(speedSpan)}</span></div><div class="rpMetric"><small>RECORDED WIND FROM</small><strong>${angle}</strong><span>${esc(angleHint)}</span></div><div class="rpMetric"><small>RECORDED SCORE</small><strong>${s.scored?s.points:'—'} <em>/ ${s.scored?s.possible:'—'}</em></strong><span>${s.scored} scored${s.unscored?' · '+s.unscored+' unscored':''}</span></div></div><div class="rpCoverage"><span class="rpPill"><strong>${s.committed}</strong> committed</span><span class="rpPill"><strong>${s.observations}</strong> local observations</span>${s.pending?`<span class="rpPill"><strong>${s.pending}</strong> pending edit${s.pending===1?'':'s'}</span>`:''}${s.legacy?`<span class="rpPill"><strong>${s.legacy}</strong> legacy</span>`:''}</div><label class="rpReference"><input id="reportSharedZero" type="checkbox" ${reportView.sharedZero?'checked':''}><span>These selected stage directions share the same fixed 0° reference. Enable only when that statement is true.</span></label><p class="rpFootnote">Recorded shooter wind is the saved stage input, not independently verified weather. Different shooter/downrange/target locations are kept separate; different local directions or speeds are not automatically treated as errors. Direction averages use circular statistics only after a common reference is confirmed.</p></section><section class="panel"><div class="rpSectionHead"><h3>Stage timeline</h3><span>Fastest day-level check</span></div>${rpTimeline(chosen)}</section><section class="panel"><div class="rpSectionHead"><h3>Environmental field review</h3><span>Separate locations · stage completion times</span></div>${rpConditionsTable(chosen)}</section><section class="panel"><div class="rpSectionHead"><h3>Target history</h3><span>Near → far · historical values only</span></div>${rpTargetTable(chosen)}</section><section class="panel"><div class="rpSectionHead"><h3>Stage details</h3><span>Open only when needed</span></div>${chosen.length?chosen.map(rpStageCard).join(''):'<div class="note">No completed stage records for this selection.</div>'}</section><section class="panel rpSecondary"><details><summary>Data quality and report limits</summary><p>Committed post-stage snapshots take priority. Missing committed fields remain missing; later mutable edits are not used to reconstruct them.</p><p>In this environmental review, observation-derived speed and direction are capability-gated. Conditions at different locations stay separate.</p><p><strong>Unresolved live-model limits:</strong> the separate live engine can still use saved angles from speed-only observations and speed contributions from direction-only observations. Those legacy live-model algorithms remain unchanged in v3.8.31; environmental summaries and saved wind sets do not certify them.</p><p><strong>Quality:</strong> Observation quality is a general rating used for each supported evidence type in this review. This field was previously labelled Direction quality. Earlier selections are retained without re-rating; do not assume an older selection was an independent speed-confidence assessment.</p><p>The historical model/final-hold columns are displayed only as saved records. Environmental history is not fed into the firing solution, does not rank similar stages, and does not create a new recommendation.</p><button class="btn outline small" id="reportLegacy">OPEN ORIGINAL LEGACY METRICS</button></details></section>`;
  document.getElementById('reportDay').onchange=e=>{reportView.day=e.target.value;reportView.sharedZero=false;reports();};document.getElementById('reportMatch').onchange=e=>{reportView.match=e.target.value;reportView.sharedZero=false;reports();};document.getElementById('reportSharedZero').onchange=e=>{reportView.sharedZero=e.target.checked;reports();};document.getElementById('reportLegacy').onclick=()=>{reportsLegacy();const warning=document.createElement('div');warning.className='note';warning.textContent='Legacy metrics are retained for reference only and are not the source of the committed historical review.';const b=document.createElement('button');b.className='btn outline';b.textContent='← MATCH DAY REVIEW';b.onclick=reports;main.prepend(warning);main.prepend(b);};
 }
 
